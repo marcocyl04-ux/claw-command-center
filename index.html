@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claw Command Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        charcoal: '#1a1a1a',
+                        surface: '#242424',
+                        border: '#333333',
+                        'text-primary': '#e8e8e8',
+                        'text-secondary': '#888888',
+                        'text-tertiary': '#555555',
+                        amber: '#d4a853',
+                        sage: '#6b8e6b',
+                        rust: '#b8735a',
+                        brick: '#a05050',
+                        slate: '#6a7a8a',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #1a1a1a;
+            color: #e8e8e8;
+            font-family: 'Inter', sans-serif;
+        }
+        .nav-item.active {
+            border-left: 3px solid #d4a853;
+            background-color: #242424;
+        }
+        .nav-item:hover {
+            background-color: #2a2a2a;
+        }
+        .prediction-card {
+            border-left: 3px solid transparent;
+        }
+        .prediction-card.resolved-correct {
+            border-left-color: #6b8e6b;
+        }
+        .prediction-card.resolved-error {
+            border-left-color: #a05050;
+        }
+        .prediction-card.forced-calibration {
+            border-left-color: #d4a853;
+        }
+    </style>
+</head>
+<body class="h-screen flex overflow-hidden">
+    <!-- Sidebar -->
+    <aside class="w-[200px] flex-shrink-0 bg-charcoal border-r border-border flex flex-col">
+        <div class="p-4 border-b border-border">
+            <h1 class="text-sm font-semibold tracking-wider text-text-primary">CLAW COMMAND CENTER</h1>
+        </div>
+        <nav class="flex-1 py-2">
+            <a href="#predictions" data-section="predictions" class="nav-item active block px-4 py-3 text-sm text-text-primary transition-colors">
+                Prediction Pipeline
+            </a>
+            <a href="#heuristics" data-section="heuristics" class="nav-item block px-4 py-3 text-sm text-text-secondary transition-colors">
+                Heuristic Health
+            </a>
+            <a href="#review" data-section="review" class="nav-item block px-4 py-3 text-sm text-text-secondary transition-colors">
+                Self-Review Output
+            </a>
+            <a href="#portfolio" data-section="portfolio" class="nav-item block px-4 py-3 text-sm text-text-secondary transition-colors">
+                Portfolio Status
+            </a>
+            <a href="#system" data-section="system" class="nav-item block px-4 py-3 text-sm text-text-secondary transition-colors">
+                System Health
+            </a>
+        </nav>
+        <div class="p-4 border-t border-border">
+            <div class="text-xs text-text-tertiary">🐾 Claw v1.0</div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col bg-charcoal">
+        <!-- Header -->
+        <header class="h-14 border-b border-border flex items-center justify-between px-6">
+            <div class="text-sm text-text-secondary">Last data: <span id="last-data-time" class="text-text-primary">--</span></div>
+            <div class="flex items-center gap-4">
+                <button id="refresh-btn" class="text-sm text-text-secondary hover:text-text-primary transition-colors">
+                    ↻ <span id="refresh-countdown">60</span>s
+                </button>
+                <div class="text-sm">🐾</div>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <div class="flex-1 overflow-auto p-6">
+            <!-- Section 1: Prediction Pipeline -->
+            <section id="predictions" class="section-panel">
+                <h2 class="text-sm font-medium text-text-secondary uppercase tracking-wider mb-4">Prediction Pipeline</h2>
+                <div id="predictions-list" class="space-y-3">
+                    <!-- Sample prediction card -->
+                    <div class="prediction-card bg-surface border border-border rounded p-4 resolved-correct">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center gap-3">
+                                <span class="text-sm font-medium text-text-primary">NO_TRADE</span>
+                                <span class="px-2 py-0.5 text-xs font-mono bg-amber/20 text-amber rounded">CAL</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-amber"></span>
+                                <span class="text-sm font-mono text-amber">67%</span>
+                                <span class="text-xs text-text-tertiary ml-2">2h ago</span>
+                            </div>
+                        </div>
+                        <h3 class="text-base text-text-primary mb-3">Will NYC temp exceed 15°C on March 16?</h3>
+                        <div class="space-y-2 text-sm">
+                            <div class="border-t border-border pt-2">
+                                <span class="text-text-tertiary">Reasoning:</span>
+                                <span class="text-text-secondary">Forecast shows high variance; market price already reflects most likely outcome.</span>
+                            </div>
+                            <div class="border-t border-border pt-2">
+                                <span class="text-text-tertiary">Failure mode:</span>
+                                <span class="text-text-secondary">ECMWF model shift >3°C 24hrs pre-event</span>
+                            </div>
+                        </div>
+                        <div class="mt-3 pt-2 border-t border-border flex items-center gap-2 text-xs">
+                            <span class="text-text-tertiary">Resolved: March 16</span>
+                            <span class="text-sage">Outcome: YES</span>
+                            <span class="px-2 py-0.5 bg-brick/20 text-brick rounded">REASONING_ERROR</span>
+                        </div>
+                    </div>
+
+                    <!-- Second sample card - unresolved -->
+                    <div class="prediction-card bg-surface border border-border rounded p-4">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center gap-3">
+                                <span class="text-sm font-medium text-text-primary">BUY</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-text-tertiary"></span>
+                                <span class="text-sm font-mono text-text-secondary">45%</span>
+                                <span class="text-xs text-text-tertiary ml-2">5h ago</span>
+                            </div>
+                        </div>
+                        <h3 class="text-base text-text-primary mb-3">Will London see precipitation on March 17?</h3>
+                        <div class="space-y-2 text-sm">
+                            <div class="border-t border-border pt-2">
+                                <span class="text-text-tertiary">Reasoning:</span>
+                                <span class="text-text-secondary">GFS shows 60% precip probability, market underpricing at 40%.</span>
+                            </div>
+                            <div class="border-t border-border pt-2">
+                                <span class="text-text-tertiary">Failure mode:</span>
+                                <span class="text-text-secondary">GFS overestimates precip by >20% in dry spring conditions</span>
+                            </div>
+                        </div>
+                        <div class="mt-3 pt-2 border-t border-border flex items-center gap-2 text-xs">
+                            <span class="text-text-tertiary">Pending resolution</span>
+                        </div>
+                    </div>
+
+                    <!-- Third sample card - resolved error -->
+                    <div class="prediction-card bg-surface border border-border rounded p-4 resolved-error">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center gap-3">
+                                <span class="text-sm font-medium text-text-primary">BUY</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-amber"></span>
+                                <span class="text-sm font-mono text-amber">72%</span>
+                                <span class="text-xs text-text-tertiary ml-2">1d ago</span>
+                            </div>
+                        </div>
+                        <h3 class="text-base text-text-primary mb-3">Will Tokyo temp exceed 20°C on March 15?</h3>
+                        <div class="space-y-2 text-sm">
+                            <div class="border-t border-border pt-2">
+                                <span class="text-text-tertiary">Reasoning:</span>
+                                <span class="text-text-secondary">Warm front approaching, models converging on 22°C.</span>
+                            </div>
+                            <div class="border-t border-border pt-2">
+                                <span class="text-text-tertiary">Failure mode:</span>
+                                <span class="text-text-secondary">Front stalls, cloud cover suppresses temps</span>
+                            </div>
+                        </div>
+                        <div class="mt-3 pt-2 border-t border-border flex items-center gap-2 text-xs">
+                            <span class="text-text-tertiary">Resolved: March 15</span>
+                            <span class="text-brick">Outcome: NO</span>
+                            <span class="px-2 py-0.5 bg-rust/20 text-rust rounded">DATA_ERROR</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2: Heuristic Health -->
+            <section id="heuristics" class="section-panel hidden">
+                <h2 class="text-sm font-medium text-text-secondary uppercase tracking-wider mb-4">Heuristic Health</h2>
+                <div class="bg-surface border border-border rounded p-8 text-center text-text-secondary">
+                    Heuristic cards will appear here
+                </div>
+            </section>
+
+            <!-- Section 3: Self-Review Output -->
+            <section id="review" class="section-panel hidden">
+                <h2 class="text-sm font-medium text-text-secondary uppercase tracking-wider mb-4">Self-Review Output</h2>
+                <div class="bg-surface border border-border rounded p-8 text-center text-text-secondary">
+                    Review output will appear here
+                </div>
+            </section>
+
+            <!-- Section 4: Portfolio Status -->
+            <section id="portfolio" class="section-panel hidden">
+                <h2 class="text-sm font-medium text-text-secondary uppercase tracking-wider mb-4">Portfolio Status</h2>
+                <div class="bg-surface border border-border rounded p-8 text-center text-text-secondary">
+                    Portfolio data will appear here
+                </div>
+            </section>
+
+            <!-- Section 5: System Health -->
+            <section id="system" class="section-panel hidden">
+                <h2 class="text-sm font-medium text-text-secondary uppercase tracking-wider mb-4">System Health</h2>
+                <div class="bg-surface border border-border rounded p-8 text-center text-text-secondary">
+                    System status will appear here
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        // Navigation
+        const navItems = document.querySelectorAll('.nav-item');
+        const sections = document.querySelectorAll('.section-panel');
+
+        function showSection(sectionId) {
+            // Hide all sections
+            sections.forEach(s => s.classList.add('hidden'));
+            // Show target section
+            document.getElementById(sectionId).classList.remove('hidden');
+            // Update nav
+            navItems.forEach(n => {
+                n.classList.remove('active');
+                n.classList.remove('text-text-primary');
+                n.classList.add('text-text-secondary');
+            });
+            const activeNav = document.querySelector(`[data-section="${sectionId}"]`);
+            if (activeNav) {
+                activeNav.classList.add('active');
+                activeNav.classList.remove('text-text-secondary');
+                activeNav.classList.add('text-text-primary');
+            }
+            // Save to localStorage
+            localStorage.setItem('activeSection', sectionId);
+        }
+
+        navItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const sectionId = item.getAttribute('data-section');
+                showSection(sectionId);
+            });
+        });
+
+        // Restore active section on load
+        const savedSection = localStorage.getItem('activeSection') || 'predictions';
+        showSection(savedSection);
+
+        // Refresh countdown
+        let countdown = 60;
+        const countdownEl = document.getElementById('refresh-countdown');
+        setInterval(() => {
+            countdown--;
+            if (countdown <= 0) countdown = 60;
+            countdownEl.textContent = countdown;
+        }, 1000);
+
+        // Update last data time
+        function updateLastDataTime() {
+            const now = new Date();
+            document.getElementById('last-data-time').textContent = now.toLocaleTimeString();
+        }
+        updateLastDataTime();
+    </script>
+</body>
+</html>
