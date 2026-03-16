@@ -74,7 +74,29 @@ def get_self_review():
                 line = line.strip()
                 if line:
                     try:
-                        reviews.append(json.loads(line))
+                        entry = json.loads(line)
+                        # Flatten nested objects for clean JSON response
+                        flat_entry = {
+                            "timestamp": entry.get("timestamp"),
+                            "health_score": entry.get("health_score"),
+                            "key_actions": entry.get("key_actions"),
+                            "full_report": entry.get("full_report"),
+                            # Flatten trading stats
+                            "predictions_total": entry.get("trading", {}).get("predictions_total", 0),
+                            "resolved": entry.get("trading", {}).get("resolved", 0),
+                            "accuracy": entry.get("trading", {}).get("accuracy", 0),
+                            "calibration": entry.get("trading", {}).get("calibration", "N/A"),
+                            # Flatten session stats
+                            "sessions_total": entry.get("session", {}).get("sessions_total", 0),
+                            "stall_rate": entry.get("session", {}).get("stall_rate", 0),
+                            "loop_rate": entry.get("session", {}).get("loop_rate", 0),
+                            "budget_adherence": entry.get("session", {}).get("budget_adherence", 0),
+                            # Flatten framework stats
+                            "heuristics_count": entry.get("framework", {}).get("heuristics_count", 0),
+                            "brief_size": entry.get("framework", {}).get("brief_size", 0),
+                            "framework_health": entry.get("framework", {}).get("health", "UNKNOWN")
+                        }
+                        reviews.append(flat_entry)
                     except json.JSONDecodeError:
                         continue
     
