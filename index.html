@@ -277,24 +277,264 @@
             <!-- Section 3: Self-Review Output -->
             <section id="review" class="section-panel hidden">
                 <h2 class="text-sm font-medium text-text-secondary uppercase tracking-wider mb-4">Self-Review Output</h2>
-                <div class="bg-surface border border-border rounded p-8 text-center text-text-secondary">
-                    Review output will appear here
+                <div id="review-list" class="space-y-3">
+                    <!-- Sample review card - high score -->
+                    <div class="review-card bg-surface border border-border rounded p-4 border-l-4 border-l-sage">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center gap-3">
+                                <span class="text-2xl font-mono font-semibold text-sage">8</span>
+                                <span class="text-sm text-text-secondary">/ 10</span>
+                            </div>
+                            <span class="text-xs text-text-tertiary">March 15, 2026</span>
+                        </div>
+                        <p class="text-sm text-text-primary mb-3 font-medium">Strong calibration on weather markets; framework holding steady</p>
+                        <div class="space-y-1 text-sm">
+                            <div class="flex items-start gap-2">
+                                <span class="text-sage">✓</span>
+                                <span class="text-text-secondary">Confidence scores aligned with actual outcomes (71% win rate)</span>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <span class="text-sage">✓</span>
+                                <span class="text-text-secondary">Volume filter correctly identified thin markets</span>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <span class="text-sage">✓</span>
+                                <span class="text-text-secondary">No over-trading; patience paid off</span>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <span class="text-brick">✗</span>
+                                <span class="text-text-secondary">Need faster resolution on precipitation timing rule</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sample review card - low score -->
+                    <div class="review-card bg-surface border border-border rounded p-4 border-l-4 border-l-brick">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center gap-3">
+                                <span class="text-2xl font-mono font-semibold text-brick">4</span>
+                                <span class="text-sm text-text-secondary">/ 10</span>
+                            </div>
+                            <span class="text-xs text-text-tertiary">March 14, 2026</span>
+                        </div>
+                        <p class="text-sm text-text-primary mb-3 font-medium">Over-confidence on temperature predictions; data source lag ignored</p>
+                        <div class="space-y-1 text-sm">
+                            <div class="flex items-start gap-2">
+                                <span class="text-sage">✓</span>
+                                <span class="text-text-secondary">Framework applied consistently</span>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <span class="text-brick">✗</span>
+                                <span class="text-text-secondary">High confidence (72%) on wrong temperature call</span>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <span class="text-brick">✗</span>
+                                <span class="text-text-secondary">Ignored 6-hour forecast update showing model shift</span>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <span class="text-brick">✗</span>
+                                <span class="text-text-secondary">Need recency check before high-confidence trades</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sample review card - medium score -->
+                    <div class="review-card bg-surface border border-border rounded p-4">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center gap-3">
+                                <span class="text-2xl font-mono font-semibold text-amber">6</span>
+                                <span class="text-sm text-text-secondary">/ 10</span>
+                            </div>
+                            <span class="text-xs text-text-tertiary">March 13, 2026</span>
+                        </div>
+                        <p class="text-sm text-text-primary mb-3 font-medium">Mixed results; volume filter working, timing needs work</p>
+                        <div class="space-y-1 text-sm">
+                            <div class="flex items-start gap-2">
+                                <span class="text-sage">✓</span>
+                                <span class="text-text-secondary">Correctly passed on 3 low-volume markets</span>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <span class="text-sage">✓</span>
+                                <span class="text-text-secondary">Edge calculation accurate</span>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <span class="text-brick">✗</span>
+                                <span class="text-text-secondary">Late to catch ECMWF model divergence</span>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <span class="text-brick">✗</span>
+                                <span class="text-text-secondary">Need automated model variance alerts</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
-            <!-- Section 4: Portfolio Status -->
+            <!-- Section 4: Portfolio Performance -->
             <section id="portfolio" class="section-panel hidden">
-                <h2 class="text-sm font-medium text-text-secondary uppercase tracking-wider mb-4">Portfolio Status</h2>
-                <div class="bg-surface border border-border rounded p-8 text-center text-text-secondary">
-                    Portfolio data will appear here
+                <h2 class="text-sm font-medium text-text-secondary uppercase tracking-wider mb-4">Portfolio Performance</h2>
+                
+                <!-- Summary Stats Row -->
+                <div class="grid grid-cols-4 gap-4 mb-6">
+                    <div class="bg-surface border border-border rounded p-4">
+                        <div class="text-xs text-text-tertiary uppercase tracking-wider mb-1">Deployed</div>
+                        <div class="text-2xl font-mono text-text-primary">$45.27</div>
+                        <div class="text-xs text-text-tertiary">of $50.00</div>
+                    </div>
+                    <div class="bg-surface border border-border rounded p-4">
+                        <div class="text-xs text-text-tertiary uppercase tracking-wider mb-1">Realized P&L</div>
+                        <div class="text-2xl font-mono text-sage">+$3.42</div>
+                        <div class="text-xs text-sage">+7.6%</div>
+                    </div>
+                    <div class="bg-surface border border-border rounded p-4">
+                        <div class="text-xs text-text-tertiary uppercase tracking-wider mb-1">Win Rate</div>
+                        <div class="text-2xl font-mono text-text-primary">71%</div>
+                        <div class="text-xs text-text-tertiary">5 wins / 7 resolved</div>
+                    </div>
+                    <div class="bg-surface border border-border rounded p-4">
+                        <div class="text-xs text-text-tertiary uppercase tracking-wider mb-1">Open Positions</div>
+                        <div class="text-2xl font-mono text-amber">12</div>
+                        <div class="text-xs text-text-tertiary">awaiting resolution</div>
+                    </div>
+                </div>
+
+                <!-- Open Positions Table -->
+                <div class="bg-surface border border-border rounded overflow-hidden">
+                    <div class="px-4 py-3 border-b border-border bg-surface/50">
+                        <h3 class="text-sm font-medium text-text-secondary">Top Open Positions</h3>
+                    </div>
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="border-b border-border text-xs text-text-tertiary">
+                                <th class="px-4 py-2 text-left font-medium">Market</th>
+                                <th class="px-4 py-2 text-left font-medium">Direction</th>
+                                <th class="px-4 py-2 text-left font-medium">Edge</th>
+                                <th class="px-4 py-2 text-left font-medium">Deployed</th>
+                                <th class="px-4 py-2 text-left font-medium">Days Left</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-text-secondary">
+                            <tr class="border-b border-border/50">
+                                <td class="px-4 py-3">NYC temp > 18°C Mar 18</td>
+                                <td class="px-4 py-3"><span class="text-sage">YES</span></td>
+                                <td class="px-4 py-3 font-mono">12%</td>
+                                <td class="px-4 py-3 font-mono">$4.00</td>
+                                <td class="px-4 py-3">2</td>
+                            </tr>
+                            <tr class="border-b border-border/50">
+                                <td class="px-4 py-3">London precip Mar 19</td>
+                                <td class="px-4 py-3"><span class="text-brick">NO</span></td>
+                                <td class="px-4 py-3 font-mono">8%</td>
+                                <td class="px-4 py-3 font-mono">$3.50</td>
+                                <td class="px-4 py-3">3</td>
+                            </tr>
+                            <tr class="border-b border-border/50">
+                                <td class="px-4 py-3">Tokyo temp > 22°C Mar 20</td>
+                                <td class="px-4 py-3"><span class="text-sage">YES</span></td>
+                                <td class="px-4 py-3 font-mono">15%</td>
+                                <td class="px-4 py-3 font-mono">$5.00</td>
+                                <td class="px-4 py-3">4</td>
+                            </tr>
+                            <tr class="border-b border-border/50">
+                                <td class="px-4 py-3">Sydney temp < 25°C Mar 21</td>
+                                <td class="px-4 py-3"><span class="text-sage">YES</span></td>
+                                <td class="px-4 py-3 font-mono">6%</td>
+                                <td class="px-4 py-3 font-mono">$2.75</td>
+                                <td class="px-4 py-3">5</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3">Paris precip Mar 22</td>
+                                <td class="px-4 py-3"><span class="text-brick">NO</span></td>
+                                <td class="px-4 py-3 font-mono">10%</td>
+                                <td class="px-4 py-3 font-mono">$4.25</td>
+                                <td class="px-4 py-3">6</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </section>
 
-            <!-- Section 5: System Health -->
+            <!-- Section 5: System Evolution -->
             <section id="system" class="section-panel hidden">
-                <h2 class="text-sm font-medium text-text-secondary uppercase tracking-wider mb-4">System Health</h2>
-                <div class="bg-surface border border-border rounded p-8 text-center text-text-secondary">
-                    System status will appear here
+                <h2 class="text-sm font-medium text-text-secondary uppercase tracking-wider mb-4">System Evolution</h2>
+                <div id="evolution-list" class="space-y-3">
+                    <!-- Evolution entry - most recent -->
+                    <div class="evolution-card bg-surface border border-border rounded p-4 border-l-4 border-l-amber">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-3">
+                                <span class="text-sm font-medium text-amber">v2.0</span>
+                                <span class="text-xs text-text-tertiary">Session #35</span>
+                            </div>
+                            <span class="text-xs text-text-tertiary">March 15, 2026</span>
+                        </div>
+                        <p class="text-sm text-text-primary mb-1">Subagent delegation architecture — Kimi fixed as orchestrator, R1/Qwen/Claude as discrete subagents</p>
+                        <p class="text-xs text-text-secondary">Impact: Eliminated model-switching failures; 100% reliable model routing</p>
+                    </div>
+
+                    <!-- Evolution entry -->
+                    <div class="evolution-card bg-surface border border-border rounded p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-3">
+                                <span class="text-sm font-medium text-text-primary">v1.9</span>
+                                <span class="text-xs text-text-tertiary">Session #34</span>
+                            </div>
+                            <span class="text-xs text-text-tertiary">March 14, 2026</span>
+                        </div>
+                        <p class="text-sm text-text-primary mb-1">Three-dimensional self-review — trading, session quality, framework evolution</p>
+                        <p class="text-xs text-text-secondary">Impact: Holistic health scoring (1-10) with actionable improvement paths</p>
+                    </div>
+
+                    <!-- Evolution entry -->
+                    <div class="evolution-card bg-surface border border-border rounded p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-3">
+                                <span class="text-sm font-medium text-text-primary">v1.8</span>
+                                <span class="text-xs text-text-tertiary">Session #33</span>
+                            </div>
+                            <span class="text-xs text-text-tertiary">March 13, 2026</span>
+                        </div>
+                        <p class="text-sm text-text-primary mb-1">Weather market pipeline — automated discovery, analysis, and prediction logging</p>
+                        <p class="text-xs text-text-secondary">Impact: First fully autonomous market analysis with zero human input</p>
+                    </div>
+
+                    <!-- Evolution entry -->
+                    <div class="evolution-card bg-surface border border-border rounded p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-3">
+                                <span class="text-sm font-medium text-text-primary">v1.7</span>
+                                <span class="text-xs text-text-tertiary">Session #32</span>
+                            </div>
+                            <span class="text-xs text-text-tertiary">March 12, 2026</span>
+                        </div>
+                        <p class="text-sm text-text-primary mb-1">Confidence calibration system — tracks prediction accuracy vs confidence scores</p>
+                        <p class="text-xs text-text-secondary">Impact: Identified over-confidence bias; improved calibration by 15%</p>
+                    </div>
+
+                    <!-- Evolution entry -->
+                    <div class="evolution-card bg-surface border border-border rounded p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-3">
+                                <span class="text-sm font-medium text-text-primary">v1.6</span>
+                                <span class="text-xs text-text-tertiary">Session #31</span>
+                            </div>
+                            <span class="text-xs text-text-tertiary">March 11, 2026</span>
+                        </div>
+                        <p class="text-sm text-text-primary mb-1">Heuristic framework v1 — 16 validated rules for market evaluation</p>
+                        <p class="text-xs text-text-secondary">Impact: Consistent decision-making; reduced cognitive load per prediction</p>
+                    </div>
+
+                    <!-- Evolution entry -->
+                    <div class="evolution-card bg-surface border border-border rounded p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-3">
+                                <span class="text-sm font-medium text-text-primary">v1.0</span>
+                                <span class="text-xs text-text-tertiary">Session #30</span>
+                            </div>
+                            <span class="text-xs text-text-tertiary">March 10, 2026</span>
+                        </div>
+                        <p class="text-sm text-text-primary mb-1">Initial deployment — Polymarket API integration, basic prediction logging</p>
+                        <p class="text-xs text-text-secondary">Impact: First live prediction; foundation for all subsequent systems</p>
+                    </div>
                 </div>
             </section>
         </div>
