@@ -16,7 +16,7 @@ def index():
     """Serve the dashboard HTML."""
     dashboard_path = Path(__file__).parent / "index.html"
     if dashboard_path.exists():
-        return dashboard_path.read_text()
+        return dashboard_path.read_text(encoding='utf-8')
     return "Dashboard not found", 404
 
 @app.route('/api/predictions')
