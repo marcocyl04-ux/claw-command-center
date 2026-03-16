@@ -201,8 +201,76 @@
             <!-- Section 2: Heuristic Health -->
             <section id="heuristics" class="section-panel hidden">
                 <h2 class="text-sm font-medium text-text-secondary uppercase tracking-wider mb-4">Heuristic Health</h2>
-                <div class="bg-surface border border-border rounded p-8 text-center text-text-secondary">
-                    Heuristic cards will appear here
+                <div id="heuristics-list" class="space-y-3">
+                    <!-- Sample heuristic card - healthy -->
+                    <div class="heuristic-card bg-surface border border-border rounded p-4 border-l-4 border-l-sage">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-3">
+                                <span class="px-2 py-0.5 text-xs font-medium bg-sage/20 text-sage rounded">HEALTHY</span>
+                                <span class="text-sm font-medium text-text-primary">Confidence Threshold</span>
+                            </div>
+                            <span class="text-xs text-text-tertiary">Triggered 12h ago</span>
+                        </div>
+                        <p class="text-sm text-text-secondary mb-3">Confidence below 40% should always result in NO_TRADE</p>
+                        <div class="flex items-center gap-4 text-xs">
+                            <span class="text-text-tertiary">Trigger count: <span class="text-text-primary">47</span></span>
+                            <span class="text-text-tertiary">Last 7d: <span class="text-sage">12 triggers</span></span>
+                        </div>
+                    </div>
+
+                    <!-- Sample heuristic card - flagged -->
+                    <div class="heuristic-card bg-surface border border-border rounded p-4 border-l-4 border-l-rust">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-3">
+                                <span class="px-2 py-0.5 text-xs font-medium bg-rust/20 text-rust rounded">FLAGGED</span>
+                                <span class="text-sm font-medium text-text-primary">Volume Filter</span>
+                            </div>
+                            <span class="text-xs text-text-tertiary">Triggered 3h ago</span>
+                        </div>
+                        <p class="text-sm text-text-secondary mb-3">Markets with &lt; $500 volume are unreliable regardless of edge</p>
+                        <div class="flex items-center gap-4 text-xs">
+                            <span class="text-text-tertiary">Trigger count: <span class="text-text-primary">23</span></span>
+                            <span class="text-text-tertiary">Last 7d: <span class="text-rust">8 triggers</span></span>
+                        </div>
+                        <div class="mt-2 text-xs text-rust">
+                            ⚠ Flagged: 3 recent predictions contradict this rule
+                        </div>
+                    </div>
+
+                    <!-- Sample heuristic card - violated -->
+                    <div class="heuristic-card bg-surface border border-border rounded p-4 border-l-4 border-l-brick">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-3">
+                                <span class="px-2 py-0.5 text-xs font-medium bg-brick/20 text-brick rounded">VIOLATED</span>
+                                <span class="text-sm font-medium text-text-primary">Precipitation Timing</span>
+                            </div>
+                            <span class="text-xs text-text-tertiary">Triggered 1d ago</span>
+                        </div>
+                        <p class="text-sm text-text-secondary mb-3">Precipitation forecasts require 48hr recency, not 24hr</p>
+                        <div class="flex items-center gap-4 text-xs">
+                            <span class="text-text-tertiary">Trigger count: <span class="text-text-primary">15</span></span>
+                            <span class="text-text-tertiary">Last 7d: <span class="text-brick">5 violations</span></span>
+                        </div>
+                        <div class="mt-2 text-xs text-brick">
+                            ✗ Violated: Recent prediction used 24hr data instead of 48hr
+                        </div>
+                    </div>
+
+                    <!-- Sample heuristic card - healthy (no border) -->
+                    <div class="heuristic-card bg-surface border border-border rounded p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-3">
+                                <span class="px-2 py-0.5 text-xs font-medium bg-slate/20 text-slate rounded">MONITORING</span>
+                                <span class="text-sm font-medium text-text-primary">Weather Forecast Age</span>
+                            </div>
+                            <span class="text-xs text-text-tertiary">Never triggered</span>
+                        </div>
+                        <p class="text-sm text-text-secondary mb-3">Weather forecasts &gt; 7 days out have high uncertainty</p>
+                        <div class="flex items-center gap-4 text-xs">
+                            <span class="text-text-tertiary">Trigger count: <span class="text-text-primary">0</span></span>
+                            <span class="text-text-tertiary">Last 7d: <span class="text-text-tertiary">—</span></span>
+                        </div>
+                    </div>
                 </div>
             </section>
 
