@@ -24,6 +24,10 @@
                         rust: '#b8735a',
                         brick: '#a05050',
                         slate: '#6a7a8a',
+                        purple: {
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                        }
                     },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
@@ -80,7 +84,10 @@
                 Portfolio Status
             </a>
             <a href="#system" data-section="system" class="nav-item block px-4 py-3 text-sm text-text-secondary transition-colors">
-                System Health
+                System Evolution
+            </a>
+            <a href="#activation" data-section="activation" class="nav-item block px-4 py-3 text-sm text-text-secondary transition-colors">
+                Activation Map
             </a>
         </nav>
         <div class="p-4 border-t border-border">
@@ -534,6 +541,127 @@
                         </div>
                         <p class="text-sm text-text-primary mb-1">Initial deployment — Polymarket API integration, basic prediction logging</p>
                         <p class="text-xs text-text-secondary">Impact: First live prediction; foundation for all subsequent systems</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 6: Activation Map -->
+            <section id="activation" class="section-panel hidden">
+                <h2 class="text-sm font-medium text-text-secondary uppercase tracking-wider mb-4">Activation Map</h2>
+                
+                <!-- Summary Bar -->
+                <div class="bg-surface border border-border rounded p-4 mb-6">
+                    <div class="text-xs text-text-tertiary uppercase tracking-wider mb-2">This Week's Activations</div>
+                    <div class="flex items-center gap-6">
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-amber"></span>
+                            <span class="text-sm text-text-primary">R1: <span class="font-mono">12</span></span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-slate"></span>
+                            <span class="text-sm text-text-primary">Qwen: <span class="font-mono">3</span></span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-purple-500"></span>
+                            <span class="text-sm text-text-primary">Claude: <span class="font-mono">1</span></span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-sage"></span>
+                            <span class="text-sm text-text-primary">Kimi-only: <span class="font-mono">8</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Run Entries -->
+                <div id="activation-list" class="space-y-3">
+                    <!-- Run entry - R1 + Qwen -->
+                    <div class="activation-card bg-surface border border-border rounded p-4">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-sm font-medium text-text-primary">March 15, 2026 · 19:02</span>
+                            <span class="text-xs text-text-tertiary">2 subagents</span>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex items-start gap-3 p-2 bg-charcoal rounded">
+                                <span class="w-2 h-2 rounded-full bg-amber mt-1.5"></span>
+                                <div>
+                                    <div class="text-xs text-amber font-medium mb-0.5">R1 · Reasoning</div>
+                                    <div class="text-sm text-text-secondary">Assess biggest risk to Claw before 50 resolved predictions</div>
+                                    <div class="text-xs text-text-tertiary mt-1">→ Resolution velocity too slow; capital frozen in open positions</div>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3 p-2 bg-charcoal rounded">
+                                <span class="w-2 h-2 rounded-full bg-slate mt-1.5"></span>
+                                <div>
+                                    <div class="text-xs text-slate font-medium mb-0.5">Qwen · Volume</div>
+                                    <div class="text-sm text-text-secondary">Alternative perspective on same risk question</div>
+                                    <div class="text-xs text-text-tertiary mt-1">→ Attention decay from competing priorities</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Run entry - Kimi only -->
+                    <div class="activation-card bg-surface border border-border rounded p-4 border-l-4 border-l-sage">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-sm font-medium text-text-primary">March 15, 2026 · 18:45</span>
+                            <span class="text-xs text-sage">Kimi only</span>
+                        </div>
+                        <div class="flex items-start gap-3 p-2 bg-charcoal rounded">
+                            <span class="w-2 h-2 rounded-full bg-sage mt-1.5"></span>
+                            <div>
+                                <div class="text-xs text-sage font-medium mb-0.5">Kimi · Execution</div>
+                                <div class="text-sm text-text-secondary">Build dashboard Section 4 (Portfolio) with sample data</div>
+                                <div class="text-xs text-text-tertiary mt-1">→ Table with 5 open positions, summary stats row</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Run entry - R1 only -->
+                    <div class="activation-card bg-surface border border-border rounded p-4">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-sm font-medium text-text-primary">March 15, 2026 · 17:00</span>
+                            <span class="text-xs text-text-tertiary">1 subagent</span>
+                        </div>
+                        <div class="flex items-start gap-3 p-2 bg-charcoal rounded">
+                            <span class="w-2 h-2 rounded-full bg-amber mt-1.5"></span>
+                            <div>
+                                <div class="text-xs text-amber font-medium mb-0.5">R1 · Causal Classification</div>
+                                <div class="text-sm text-text-secondary">Classify resolved prediction: Tokyo temp Mar 15</div>
+                                <div class="text-xs text-text-tertiary mt-1">→ REASONING_ERROR: Good forecast, wrong confidence calibration</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Run entry - Claude only -->
+                    <div class="activation-card bg-surface border border-border rounded p-4">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-sm font-medium text-text-primary">March 14, 2026 · 22:15</span>
+                            <span class="text-xs text-text-tertiary">1 subagent</span>
+                        </div>
+                        <div class="flex items-start gap-3 p-2 bg-charcoal rounded">
+                            <span class="w-2 h-2 rounded-full bg-purple-500 mt-1.5"></span>
+                            <div>
+                                <div class="text-xs text-purple-400 font-medium mb-0.5">Claude · Scalpel</div>
+                                <div class="text-sm text-text-secondary">Review SOUL.md edit: operator override clause</div>
+                                <div class="text-xs text-text-tertiary mt-1">→ Approved with modification: add 24hr cooldown</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Run entry - Kimi only -->
+                    <div class="activation-card bg-surface border border-border rounded p-4 border-l-4 border-l-sage">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-sm font-medium text-text-primary">March 14, 2026 · 14:30</span>
+                            <span class="text-xs text-sage">Kimi only</span>
+                        </div>
+                        <div class="flex items-start gap-3 p-2 bg-charcoal rounded">
+                            <span class="w-2 h-2 rounded-full bg-sage mt-1.5"></span>
+                            <div>
+                                <div class="text-xs text-sage font-medium mb-0.5">Kimi · Execution</div>
+                                <div class="text-sm text-text-secondary">Update heuristic validation tracking in heuristics.md</div>
+                                <div class="text-xs text-text-tertiary mt-1">→ Tagged all 16 rules as UNVALIDATED, added promotion rules</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
