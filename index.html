@@ -4,828 +4,934 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Claw Command Center</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        charcoal: '#1a1a1a',
-                        surface: '#242424',
-                        border: '#333333',
-                        'text-primary': '#e8e8e8',
-                        'text-secondary': '#888888',
-                        'text-tertiary': '#555555',
-                        amber: '#d4a853',
-                        sage: '#6b8e6b',
-                        rust: '#b8735a',
-                        brick: '#a05050',
-                        slate: '#6a7a8a',
-                        purple: {
-                            400: '#a78bfa',
-                            500: '#8b5cf6',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
-                    },
-                }
-            }
-        }
-    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="design-system.css">
     <style>
-        body {
-            background-color: #1a1a1a;
-            color: #e8e8e8;
-            font-family: 'Inter', sans-serif;
-        }
-        .nav-item.active {
-            border-left: 3px solid #d4a853;
-            background-color: #242424;
-        }
-        .nav-item:hover {
-            background-color: #2a2a2a;
-        }
-        .prediction-card {
-            border-left: 3px solid transparent;
-        }
-        .prediction-card.resolved-correct {
-            border-left-color: #6b8e6b;
-        }
-        .prediction-card.resolved-error {
-            border-left-color: #a05050;
-        }
-        .prediction-card.forced-calibration {
-            border-left-color: #d4a853;
-        }
+        html, body { height: 100%; overflow: hidden; }
+        .shell { display: grid; grid-template-columns: 220px 1fr; grid-template-rows: 56px 1fr; grid-template-areas: "sidebar header" "sidebar main"; height: 100vh; }
+
+        /* Sidebar */
+        .sidebar { grid-area: sidebar; background: var(--bg-surface); border-right: 1px solid var(--border-subtle); display: flex; flex-direction: column; overflow-y: auto; }
+        .sidebar__brand { padding: var(--space-5); border-bottom: 1px solid var(--border-subtle); display: flex; align-items: center; gap: var(--space-3); }
+        .sidebar__brand-text { font-size: var(--text-micro); font-weight: var(--weight-semi); letter-spacing: var(--tracking-wide); text-transform: uppercase; color: var(--fg-primary); }
+        .sidebar__nav { flex: 1; padding: var(--space-3) var(--space-2); }
+        .sidebar__footer { padding: var(--space-4) var(--space-5); border-top: 1px solid var(--border-subtle); display: flex; align-items: center; gap: var(--space-2); }
+        .sidebar__dot { width: 6px; height: 6px; border-radius: var(--radius-full); background: var(--status-success); animation: pulse 2s ease-in-out infinite; }
+
+        /* Nav */
+        .nav-link { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); color: var(--fg-muted); text-decoration: none; font-size: var(--text-caption); font-weight: var(--weight-medium); cursor: pointer; transition: all var(--duration-fast) var(--ease-out); border-left: 3px solid transparent; margin-bottom: 2px; }
+        .nav-link:hover { background: var(--bg-overlay); color: var(--fg-secondary); }
+        .nav-link.active { background: var(--accent-muted); color: var(--fg-primary); border-left-color: var(--accent); }
+        .nav-link__icon { font-size: 0.95rem; width: 20px; text-align: center; flex-shrink: 0; }
+
+        /* Header */
+        .header { grid-area: header; background: var(--bg-surface); border-bottom: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: space-between; padding: 0 var(--space-6); }
+        .header__left { display: flex; align-items: center; gap: var(--space-4); }
+        .header__title { font-size: var(--text-body); font-weight: var(--weight-medium); color: var(--fg-primary); }
+        .header__sep { width: 1px; height: 20px; background: var(--border-default); }
+        .header__ts { font-size: var(--text-caption); color: var(--fg-muted); }
+        .header__ts span { color: var(--fg-secondary); font-family: var(--font-mono); font-size: var(--text-micro); }
+        .header__right { display: flex; align-items: center; gap: var(--space-3); }
+        .refresh-btn { display: inline-flex; align-items: center; gap: var(--space-2); padding: var(--space-1) var(--space-3); border-radius: var(--radius-md); border: 1px solid var(--border-default); background: transparent; color: var(--fg-muted); font-family: var(--font-mono); font-size: var(--text-micro); cursor: pointer; transition: all var(--duration-fast) var(--ease-out); }
+        .refresh-btn:hover { background: var(--bg-elevated); color: var(--fg-primary); border-color: var(--border-strong); }
+
+        /* Main */
+        .main { grid-area: main; overflow-y: auto; padding: var(--space-6); background: var(--bg-root); }
+        .section-panel { display: none; }
+        .section-panel.active { display: block; }
+        .section-header { margin-bottom: var(--space-6); }
+        .section-header__title { font-size: var(--text-title); font-weight: var(--weight-semi); color: var(--fg-primary); letter-spacing: var(--tracking-tight); }
+        .section-header__desc { font-size: var(--text-body); color: var(--fg-muted); margin-top: var(--space-1); }
+
+        /* KPI cards */
+        .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--space-4); margin-bottom: var(--space-6); }
+        .kpi { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: var(--space-4) var(--space-5); transition: border-color var(--duration-fast) var(--ease-out); }
+        .kpi:hover { border-color: var(--border-default); }
+        .kpi__label { font-size: var(--text-micro); font-weight: var(--weight-medium); letter-spacing: var(--tracking-wide); text-transform: uppercase; color: var(--fg-muted); margin-bottom: var(--space-2); }
+        .kpi__value { font-family: var(--font-mono); font-size: var(--text-title); font-weight: var(--weight-semi); font-variant-numeric: tabular-nums; color: var(--fg-primary); line-height: 1; }
+        .kpi__value--green { color: var(--status-success); }
+        .kpi__value--yellow { color: var(--status-warning); }
+        .kpi__value--red { color: var(--status-error); }
+        .kpi__sub { font-size: var(--text-micro); color: var(--fg-muted); margin-top: var(--space-1); font-family: var(--font-mono); }
+        .card-stack > * + * { margin-top: var(--space-3); }
+
+        /* Prediction cards */
+        .pred { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: var(--space-5); border-left: 3px solid transparent; transition: border-color var(--duration-fast) var(--ease-out); }
+        .pred:hover { border-color: var(--border-default); }
+        .pred--won { border-left-color: var(--status-success) !important; }
+        .pred--lost { border-left-color: var(--status-error) !important; }
+        .pred--pending { border-left-color: var(--accent) !important; }
+        .pred--skipped { border-left-color: var(--fg-ghost) !important; }
+        .pred__top { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-3); }
+        .pred__badges { display: flex; align-items: center; gap: var(--space-2); }
+        .pred__conf { display: flex; align-items: center; gap: var(--space-2); font-family: var(--font-mono); font-size: var(--text-caption); font-variant-numeric: tabular-nums; }
+        .pred__conf--high { color: var(--status-warning); }
+        .pred__conf--mid { color: var(--fg-secondary); }
+        .pred__conf--low { color: var(--fg-muted); }
+        .pred__q { font-size: var(--text-body); font-weight: var(--weight-medium); color: var(--fg-primary); line-height: var(--leading-snug); margin-bottom: var(--space-3); }
+        .pred__detail { padding-top: var(--space-2); border-top: 1px solid var(--border-subtle); margin-top: var(--space-2); }
+        .pred__detail-label { font-size: var(--text-micro); font-weight: var(--weight-medium); letter-spacing: var(--tracking-wide); text-transform: uppercase; color: var(--fg-ghost); margin-bottom: 2px; }
+        .pred__detail-text { font-size: var(--text-caption); color: var(--fg-secondary); line-height: var(--leading-relaxed); }
+        .pred__footer { display: flex; align-items: center; gap: var(--space-3); padding-top: var(--space-3); border-top: 1px solid var(--border-subtle); margin-top: var(--space-3); font-size: var(--text-micro); flex-wrap: wrap; }
+        .pred__ts { font-size: var(--text-micro); color: var(--fg-ghost); margin-left: auto; }
+
+        /* Rule cards */
+        .rule { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: var(--space-5); border-left: 3px solid transparent; transition: border-color var(--duration-fast) var(--ease-out); }
+        .rule:hover { border-color: var(--border-default); }
+        .rule--healthy { border-left-color: var(--status-success) !important; }
+        .rule--flagged { border-left-color: var(--status-warning) !important; }
+        .rule--violated { border-left-color: var(--status-error) !important; }
+        .rule--watching { border-left-color: var(--fg-ghost) !important; }
+        .rule__top { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-2); }
+        .rule__meta { display: flex; align-items: center; gap: var(--space-3); }
+        .rule__name { font-size: var(--text-caption); font-weight: var(--weight-medium); color: var(--fg-primary); }
+        .rule__desc { font-size: var(--text-caption); color: var(--fg-secondary); line-height: var(--leading-relaxed); margin-bottom: var(--space-3); }
+        .rule__stats { display: flex; align-items: center; gap: var(--space-6); font-size: var(--text-micro); color: var(--fg-muted); }
+        .rule__stats strong { color: var(--fg-primary); font-weight: var(--weight-medium); }
+        .rule__alert { margin-top: var(--space-2); font-size: var(--text-micro); }
+        .rule__alert--warn { color: var(--status-warning); }
+        .rule__alert--error { color: var(--status-error); }
+
+        /* Review cards */
+        .review { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: var(--space-5); border-left: 3px solid transparent; transition: border-color var(--duration-fast) var(--ease-out); }
+        .review:hover { border-color: var(--border-default); }
+        .review--good { border-left-color: var(--status-success) !important; }
+        .review--bad { border-left-color: var(--status-error) !important; }
+        .review--ok { border-left-color: var(--status-warning) !important; }
+        .review__top { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-3); }
+        .review__score { display: flex; align-items: baseline; gap: var(--space-2); }
+        .review__score-num { font-family: var(--font-mono); font-size: var(--text-display); font-weight: var(--weight-semi); line-height: 1; }
+        .review__score-den { font-size: var(--text-caption); color: var(--fg-muted); }
+        .review__score--good .review__score-num { color: var(--status-success); }
+        .review__score--bad .review__score-num { color: var(--status-error); }
+        .review__score--ok .review__score-num { color: var(--status-warning); }
+        .review__summary { font-size: var(--text-body); font-weight: var(--weight-medium); color: var(--fg-primary); margin-bottom: var(--space-3); line-height: var(--leading-snug); }
+        .review__findings { list-style: none; }
+        .review__finding { display: flex; align-items: flex-start; gap: var(--space-2); font-size: var(--text-caption); color: var(--fg-secondary); padding: var(--space-1) 0; }
+        .review__finding-icon { flex-shrink: 0; margin-top: 1px; }
+        .review__finding-icon--pass { color: var(--status-success); }
+        .review__finding-icon--fail { color: var(--status-error); }
+        .review__date { font-size: var(--text-micro); color: var(--fg-ghost); }
+
+        /* Evolution cards */
+        .evo { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: var(--space-5); border-left: 3px solid transparent; transition: border-color var(--duration-fast) var(--ease-out); }
+        .evo:hover { border-color: var(--border-default); }
+        .evo--latest { border-left-color: var(--accent) !important; }
+        .evo__top { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-2); }
+        .evo__version { font-family: var(--font-mono); font-size: var(--text-caption); font-weight: var(--weight-semi); color: var(--accent); }
+        .evo__version--old { color: var(--fg-secondary); }
+        .evo__session { font-size: var(--text-micro); color: var(--fg-ghost); }
+        .evo__date { font-size: var(--text-micro); color: var(--fg-ghost); }
+        .evo__title { font-size: var(--text-body); font-weight: var(--weight-medium); color: var(--fg-primary); margin-bottom: var(--space-1); line-height: var(--leading-snug); }
+        .evo__impact { font-size: var(--text-caption); color: var(--fg-muted); }
+
+        /* Activity cards */
+        .act { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: var(--space-5); border-left: 3px solid transparent; transition: border-color var(--duration-fast) var(--ease-out); }
+        .act:hover { border-color: var(--border-default); }
+        .act--solo { border-left-color: var(--status-success) !important; }
+        .act__top { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-3); }
+        .act__time { font-size: var(--text-caption); font-weight: var(--weight-medium); color: var(--fg-primary); }
+        .act__count { font-size: var(--text-micro); color: var(--fg-ghost); }
+        .act__entry { display: flex; align-items: flex-start; gap: var(--space-3); padding: var(--space-2); background: var(--bg-root); border-radius: var(--radius-md); margin-top: var(--space-2); }
+        .act__dot { width: 8px; height: 8px; border-radius: var(--radius-full); flex-shrink: 0; margin-top: 5px; }
+        .act__dot--r1 { background: var(--status-warning); }
+        .act__dot--qwen { background: var(--fg-muted); }
+        .act__dot--claude { background: #a78bfa; }
+        .act__dot--kimi { background: var(--status-success); }
+        .act__model { font-size: var(--text-micro); font-weight: var(--weight-medium); margin-bottom: 2px; }
+        .act__model--r1 { color: var(--status-warning); }
+        .act__model--qwen { color: var(--fg-muted); }
+        .act__model--claude { color: #a78bfa; }
+        .act__model--kimi { color: var(--status-success); }
+        .act__task { font-size: var(--text-caption); color: var(--fg-secondary); }
+        .act__result { font-size: var(--text-micro); color: var(--fg-ghost); margin-top: 2px; }
+
+        /* Summary bar for activity */
+        .act-summary { display: flex; align-items: center; gap: var(--space-6); padding: var(--space-4) var(--space-5); background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); margin-bottom: var(--space-6); }
+        .act-summary__item { display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-caption); color: var(--fg-primary); }
+        .act-summary__item span { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+        /* Portfolio table */
+        .portfolio-table { width: 100%; border-collapse: collapse; font-size: var(--text-caption); }
+        .portfolio-table th { font-size: var(--text-micro); font-weight: var(--weight-medium); letter-spacing: var(--tracking-wide); text-transform: uppercase; color: var(--fg-muted); text-align: left; padding: var(--space-3) var(--space-4); background: var(--bg-elevated); border-bottom: 1px solid var(--border-default); white-space: nowrap; }
+        .portfolio-table td { padding: var(--space-2) var(--space-4); border-bottom: 1px solid var(--border-subtle); color: var(--fg-secondary); vertical-align: middle; }
+        .portfolio-table tr:hover td { background: var(--bg-elevated); }
+        .portfolio-table .num { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+        /* Empty state */
+        .empty { text-align: center; padding: var(--space-12) var(--space-6); color: var(--fg-muted); font-size: var(--text-caption); }
+        .empty__icon { font-size: 2rem; margin-bottom: var(--space-3); opacity: 0.4; }
+
+        /* Loading skeleton */
+        .skel { height: 80px; background: linear-gradient(90deg, var(--bg-wash) 25%, var(--bg-overlay) 50%, var(--bg-wash) 75%); background-size: 200% 100%; animation: skeleton-shimmer 1.5s ease-in-out infinite; border-radius: var(--radius-lg); margin-bottom: var(--space-3); }
+        @keyframes skeleton-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
     </style>
 </head>
-<body class="h-screen flex overflow-hidden">
+<body>
+<div class="shell">
     <!-- Sidebar -->
-    <aside class="w-[200px] flex-shrink-0 bg-charcoal border-r border-border flex flex-col">
-        <div class="p-4 border-b border-border">
-            <h1 class="text-sm font-semibold tracking-wider text-text-primary">CLAW COMMAND CENTER</h1>
+    <aside class="sidebar">
+        <div class="sidebar__brand">
+            <span style="font-size: 1.1rem;">&#x1F43E;</span>
+            <span class="sidebar__brand-text">Claw Command</span>
         </div>
-        <nav class="flex-1 py-2">
-            <a href="#predictions" data-section="predictions" class="nav-item active block px-4 py-3 text-sm text-text-primary transition-colors">
-                Prediction Pipeline
+        <nav class="sidebar__nav">
+            <a href="#predictions" data-section="predictions" data-label="Predictions" class="nav-link active">
+                <span class="nav-link__icon">&#x1F3AF;</span> Predictions
             </a>
-            <a href="#heuristics" data-section="heuristics" class="nav-item block px-4 py-3 text-sm text-text-secondary transition-colors">
-                Heuristic Health
+            <a href="#rules" data-section="rules" data-label="Trading Rules" class="nav-link">
+                <span class="nav-link__icon">&#x2696;</span> Trading Rules
             </a>
-            <a href="#review" data-section="review" class="nav-item block px-4 py-3 text-sm text-text-secondary transition-colors">
-                Self-Review Output
+            <a href="#reviews" data-section="reviews" data-label="Daily Reviews" class="nav-link">
+                <span class="nav-link__icon">&#x1F4CB;</span> Daily Reviews
             </a>
-            <a href="#portfolio" data-section="portfolio" class="nav-item block px-4 py-3 text-sm text-text-secondary transition-colors">
-                Portfolio Status
+            <a href="#portfolio" data-section="portfolio" data-label="Portfolio" class="nav-link">
+                <span class="nav-link__icon">&#x1F4B0;</span> Portfolio
             </a>
-            <a href="#system" data-section="system" class="nav-item block px-4 py-3 text-sm text-text-secondary transition-colors">
-                System Evolution
+            <a href="#updates" data-section="updates" data-label="Update History" class="nav-link">
+                <span class="nav-link__icon">&#x1F504;</span> Update History
             </a>
-            <a href="#activation" data-section="activation" class="nav-item block px-4 py-3 text-sm text-text-secondary transition-colors">
-                Activation Map
+            <a href="#activity" data-section="activity" data-label="AI Activity" class="nav-link">
+                <span class="nav-link__icon">&#x26A1;</span> AI Activity
             </a>
         </nav>
-        <div class="p-4 border-t border-border">
-            <div class="text-xs text-text-tertiary">🐾 Claw v1.0</div>
+        <div class="sidebar__footer">
+            <span class="sidebar__dot"></span>
+            <span style="font-size: var(--text-micro); color: var(--fg-ghost);">Claw v1.0 &middot; Online</span>
         </div>
     </aside>
 
+    <!-- Header -->
+    <header class="header">
+        <div class="header__left">
+            <span id="header-title" class="header__title">Predictions</span>
+            <span class="header__sep"></span>
+            <span class="header__ts">Updated <span id="last-data-time">--</span></span>
+        </div>
+        <div class="header__right">
+            <button id="refresh-btn" class="refresh-btn" onclick="loadAllData()">
+                &#x21BB; Refresh &middot; <span id="refresh-countdown">60</span>s
+            </button>
+        </div>
+    </header>
+
     <!-- Main Content -->
-    <main class="flex-1 flex flex-col bg-charcoal">
-        <!-- Header -->
-        <header class="h-14 border-b border-border flex items-center justify-between px-6">
-            <div class="text-sm text-text-secondary">Last data: <span id="last-data-time" class="text-text-primary">--</span></div>
-            <div class="flex items-center gap-4">
-                <button id="refresh-btn" class="text-sm text-text-secondary hover:text-text-primary transition-colors">
-                    ↻ <span id="refresh-countdown">60</span>s
-                </button>
-                <div class="text-sm">🐾</div>
+    <main class="main">
+        <!-- Section 1: Predictions -->
+        <section id="predictions" class="section-panel active">
+            <div class="section-header">
+                <div class="section-header__title">Predictions</div>
+                <div class="section-header__desc">Market analysis results and trade decisions, most recent first</div>
             </div>
-        </header>
 
-        <!-- Content Area -->
-        <div class="flex-1 overflow-auto p-6">
-            <!-- Section 1: Prediction Pipeline -->
-            <section id="predictions" class="section-panel">
-                <h2 class="text-sm font-medium text-text-secondary uppercase tracking-wider mb-4">Prediction Pipeline</h2>
-                <div id="predictions-list" class="space-y-3">
-                    <!-- Sample prediction card -->
-                    <div class="prediction-card bg-surface border border-border rounded p-4 resolved-correct">
-                        <div class="flex items-center justify-between mb-3">
-                            <div class="flex items-center gap-3">
-                                <span class="text-sm font-medium text-text-primary">NO_TRADE</span>
-                                <span class="px-2 py-0.5 text-xs font-mono bg-amber/20 text-amber rounded">CAL</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <span class="w-2 h-2 rounded-full bg-amber"></span>
-                                <span class="text-sm font-mono text-amber">67%</span>
-                                <span class="text-xs text-text-tertiary ml-2">2h ago</span>
-                            </div>
-                        </div>
-                        <h3 class="text-base text-text-primary mb-3">Will NYC temp exceed 15°C on March 16?</h3>
-                        <div class="space-y-2 text-sm">
-                            <div class="border-t border-border pt-2">
-                                <span class="text-text-tertiary">Reasoning:</span>
-                                <span class="text-text-secondary">Forecast shows high variance; market price already reflects most likely outcome.</span>
-                            </div>
-                            <div class="border-t border-border pt-2">
-                                <span class="text-text-tertiary">Failure mode:</span>
-                                <span class="text-text-secondary">ECMWF model shift >3°C 24hrs pre-event</span>
-                            </div>
-                        </div>
-                        <div class="mt-3 pt-2 border-t border-border flex items-center gap-2 text-xs">
-                            <span class="text-text-tertiary">Resolved: March 16</span>
-                            <span class="text-sage">Outcome: YES</span>
-                            <span class="px-2 py-0.5 bg-brick/20 text-brick rounded">REASONING_ERROR</span>
-                        </div>
-                    </div>
-
-                    <!-- Second sample card - unresolved -->
-                    <div class="prediction-card bg-surface border border-border rounded p-4">
-                        <div class="flex items-center justify-between mb-3">
-                            <div class="flex items-center gap-3">
-                                <span class="text-sm font-medium text-text-primary">BUY</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <span class="w-2 h-2 rounded-full bg-text-tertiary"></span>
-                                <span class="text-sm font-mono text-text-secondary">45%</span>
-                                <span class="text-xs text-text-tertiary ml-2">5h ago</span>
-                            </div>
-                        </div>
-                        <h3 class="text-base text-text-primary mb-3">Will London see precipitation on March 17?</h3>
-                        <div class="space-y-2 text-sm">
-                            <div class="border-t border-border pt-2">
-                                <span class="text-text-tertiary">Reasoning:</span>
-                                <span class="text-text-secondary">GFS shows 60% precip probability, market underpricing at 40%.</span>
-                            </div>
-                            <div class="border-t border-border pt-2">
-                                <span class="text-text-tertiary">Failure mode:</span>
-                                <span class="text-text-secondary">GFS overestimates precip by >20% in dry spring conditions</span>
-                            </div>
-                        </div>
-                        <div class="mt-3 pt-2 border-t border-border flex items-center gap-2 text-xs">
-                            <span class="text-text-tertiary">Pending resolution</span>
-                        </div>
-                    </div>
-
-                    <!-- Third sample card - resolved error -->
-                    <div class="prediction-card bg-surface border border-border rounded p-4 resolved-error">
-                        <div class="flex items-center justify-between mb-3">
-                            <div class="flex items-center gap-3">
-                                <span class="text-sm font-medium text-text-primary">BUY</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <span class="w-2 h-2 rounded-full bg-amber"></span>
-                                <span class="text-sm font-mono text-amber">72%</span>
-                                <span class="text-xs text-text-tertiary ml-2">1d ago</span>
-                            </div>
-                        </div>
-                        <h3 class="text-base text-text-primary mb-3">Will Tokyo temp exceed 20°C on March 15?</h3>
-                        <div class="space-y-2 text-sm">
-                            <div class="border-t border-border pt-2">
-                                <span class="text-text-tertiary">Reasoning:</span>
-                                <span class="text-text-secondary">Warm front approaching, models converging on 22°C.</span>
-                            </div>
-                            <div class="border-t border-border pt-2">
-                                <span class="text-text-tertiary">Failure mode:</span>
-                                <span class="text-text-secondary">Front stalls, cloud cover suppresses temps</span>
-                            </div>
-                        </div>
-                        <div class="mt-3 pt-2 border-t border-border flex items-center gap-2 text-xs">
-                            <span class="text-text-tertiary">Resolved: March 15</span>
-                            <span class="text-brick">Outcome: NO</span>
-                            <span class="px-2 py-0.5 bg-rust/20 text-rust rounded">DATA_ERROR</span>
-                        </div>
-                    </div>
+            <div id="predictions-kpis" class="kpi-row">
+                <div class="kpi">
+                    <div class="kpi__label">Total Analyzed</div>
+                    <div class="kpi__value" id="kpi-total">--</div>
                 </div>
-            </section>
-
-            <!-- Section 2: Heuristic Health -->
-            <section id="heuristics" class="section-panel hidden">
-                <h2 class="text-sm font-medium text-text-secondary uppercase tracking-wider mb-4">Heuristic Health</h2>
-                <div id="heuristics-list" class="space-y-3">
-                    <!-- Sample heuristic card - healthy -->
-                    <div class="heuristic-card bg-surface border border-border rounded p-4 border-l-4 border-l-sage">
-                        <div class="flex items-center justify-between mb-2">
-                            <div class="flex items-center gap-3">
-                                <span class="px-2 py-0.5 text-xs font-medium bg-sage/20 text-sage rounded">HEALTHY</span>
-                                <span class="text-sm font-medium text-text-primary">Confidence Threshold</span>
-                            </div>
-                            <span class="text-xs text-text-tertiary">Triggered 12h ago</span>
-                        </div>
-                        <p class="text-sm text-text-secondary mb-3">Confidence below 40% should always result in NO_TRADE</p>
-                        <div class="flex items-center gap-4 text-xs">
-                            <span class="text-text-tertiary">Trigger count: <span class="text-text-primary">47</span></span>
-                            <span class="text-text-tertiary">Last 7d: <span class="text-sage">12 triggers</span></span>
-                        </div>
-                    </div>
-
-                    <!-- Sample heuristic card - flagged -->
-                    <div class="heuristic-card bg-surface border border-border rounded p-4 border-l-4 border-l-rust">
-                        <div class="flex items-center justify-between mb-2">
-                            <div class="flex items-center gap-3">
-                                <span class="px-2 py-0.5 text-xs font-medium bg-rust/20 text-rust rounded">FLAGGED</span>
-                                <span class="text-sm font-medium text-text-primary">Volume Filter</span>
-                            </div>
-                            <span class="text-xs text-text-tertiary">Triggered 3h ago</span>
-                        </div>
-                        <p class="text-sm text-text-secondary mb-3">Markets with &lt; $500 volume are unreliable regardless of edge</p>
-                        <div class="flex items-center gap-4 text-xs">
-                            <span class="text-text-tertiary">Trigger count: <span class="text-text-primary">23</span></span>
-                            <span class="text-text-tertiary">Last 7d: <span class="text-rust">8 triggers</span></span>
-                        </div>
-                        <div class="mt-2 text-xs text-rust">
-                            ⚠ Flagged: 3 recent predictions contradict this rule
-                        </div>
-                    </div>
-
-                    <!-- Sample heuristic card - violated -->
-                    <div class="heuristic-card bg-surface border border-border rounded p-4 border-l-4 border-l-brick">
-                        <div class="flex items-center justify-between mb-2">
-                            <div class="flex items-center gap-3">
-                                <span class="px-2 py-0.5 text-xs font-medium bg-brick/20 text-brick rounded">VIOLATED</span>
-                                <span class="text-sm font-medium text-text-primary">Precipitation Timing</span>
-                            </div>
-                            <span class="text-xs text-text-tertiary">Triggered 1d ago</span>
-                        </div>
-                        <p class="text-sm text-text-secondary mb-3">Precipitation forecasts require 48hr recency, not 24hr</p>
-                        <div class="flex items-center gap-4 text-xs">
-                            <span class="text-text-tertiary">Trigger count: <span class="text-text-primary">15</span></span>
-                            <span class="text-text-tertiary">Last 7d: <span class="text-brick">5 violations</span></span>
-                        </div>
-                        <div class="mt-2 text-xs text-brick">
-                            ✗ Violated: Recent prediction used 24hr data instead of 48hr
-                        </div>
-                    </div>
-
-                    <!-- Sample heuristic card - healthy (no border) -->
-                    <div class="heuristic-card bg-surface border border-border rounded p-4">
-                        <div class="flex items-center justify-between mb-2">
-                            <div class="flex items-center gap-3">
-                                <span class="px-2 py-0.5 text-xs font-medium bg-slate/20 text-slate rounded">MONITORING</span>
-                                <span class="text-sm font-medium text-text-primary">Weather Forecast Age</span>
-                            </div>
-                            <span class="text-xs text-text-tertiary">Never triggered</span>
-                        </div>
-                        <p class="text-sm text-text-secondary mb-3">Weather forecasts &gt; 7 days out have high uncertainty</p>
-                        <div class="flex items-center gap-4 text-xs">
-                            <span class="text-text-tertiary">Trigger count: <span class="text-text-primary">0</span></span>
-                            <span class="text-text-tertiary">Last 7d: <span class="text-text-tertiary">—</span></span>
-                        </div>
-                    </div>
+                <div class="kpi">
+                    <div class="kpi__label">Resolved</div>
+                    <div class="kpi__value" id="kpi-resolved">--</div>
                 </div>
-            </section>
-
-            <!-- Section 3: Self-Review Output -->
-            <section id="review" class="section-panel hidden">
-                <h2 class="text-sm font-medium text-text-secondary uppercase tracking-wider mb-4">Self-Review Output</h2>
-                <div id="review-list" class="space-y-3">
-                    <!-- Sample review card - high score -->
-                    <div class="review-card bg-surface border border-border rounded p-4 border-l-4 border-l-sage">
-                        <div class="flex items-center justify-between mb-3">
-                            <div class="flex items-center gap-3">
-                                <span class="text-2xl font-mono font-semibold text-sage">8</span>
-                                <span class="text-sm text-text-secondary">/ 10</span>
-                            </div>
-                            <span class="text-xs text-text-tertiary">March 15, 2026</span>
-                        </div>
-                        <p class="text-sm text-text-primary mb-3 font-medium">Strong calibration on weather markets; framework holding steady</p>
-                        <div class="space-y-1 text-sm">
-                            <div class="flex items-start gap-2">
-                                <span class="text-sage">✓</span>
-                                <span class="text-text-secondary">Confidence scores aligned with actual outcomes (71% win rate)</span>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="text-sage">✓</span>
-                                <span class="text-text-secondary">Volume filter correctly identified thin markets</span>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="text-sage">✓</span>
-                                <span class="text-text-secondary">No over-trading; patience paid off</span>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="text-brick">✗</span>
-                                <span class="text-text-secondary">Need faster resolution on precipitation timing rule</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Sample review card - low score -->
-                    <div class="review-card bg-surface border border-border rounded p-4 border-l-4 border-l-brick">
-                        <div class="flex items-center justify-between mb-3">
-                            <div class="flex items-center gap-3">
-                                <span class="text-2xl font-mono font-semibold text-brick">4</span>
-                                <span class="text-sm text-text-secondary">/ 10</span>
-                            </div>
-                            <span class="text-xs text-text-tertiary">March 14, 2026</span>
-                        </div>
-                        <p class="text-sm text-text-primary mb-3 font-medium">Over-confidence on temperature predictions; data source lag ignored</p>
-                        <div class="space-y-1 text-sm">
-                            <div class="flex items-start gap-2">
-                                <span class="text-sage">✓</span>
-                                <span class="text-text-secondary">Framework applied consistently</span>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="text-brick">✗</span>
-                                <span class="text-text-secondary">High confidence (72%) on wrong temperature call</span>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="text-brick">✗</span>
-                                <span class="text-text-secondary">Ignored 6-hour forecast update showing model shift</span>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="text-brick">✗</span>
-                                <span class="text-text-secondary">Need recency check before high-confidence trades</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Sample review card - medium score -->
-                    <div class="review-card bg-surface border border-border rounded p-4">
-                        <div class="flex items-center justify-between mb-3">
-                            <div class="flex items-center gap-3">
-                                <span class="text-2xl font-mono font-semibold text-amber">6</span>
-                                <span class="text-sm text-text-secondary">/ 10</span>
-                            </div>
-                            <span class="text-xs text-text-tertiary">March 13, 2026</span>
-                        </div>
-                        <p class="text-sm text-text-primary mb-3 font-medium">Mixed results; volume filter working, timing needs work</p>
-                        <div class="space-y-1 text-sm">
-                            <div class="flex items-start gap-2">
-                                <span class="text-sage">✓</span>
-                                <span class="text-text-secondary">Correctly passed on 3 low-volume markets</span>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="text-sage">✓</span>
-                                <span class="text-text-secondary">Edge calculation accurate</span>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="text-brick">✗</span>
-                                <span class="text-text-secondary">Late to catch ECMWF model divergence</span>
-                            </div>
-                            <div class="flex items-start gap-2">
-                                <span class="text-brick">✗</span>
-                                <span class="text-text-secondary">Need automated model variance alerts</span>
-                            </div>
-                        </div>
-                    </div>
+                <div class="kpi">
+                    <div class="kpi__label">Accuracy</div>
+                    <div class="kpi__value" id="kpi-accuracy">--</div>
                 </div>
-            </section>
-
-            <!-- Section 4: Portfolio Performance -->
-            <section id="portfolio" class="section-panel hidden">
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-sm font-medium text-text-secondary uppercase tracking-wider">Portfolio Performance</h2>
-                    <span class="text-xs text-rust">⚠️ source TBD</span>
+                <div class="kpi">
+                    <div class="kpi__label">Pending</div>
+                    <div class="kpi__value kpi__value--yellow" id="kpi-pending">--</div>
                 </div>
-                
-                <!-- Summary Stats Row -->
-                <div class="grid grid-cols-4 gap-4 mb-6">
-                    <div class="bg-surface border border-border rounded p-4">
-                        <div class="text-xs text-text-tertiary uppercase tracking-wider mb-1">Deployed</div>
-                        <div class="text-2xl font-mono text-text-primary">$45.27</div>
-                        <div class="text-xs text-text-tertiary">of $50.00</div>
-                    </div>
-                    <div class="bg-surface border border-border rounded p-4">
-                        <div class="text-xs text-text-tertiary uppercase tracking-wider mb-1">Realized P&L</div>
-                        <div class="text-2xl font-mono text-sage">+$3.42</div>
-                        <div class="text-xs text-sage">+7.6%</div>
-                    </div>
-                    <div class="bg-surface border border-border rounded p-4">
-                        <div class="text-xs text-text-tertiary uppercase tracking-wider mb-1">Win Rate</div>
-                        <div class="text-2xl font-mono text-text-primary">71%</div>
-                        <div class="text-xs text-text-tertiary">5 wins / 7 resolved</div>
-                    </div>
-                    <div class="bg-surface border border-border rounded p-4">
-                        <div class="text-xs text-text-tertiary uppercase tracking-wider mb-1">Open Positions</div>
-                        <div class="text-2xl font-mono text-amber">12</div>
-                        <div class="text-xs text-text-tertiary">awaiting resolution</div>
-                    </div>
-                </div>
+            </div>
 
-                <!-- Open Positions Table -->
-                <div class="bg-surface border border-border rounded overflow-hidden">
-                    <div class="px-4 py-3 border-b border-border bg-surface/50">
-                        <h3 class="text-sm font-medium text-text-secondary">Top Open Positions</h3>
-                    </div>
-                    <table class="w-full text-sm">
+            <div id="predictions-list" class="card-stack">
+                <div class="skel"></div>
+                <div class="skel"></div>
+                <div class="skel"></div>
+            </div>
+        </section>
+        <!-- Section 2: Trading Rules -->
+        <section id="rules" class="section-panel">
+            <div class="section-header">
+                <div class="section-header__title">Trading Rules</div>
+                <div class="section-header__desc">Decision-making rules and their current health status</div>
+            </div>
+
+            <div id="rules-kpis" class="kpi-row">
+                <div class="kpi">
+                    <div class="kpi__label">Total Rules</div>
+                    <div class="kpi__value" id="kpi-rules-total">--</div>
+                </div>
+                <div class="kpi">
+                    <div class="kpi__label">Passing</div>
+                    <div class="kpi__value kpi__value--green" id="kpi-rules-healthy">--</div>
+                </div>
+                <div class="kpi">
+                    <div class="kpi__label">Needs Attention</div>
+                    <div class="kpi__value kpi__value--yellow" id="kpi-rules-flagged">--</div>
+                </div>
+                <div class="kpi">
+                    <div class="kpi__label">Broken</div>
+                    <div class="kpi__value kpi__value--red" id="kpi-rules-violated">--</div>
+                </div>
+            </div>
+
+            <div id="rules-list" class="card-stack">
+                <div class="skel"></div>
+                <div class="skel"></div>
+            </div>
+        </section>
+        <!-- Section 3: Daily Reviews -->
+        <section id="reviews" class="section-panel">
+            <div class="section-header">
+                <div class="section-header__title">Daily Reviews</div>
+                <div class="section-header__desc">End-of-day self-assessments covering trading, session quality, and framework health</div>
+            </div>
+
+            <div id="reviews-list" class="card-stack">
+                <div class="skel"></div>
+                <div class="skel"></div>
+            </div>
+        </section>
+        <!-- Section 4: Portfolio -->
+        <section id="portfolio" class="section-panel">
+            <div class="section-header">
+                <div class="section-header__title">Portfolio</div>
+                <div class="section-header__desc">Current positions, capital allocation, and realized profit/loss</div>
+            </div>
+
+            <div id="portfolio-kpis" class="kpi-row">
+                <div class="kpi">
+                    <div class="kpi__label">Capital Deployed</div>
+                    <div class="kpi__value" id="kpi-deployed">--</div>
+                    <div class="kpi__sub" id="kpi-deployed-sub">of $--</div>
+                </div>
+                <div class="kpi">
+                    <div class="kpi__label">Realized P&amp;L</div>
+                    <div class="kpi__value" id="kpi-pnl">--</div>
+                    <div class="kpi__sub" id="kpi-pnl-pct"></div>
+                </div>
+                <div class="kpi">
+                    <div class="kpi__label">Win Rate</div>
+                    <div class="kpi__value" id="kpi-winrate">--</div>
+                    <div class="kpi__sub" id="kpi-winrate-sub"></div>
+                </div>
+                <div class="kpi">
+                    <div class="kpi__label">Open Positions</div>
+                    <div class="kpi__value kpi__value--yellow" id="kpi-open">--</div>
+                    <div class="kpi__sub">awaiting resolution</div>
+                </div>
+            </div>
+
+            <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); overflow: hidden;">
+                <div style="padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--border-subtle);">
+                    <span style="font-size: var(--text-micro); font-weight: var(--weight-medium); letter-spacing: var(--tracking-wide); text-transform: uppercase; color: var(--fg-muted);">Open Positions</span>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table class="portfolio-table" id="positions-table">
                         <thead>
-                            <tr class="border-b border-border text-xs text-text-tertiary">
-                                <th class="px-4 py-2 text-left font-medium">Market</th>
-                                <th class="px-4 py-2 text-left font-medium">Direction</th>
-                                <th class="px-4 py-2 text-left font-medium">Edge</th>
-                                <th class="px-4 py-2 text-left font-medium">Deployed</th>
-                                <th class="px-4 py-2 text-left font-medium">Days Left</th>
+                            <tr>
+                                <th>Market</th>
+                                <th>Side</th>
+                                <th class="num">Edge</th>
+                                <th class="num">Deployed</th>
+                                <th class="num">Days Left</th>
                             </tr>
                         </thead>
-                        <tbody class="text-text-secondary">
-                            <tr class="border-b border-border/50">
-                                <td class="px-4 py-3">NYC temp > 18°C Mar 18</td>
-                                <td class="px-4 py-3"><span class="text-sage">YES</span></td>
-                                <td class="px-4 py-3 font-mono">12%</td>
-                                <td class="px-4 py-3 font-mono">$4.00</td>
-                                <td class="px-4 py-3">2</td>
-                            </tr>
-                            <tr class="border-b border-border/50">
-                                <td class="px-4 py-3">London precip Mar 19</td>
-                                <td class="px-4 py-3"><span class="text-brick">NO</span></td>
-                                <td class="px-4 py-3 font-mono">8%</td>
-                                <td class="px-4 py-3 font-mono">$3.50</td>
-                                <td class="px-4 py-3">3</td>
-                            </tr>
-                            <tr class="border-b border-border/50">
-                                <td class="px-4 py-3">Tokyo temp > 22°C Mar 20</td>
-                                <td class="px-4 py-3"><span class="text-sage">YES</span></td>
-                                <td class="px-4 py-3 font-mono">15%</td>
-                                <td class="px-4 py-3 font-mono">$5.00</td>
-                                <td class="px-4 py-3">4</td>
-                            </tr>
-                            <tr class="border-b border-border/50">
-                                <td class="px-4 py-3">Sydney temp < 25°C Mar 21</td>
-                                <td class="px-4 py-3"><span class="text-sage">YES</span></td>
-                                <td class="px-4 py-3 font-mono">6%</td>
-                                <td class="px-4 py-3 font-mono">$2.75</td>
-                                <td class="px-4 py-3">5</td>
-                            </tr>
-                            <tr>
-                                <td class="px-4 py-3">Paris precip Mar 22</td>
-                                <td class="px-4 py-3"><span class="text-brick">NO</span></td>
-                                <td class="px-4 py-3 font-mono">10%</td>
-                                <td class="px-4 py-3 font-mono">$4.25</td>
-                                <td class="px-4 py-3">6</td>
-                            </tr>
+                        <tbody id="positions-body">
+                            <tr><td colspan="5" class="empty">Loading positions...</td></tr>
                         </tbody>
                     </table>
                 </div>
-            </section>
+            </div>
+        </section>
+        <!-- Section 5: Update History -->
+        <section id="updates" class="section-panel">
+            <div class="section-header">
+                <div class="section-header__title">Update History</div>
+                <div class="section-header__desc">System changes and capability upgrades, newest first</div>
+            </div>
 
-            <!-- Section 5: System Evolution -->
-            <section id="system" class="section-panel hidden">
-                <h2 class="text-sm font-medium text-text-secondary uppercase tracking-wider mb-4">System Evolution</h2>
-                <div id="evolution-list" class="space-y-3">
-                    <!-- Evolution entry - most recent -->
-                    <div class="evolution-card bg-surface border border-border rounded p-4 border-l-4 border-l-amber">
-                        <div class="flex items-center justify-between mb-2">
-                            <div class="flex items-center gap-3">
-                                <span class="text-sm font-medium text-amber">v2.0</span>
-                                <span class="text-xs text-text-tertiary">Session #35</span>
-                            </div>
-                            <span class="text-xs text-text-tertiary">March 15, 2026</span>
-                        </div>
-                        <p class="text-sm text-text-primary mb-1">Subagent delegation architecture — Kimi fixed as orchestrator, R1/Qwen/Claude as discrete subagents</p>
-                        <p class="text-xs text-text-secondary">Impact: Eliminated model-switching failures; 100% reliable model routing</p>
-                    </div>
+            <div id="updates-list" class="card-stack">
+                <div class="skel"></div>
+                <div class="skel"></div>
+            </div>
+        </section>
+        <!-- Section 6: AI Activity -->
+        <section id="activity" class="section-panel">
+            <div class="section-header">
+                <div class="section-header__title">AI Activity</div>
+                <div class="section-header__desc">When and how sub-models were called &mdash; R1 for reasoning, Qwen for volume, Claude for review</div>
+            </div>
 
-                    <!-- Evolution entry -->
-                    <div class="evolution-card bg-surface border border-border rounded p-4">
-                        <div class="flex items-center justify-between mb-2">
-                            <div class="flex items-center gap-3">
-                                <span class="text-sm font-medium text-text-primary">v1.9</span>
-                                <span class="text-xs text-text-tertiary">Session #34</span>
-                            </div>
-                            <span class="text-xs text-text-tertiary">March 14, 2026</span>
-                        </div>
-                        <p class="text-sm text-text-primary mb-1">Three-dimensional self-review — trading, session quality, framework evolution</p>
-                        <p class="text-xs text-text-secondary">Impact: Holistic health scoring (1-10) with actionable improvement paths</p>
-                    </div>
+            <div id="activity-summary" class="act-summary" style="display: none;">
+                <span style="font-size: var(--text-micro); font-weight: var(--weight-medium); letter-spacing: var(--tracking-wide); text-transform: uppercase; color: var(--fg-muted);">This Week</span>
+            </div>
 
-                    <!-- Evolution entry -->
-                    <div class="evolution-card bg-surface border border-border rounded p-4">
-                        <div class="flex items-center justify-between mb-2">
-                            <div class="flex items-center gap-3">
-                                <span class="text-sm font-medium text-text-primary">v1.8</span>
-                                <span class="text-xs text-text-tertiary">Session #33</span>
-                            </div>
-                            <span class="text-xs text-text-tertiary">March 13, 2026</span>
-                        </div>
-                        <p class="text-sm text-text-primary mb-1">Weather market pipeline — automated discovery, analysis, and prediction logging</p>
-                        <p class="text-xs text-text-secondary">Impact: First fully autonomous market analysis with zero human input</p>
-                    </div>
+            <div id="activity-list" class="card-stack">
+                <div class="skel"></div>
+                <div class="skel"></div>
+            </div>
+        </section>
 
-                    <!-- Evolution entry -->
-                    <div class="evolution-card bg-surface border border-border rounded p-4">
-                        <div class="flex items-center justify-between mb-2">
-                            <div class="flex items-center gap-3">
-                                <span class="text-sm font-medium text-text-primary">v1.7</span>
-                                <span class="text-xs text-text-tertiary">Session #32</span>
-                            </div>
-                            <span class="text-xs text-text-tertiary">March 12, 2026</span>
-                        </div>
-                        <p class="text-sm text-text-primary mb-1">Confidence calibration system — tracks prediction accuracy vs confidence scores</p>
-                        <p class="text-xs text-text-secondary">Impact: Identified over-confidence bias; improved calibration by 15%</p>
-                    </div>
-
-                    <!-- Evolution entry -->
-                    <div class="evolution-card bg-surface border border-border rounded p-4">
-                        <div class="flex items-center justify-between mb-2">
-                            <div class="flex items-center gap-3">
-                                <span class="text-sm font-medium text-text-primary">v1.6</span>
-                                <span class="text-xs text-text-tertiary">Session #31</span>
-                            </div>
-                            <span class="text-xs text-text-tertiary">March 11, 2026</span>
-                        </div>
-                        <p class="text-sm text-text-primary mb-1">Heuristic framework v1 — 16 validated rules for market evaluation</p>
-                        <p class="text-xs text-text-secondary">Impact: Consistent decision-making; reduced cognitive load per prediction</p>
-                    </div>
-
-                    <!-- Evolution entry -->
-                    <div class="evolution-card bg-surface border border-border rounded p-4">
-                        <div class="flex items-center justify-between mb-2">
-                            <div class="flex items-center gap-3">
-                                <span class="text-sm font-medium text-text-primary">v1.0</span>
-                                <span class="text-xs text-text-tertiary">Session #30</span>
-                            </div>
-                            <span class="text-xs text-text-tertiary">March 10, 2026</span>
-                        </div>
-                        <p class="text-sm text-text-primary mb-1">Initial deployment — Polymarket API integration, basic prediction logging</p>
-                        <p class="text-xs text-text-secondary">Impact: First live prediction; foundation for all subsequent systems</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Section 6: Activation Map -->
-            <section id="activation" class="section-panel hidden">
-                <h2 class="text-sm font-medium text-text-secondary uppercase tracking-wider mb-4">Activation Map</h2>
-                
-                <!-- Summary Bar -->
-                <div class="bg-surface border border-border rounded p-4 mb-6">
-                    <div class="text-xs text-text-tertiary uppercase tracking-wider mb-2">This Week's Activations</div>
-                    <div class="flex items-center gap-6">
-                        <div class="flex items-center gap-2">
-                            <span class="w-3 h-3 rounded-full bg-amber"></span>
-                            <span class="text-sm text-text-primary">R1: <span class="font-mono">12</span></span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="w-3 h-3 rounded-full bg-slate"></span>
-                            <span class="text-sm text-text-primary">Qwen: <span class="font-mono">3</span></span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="w-3 h-3 rounded-full bg-purple-500"></span>
-                            <span class="text-sm text-text-primary">Claude: <span class="font-mono">1</span></span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="w-3 h-3 rounded-full bg-sage"></span>
-                            <span class="text-sm text-text-primary">Kimi-only: <span class="font-mono">8</span></span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Run Entries -->
-                <div id="activation-list" class="space-y-3">
-                    <!-- Run entry - R1 + Qwen -->
-                    <div class="activation-card bg-surface border border-border rounded p-4">
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="text-sm font-medium text-text-primary">March 15, 2026 · 19:02</span>
-                            <span class="text-xs text-text-tertiary">2 subagents</span>
-                        </div>
-                        <div class="space-y-2">
-                            <div class="flex items-start gap-3 p-2 bg-charcoal rounded">
-                                <span class="w-2 h-2 rounded-full bg-amber mt-1.5"></span>
-                                <div>
-                                    <div class="text-xs text-amber font-medium mb-0.5">R1 · Reasoning</div>
-                                    <div class="text-sm text-text-secondary">Assess biggest risk to Claw before 50 resolved predictions</div>
-                                    <div class="text-xs text-text-tertiary mt-1">→ Resolution velocity too slow; capital frozen in open positions</div>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-3 p-2 bg-charcoal rounded">
-                                <span class="w-2 h-2 rounded-full bg-slate mt-1.5"></span>
-                                <div>
-                                    <div class="text-xs text-slate font-medium mb-0.5">Qwen · Volume</div>
-                                    <div class="text-sm text-text-secondary">Alternative perspective on same risk question</div>
-                                    <div class="text-xs text-text-tertiary mt-1">→ Attention decay from competing priorities</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Run entry - Kimi only -->
-                    <div class="activation-card bg-surface border border-border rounded p-4 border-l-4 border-l-sage">
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="text-sm font-medium text-text-primary">March 15, 2026 · 18:45</span>
-                            <span class="text-xs text-sage">Kimi only</span>
-                        </div>
-                        <div class="flex items-start gap-3 p-2 bg-charcoal rounded">
-                            <span class="w-2 h-2 rounded-full bg-sage mt-1.5"></span>
-                            <div>
-                                <div class="text-xs text-sage font-medium mb-0.5">Kimi · Execution</div>
-                                <div class="text-sm text-text-secondary">Build dashboard Section 4 (Portfolio) with sample data</div>
-                                <div class="text-xs text-text-tertiary mt-1">→ Table with 5 open positions, summary stats row</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Run entry - R1 only -->
-                    <div class="activation-card bg-surface border border-border rounded p-4">
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="text-sm font-medium text-text-primary">March 15, 2026 · 17:00</span>
-                            <span class="text-xs text-text-tertiary">1 subagent</span>
-                        </div>
-                        <div class="flex items-start gap-3 p-2 bg-charcoal rounded">
-                            <span class="w-2 h-2 rounded-full bg-amber mt-1.5"></span>
-                            <div>
-                                <div class="text-xs text-amber font-medium mb-0.5">R1 · Causal Classification</div>
-                                <div class="text-sm text-text-secondary">Classify resolved prediction: Tokyo temp Mar 15</div>
-                                <div class="text-xs text-text-tertiary mt-1">→ REASONING_ERROR: Good forecast, wrong confidence calibration</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Run entry - Claude only -->
-                    <div class="activation-card bg-surface border border-border rounded p-4">
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="text-sm font-medium text-text-primary">March 14, 2026 · 22:15</span>
-                            <span class="text-xs text-text-tertiary">1 subagent</span>
-                        </div>
-                        <div class="flex items-start gap-3 p-2 bg-charcoal rounded">
-                            <span class="w-2 h-2 rounded-full bg-purple-500 mt-1.5"></span>
-                            <div>
-                                <div class="text-xs text-purple-400 font-medium mb-0.5">Claude · Scalpel</div>
-                                <div class="text-sm text-text-secondary">Review SOUL.md edit: operator override clause</div>
-                                <div class="text-xs text-text-tertiary mt-1">→ Approved with modification: add 24hr cooldown</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Run entry - Kimi only -->
-                    <div class="activation-card bg-surface border border-border rounded p-4 border-l-4 border-l-sage">
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="text-sm font-medium text-text-primary">March 14, 2026 · 14:30</span>
-                            <span class="text-xs text-sage">Kimi only</span>
-                        </div>
-                        <div class="flex items-start gap-3 p-2 bg-charcoal rounded">
-                            <span class="w-2 h-2 rounded-full bg-sage mt-1.5"></span>
-                            <div>
-                                <div class="text-xs text-sage font-medium mb-0.5">Kimi · Execution</div>
-                                <div class="text-sm text-text-secondary">Update heuristic validation tracking in heuristics.md</div>
-                                <div class="text-xs text-text-tertiary mt-1">→ Tagged all 16 rules as UNVALIDATED, added promotion rules</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
     </main>
+</div>
+<script>
+// ============================================================
+// Navigation
+// ============================================================
+const navLinks = document.querySelectorAll('.nav-link');
+const panels = document.querySelectorAll('.section-panel');
+const headerTitle = document.getElementById('header-title');
 
-    <script>
-        // Navigation
-        const navItems = document.querySelectorAll('.nav-item');
-        const sections = document.querySelectorAll('.section-panel');
+function showSection(id) {
+    panels.forEach(p => p.classList.remove('active'));
+    const target = document.getElementById(id);
+    if (target) target.classList.add('active');
 
-        function showSection(sectionId) {
-            // Hide all sections
-            sections.forEach(s => s.classList.add('hidden'));
-            // Show target section
-            document.getElementById(sectionId).classList.remove('hidden');
-            // Update nav
-            navItems.forEach(n => {
-                n.classList.remove('active');
-                n.classList.remove('text-text-primary');
-                n.classList.add('text-text-secondary');
-            });
-            const activeNav = document.querySelector(`[data-section="${sectionId}"]`);
-            if (activeNav) {
-                activeNav.classList.add('active');
-                activeNav.classList.remove('text-text-secondary');
-                activeNav.classList.add('text-text-primary');
-            }
-            // Save to localStorage
-            localStorage.setItem('activeSection', sectionId);
+    navLinks.forEach(n => n.classList.remove('active'));
+    const link = document.querySelector(`[data-section="${id}"]`);
+    if (link) {
+        link.classList.add('active');
+        headerTitle.textContent = link.getAttribute('data-label') || id;
+    }
+    localStorage.setItem('claw-section', id);
+}
+
+navLinks.forEach(link => {
+    link.addEventListener('click', e => {
+        e.preventDefault();
+        showSection(link.getAttribute('data-section'));
+    });
+});
+
+// Restore saved section
+const saved = localStorage.getItem('claw-section') || 'predictions';
+showSection(saved);
+
+// ============================================================
+// Refresh countdown
+// ============================================================
+let countdown = 60;
+const countdownEl = document.getElementById('refresh-countdown');
+setInterval(() => {
+    countdown--;
+    if (countdown <= 0) { countdown = 60; loadAllData(); }
+    countdownEl.textContent = countdown;
+}, 1000);
+
+function updateTimestamp() {
+    document.getElementById('last-data-time').textContent = new Date().toLocaleTimeString();
+}
+
+// ============================================================
+// API
+// ============================================================
+const API = window.location.hostname === 'localhost' ? 'http://localhost:5000' : '';
+
+async function apiFetch(endpoint) {
+    try {
+        const r = await fetch(`${API}${endpoint}`);
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return await r.json();
+    } catch (e) {
+        console.warn(`Fetch ${endpoint}:`, e);
+        return null;
+    }
+}
+
+// ============================================================
+// Label translations (jargon -> plain English)
+// ============================================================
+const DECISION_LABELS = {
+    'NO_TRADE': 'Skipped',
+    'BUY': 'Bet: Yes',
+    'SELL': 'Bet: No',
+    'HOLD': 'Watching',
+    'BUY_YES': 'Bet: Yes',
+    'BUY_NO': 'Bet: No',
+};
+
+const OUTCOME_LABELS = {
+    'REASONING_ERROR': 'Analysis Was Wrong',
+    'DATA_ERROR': 'Outdated Data Used',
+    'MODEL_ERROR': 'Model Gave Bad Data',
+    'CALIBRATION_ERROR': 'Confidence Was Off',
+    'CORRECT': 'Correct Call',
+    'TIMING_ERROR': 'Bad Timing',
+    'EDGE_ERROR': 'Edge Miscalculated',
+};
+
+const STATUS_LABELS = {
+    'VALIDATED': 'Passing',
+    'UNVALIDATED': 'Not Yet Tested',
+    'HEALTHY': 'Passing',
+    'FLAGGED': 'Needs Attention',
+    'VIOLATED': 'Broken',
+    'MONITORING': 'Watching',
+};
+
+function humanDecision(raw) { return DECISION_LABELS[raw] || raw || 'Unknown'; }
+function humanOutcome(raw) { return OUTCOME_LABELS[raw] || raw || ''; }
+function humanStatus(raw) { return STATUS_LABELS[raw] || raw || 'Unknown'; }
+
+function confidenceClass(score) {
+    if (score > 0.7) return 'pred__conf--high';
+    if (score > 0.4) return 'pred__conf--mid';
+    return 'pred__conf--low';
+}
+
+function timeAgo(ts) {
+    if (!ts) return '';
+    const diff = Date.now() - new Date(ts).getTime();
+    const mins = Math.floor(diff / 60000);
+    if (mins < 60) return `${mins}m ago`;
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return `${hrs}h ago`;
+    const days = Math.floor(hrs / 24);
+    return `${days}d ago`;
+}
+
+// ============================================================
+// Render: Predictions
+// ============================================================
+function renderPredictions(data) {
+    const el = document.getElementById('predictions-list');
+
+    if (!data || data.length === 0) {
+        el.innerHTML = '<div class="empty"><div class="empty__icon">&#x1F3AF;</div>No predictions yet. Run the analysis pipeline to see results here.</div>';
+        return;
+    }
+
+    // KPIs
+    const total = data.length;
+    const resolved = data.filter(p => p.api_status).length;
+    const correct = data.filter(p => p.api_status && p.predicted_outcome === p.api_status).length;
+    const pending = total - resolved;
+    const accuracy = resolved > 0 ? Math.round((correct / resolved) * 100) : 0;
+
+    document.getElementById('kpi-total').textContent = total;
+    document.getElementById('kpi-resolved').textContent = resolved;
+    document.getElementById('kpi-accuracy').textContent = resolved > 0 ? `${accuracy}%` : '--';
+    document.getElementById('kpi-accuracy').className = 'kpi__value' + (accuracy >= 60 ? ' kpi__value--green' : accuracy >= 40 ? ' kpi__value--yellow' : resolved > 0 ? ' kpi__value--red' : '');
+    document.getElementById('kpi-pending').textContent = pending;
+
+    el.innerHTML = data.map(p => {
+        const conf = p.confidence_score || 0;
+        const confPct = Math.round(conf * 100);
+        const isResolved = !!p.api_status;
+        const isCorrect = isResolved && p.predicted_outcome === p.api_status;
+        const decision = humanDecision(p.recommendation);
+        const isSkipped = (p.recommendation === 'NO_TRADE' || decision === 'Skipped');
+
+        let cardClass = 'pred';
+        if (isResolved && isCorrect) cardClass += ' pred--won';
+        else if (isResolved && !isCorrect) cardClass += ' pred--lost';
+        else if (isSkipped) cardClass += ' pred--skipped';
+        else cardClass += ' pred--pending';
+
+        // Decision badge
+        let badgeClass = 'badge badge--neutral';
+        if (isSkipped) badgeClass = 'badge badge--neutral';
+        else if (decision.startsWith('Bet: Yes')) badgeClass = 'badge badge--success';
+        else if (decision.startsWith('Bet: No')) badgeClass = 'badge badge--error';
+        else if (decision === 'Watching') badgeClass = 'badge badge--info';
+
+        // Calibration tag
+        const calBadge = p.forced_calibration ? '<span class="badge badge--warning">Recalibrated</span>' : '';
+
+        // Confidence dot
+        const confDotColor = conf > 0.7 ? 'var(--status-warning)' : conf > 0.4 ? 'var(--fg-secondary)' : 'var(--fg-ghost)';
+
+        // Footer items
+        let footerParts = [];
+        if (isResolved) {
+            const outcomeColor = isCorrect ? 'var(--status-success)' : 'var(--status-error)';
+            footerParts.push(`<span style="color: ${outcomeColor}">${isCorrect ? '&#x2713; Correct' : '&#x2717; Wrong'} &mdash; Actual: ${p.api_status}</span>`);
+        } else {
+            footerParts.push('<span style="color: var(--accent)">&#x23F3; Awaiting resolution</span>');
         }
 
-        navItems.forEach(item => {
-            item.addEventListener('click', (e) => {
-                e.preventDefault();
-                const sectionId = item.getAttribute('data-section');
-                showSection(sectionId);
-            });
-        });
-
-        // Restore active section on load
-        const savedSection = localStorage.getItem('activeSection') || 'predictions';
-        showSection(savedSection);
-
-        // Refresh countdown
-        let countdown = 60;
-        const countdownEl = document.getElementById('refresh-countdown');
-        setInterval(() => {
-            countdown--;
-            if (countdown <= 0) countdown = 60;
-            countdownEl.textContent = countdown;
-        }, 1000);
-
-        // Update last data time
-        function updateLastDataTime() {
-            const now = new Date();
-            document.getElementById('last-data-time').textContent = now.toLocaleTimeString();
+        // Error classification
+        if (p.error_classification) {
+            const humanErr = humanOutcome(p.error_classification);
+            const errClass = p.error_classification.includes('ERROR') ? 'badge--error' : 'badge--warning';
+            footerParts.push(`<span class="badge ${errClass}">${humanErr}</span>`);
         }
-        updateLastDataTime();
 
-        // API Configuration
-        const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:5000' : '';
-        
-        // Sample data fallback
-        const sampleData = {
-            predictions: document.getElementById('predictions-list').innerHTML,
-            heuristics: document.getElementById('heuristics-list').innerHTML,
-            review: document.getElementById('review-list').innerHTML,
-            portfolio: document.getElementById('portfolio').innerHTML,
-            evolution: document.getElementById('evolution-list').innerHTML,
-            activation: document.getElementById('activation-list').innerHTML
+        return `
+        <div class="${cardClass}">
+            <div class="pred__top">
+                <div class="pred__badges">
+                    <span class="${badgeClass}">${decision}</span>
+                    ${calBadge}
+                </div>
+                <div class="pred__conf ${confidenceClass(conf)}">
+                    <span style="width:6px;height:6px;border-radius:50%;background:${confDotColor};display:inline-block;"></span>
+                    ${confPct}%
+                </div>
+            </div>
+            <div class="pred__q">${p.market_id || 'Unknown market'}</div>
+            ${p.reasoning_summary ? `
+            <div class="pred__detail">
+                <div class="pred__detail-label">Analysis</div>
+                <div class="pred__detail-text">${p.reasoning_summary}</div>
+            </div>` : ''}
+            ${p.failure_mode ? `
+            <div class="pred__detail">
+                <div class="pred__detail-label">Risk</div>
+                <div class="pred__detail-text">${p.failure_mode}</div>
+            </div>` : ''}
+            <div class="pred__footer">
+                ${footerParts.join('')}
+                <span class="pred__ts">${timeAgo(p.timestamp)}</span>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+// ============================================================
+// Render: Trading Rules
+// ============================================================
+function renderRules(data) {
+    const el = document.getElementById('rules-list');
+
+    if (!data || data.length === 0) {
+        el.innerHTML = '<div class="empty"><div class="empty__icon">&#x2696;</div>No trading rules defined yet.</div>';
+        return;
+    }
+
+    // KPIs
+    const total = data.length;
+    const healthy = data.filter(h => h.status === 'VALIDATED' || h.status === 'HEALTHY').length;
+    const flagged = data.filter(h => h.status === 'FLAGGED').length;
+    const violated = data.filter(h => h.status === 'VIOLATED').length;
+
+    document.getElementById('kpi-rules-total').textContent = total;
+    document.getElementById('kpi-rules-healthy').textContent = healthy;
+    document.getElementById('kpi-rules-flagged').textContent = flagged;
+    document.getElementById('kpi-rules-violated').textContent = violated;
+
+    el.innerHTML = data.map(h => {
+        const statusMap = {
+            'VALIDATED': { cls: 'rule--healthy', badge: 'badge--success' },
+            'HEALTHY': { cls: 'rule--healthy', badge: 'badge--success' },
+            'FLAGGED': { cls: 'rule--flagged', badge: 'badge--warning' },
+            'VIOLATED': { cls: 'rule--violated', badge: 'badge--error' },
+            'UNVALIDATED': { cls: 'rule--watching', badge: 'badge--neutral' },
+            'MONITORING': { cls: 'rule--watching', badge: 'badge--neutral' },
         };
+        const st = statusMap[h.status] || statusMap['UNVALIDATED'];
+        const label = humanStatus(h.status);
+        const name = h.text ? h.text.substring(0, 50) : 'Unnamed rule';
+        const desc = h.text || '';
 
-        // Fetch with fallback
-        async function fetchWithFallback(endpoint, fallbackHtml) {
-            try {
-                const response = await fetch(`${API_BASE}${endpoint}`);
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                return await response.json();
-            } catch (error) {
-                console.warn(`Fetch failed for ${endpoint}:`, error);
-                return null;
-            }
+        let alertHtml = '';
+        if (h.status === 'FLAGGED') {
+            alertHtml = '<div class="rule__alert rule__alert--warn">&#x26A0; Recent predictions may conflict with this rule</div>';
+        } else if (h.status === 'VIOLATED') {
+            alertHtml = '<div class="rule__alert rule__alert--error">&#x2717; This rule was broken in a recent decision</div>';
         }
 
-        // Render predictions
-        function renderPredictions(data) {
-            if (!data || data.length === 0) return;
-            const container = document.getElementById('predictions-list');
-            container.innerHTML = data.map(p => `
-                <div class="prediction-card bg-surface border border-border rounded p-4 ${p.api_status ? (p.predicted_outcome === p.api_status ? 'resolved-correct' : 'resolved-error') : ''}">
-                    <div class="flex items-center justify-between mb-3">
-                        <div class="flex items-center gap-3">
-                            <span class="text-sm font-medium text-text-primary">${p.recommendation || 'NO_TRADE'}</span>
-                            ${p.forced_calibration ? '<span class="px-2 py-0.5 text-xs font-mono bg-amber/20 text-amber rounded">CAL</span>' : ''}
-                        </div>
-                        <div class="flex items-center gap-2">
-                            ${p.confidence_score > 0.7 ? '<span class="w-2 h-2 rounded-full bg-amber"></span>' : '<span class="w-2 h-2 rounded-full bg-text-tertiary"></span>'}
-                            <span class="text-sm font-mono ${p.confidence_score > 0.7 ? 'text-amber' : 'text-text-secondary'}">${Math.round((p.confidence_score || 0) * 100)}%</span>
-                            <span class="text-xs text-text-tertiary ml-2">${new Date(p.timestamp).toLocaleDateString()}</span>
-                        </div>
-                    </div>
-                    <h3 class="text-base text-text-primary mb-3">${p.market_id || 'Unknown market'}</h3>
-                    ${p.reasoning_summary ? `<div class="border-t border-border pt-2 text-sm"><span class="text-text-tertiary">Reasoning:</span> <span class="text-text-secondary">${p.reasoning_summary}</span></div>` : ''}
-                    ${p.api_status ? `<div class="mt-3 pt-2 border-t border-border flex items-center gap-2 text-xs"><span class="text-text-tertiary">Outcome: ${p.api_status}</span></div>` : ''}
+        return `
+        <div class="rule ${st.cls}">
+            <div class="rule__top">
+                <div class="rule__meta">
+                    <span class="badge ${st.badge}">${label}</span>
+                    <span class="rule__name">${name}</span>
                 </div>
-            `).join('');
+                <span style="font-size: var(--text-micro); color: var(--fg-ghost);">${h.last_triggered ? timeAgo(h.last_triggered) : 'Never triggered'}</span>
+            </div>
+            <div class="rule__desc">${desc}</div>
+            <div class="rule__stats">
+                <span>Times triggered: <strong>${h.trigger_count || 0}</strong></span>
+            </div>
+            ${alertHtml}
+        </div>`;
+    }).join('');
+}
+
+// ============================================================
+// Render: Daily Reviews
+// ============================================================
+function renderReviews(data) {
+    const el = document.getElementById('reviews-list');
+
+    if (!data || data.length === 0) {
+        el.innerHTML = '<div class="empty"><div class="empty__icon">&#x1F4CB;</div>No daily reviews yet. Reviews appear after end-of-day self-assessment runs.</div>';
+        return;
+    }
+
+    el.innerHTML = data.map(r => {
+        const score = r.health_score || 0;
+        let tier = 'ok';
+        if (score >= 7) tier = 'good';
+        else if (score <= 4) tier = 'bad';
+
+        const dateStr = r.timestamp ? new Date(r.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Unknown date';
+
+        // Build findings from key_actions or full_report
+        let findings = [];
+        if (r.key_actions && Array.isArray(r.key_actions)) {
+            findings = r.key_actions;
+        } else if (r.full_report) {
+            findings = [r.full_report];
         }
 
-        // Render heuristics
-        function renderHeuristics(data) {
-            if (!data || data.length === 0) return;
-            const container = document.getElementById('heuristics-list');
-            const statusColors = {
-                'VALIDATED': 'sage',
-                'UNVALIDATED': 'slate',
-                'FLAGGED': 'rust',
-                'VIOLATED': 'brick'
-            };
-            container.innerHTML = data.map(h => `
-                <div class="heuristic-card bg-surface border border-border rounded p-4 border-l-4 border-l-${statusColors[h.status] || 'slate'}">
-                    <div class="flex items-center justify-between mb-2">
-                        <div class="flex items-center gap-3">
-                            <span class="px-2 py-0.5 text-xs font-medium bg-${statusColors[h.status] || 'slate'}/20 text-${statusColors[h.status] || 'slate'} rounded">${h.status}</span>
-                            <span class="text-sm font-medium text-text-primary">${h.text.substring(0, 40)}...</span>
-                        </div>
-                    </div>
-                    <p class="text-sm text-text-secondary">${h.text}</p>
+        // Build stats summary
+        const stats = [];
+        if (r.predictions_total) stats.push(`${r.predictions_total} predictions`);
+        if (r.accuracy) stats.push(`${Math.round(r.accuracy * 100)}% accuracy`);
+        if (r.sessions_total) stats.push(`${r.sessions_total} sessions`);
+
+        return `
+        <div class="review review--${tier}">
+            <div class="review__top">
+                <div class="review__score review__score--${tier}">
+                    <span class="review__score-num">${score}</span>
+                    <span class="review__score-den">/ 10</span>
                 </div>
-            `).join('');
-        }
+                <span class="review__date">${dateStr}</span>
+            </div>
+            ${stats.length ? `<div style="font-size: var(--text-micro); color: var(--fg-muted); margin-bottom: var(--space-2); display: flex; gap: var(--space-4);">${stats.map(s => `<span>${s}</span>`).join('')}</div>` : ''}
+            ${findings.length ? `
+            <ul class="review__findings">
+                ${findings.map(f => `
+                <li class="review__finding">
+                    <span class="review__finding-icon review__finding-icon--pass" style="color: var(--fg-muted);">&#x2022;</span>
+                    <span>${f}</span>
+                </li>`).join('')}
+            </ul>` : ''}
+        </div>`;
+    }).join('');
+}
 
-        // Render activation map
-        function renderActivationMap(data) {
-            const container = document.getElementById('activation-list');
-            if (!data || data.length === 0) {
-                container.innerHTML = '<div class="text-center text-text-secondary py-8">No subagent calls logged yet</div>';
-                return;
-            }
-            // Keep sample data for now - activation map rendering is complex
-        }
+// ============================================================
+// Render: Portfolio
+// ============================================================
+function renderPortfolio(data) {    if (!data) return;
 
-        // Load all data
-        async function loadAllData() {
-            const predictions = await fetchWithFallback('/api/predictions');
-            if (predictions) renderPredictions(predictions);
-            
-            const heuristics = await fetchWithFallback('/api/heuristics');
-            if (heuristics) renderHeuristics(heuristics);
-            
-            const activation = await fetchWithFallback('/api/activation-map');
-            renderActivationMap(activation);
-            
-            updateLastDataTime();
-        }
+    // KPIs
+    const deployed = data.deployed || 0;
+    const total = data.total || 0;
+    const pnl = data.realized_pnl || 0;
+    const winRate = data.win_rate || 0;
+    const openCount = data.open_positions || 0;
 
-        // Initial load
-        loadAllData();
-        
-        // Refresh every 60 seconds
-        setInterval(loadAllData, 60000);
-    </script>
+    document.getElementById('kpi-deployed').textContent = `$${deployed.toFixed(2)}`;
+    document.getElementById('kpi-deployed-sub').textContent = `of $${total.toFixed(2)}`;
+
+    const pnlEl = document.getElementById('kpi-pnl');
+    pnlEl.textContent = `${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)}`;
+    pnlEl.className = 'kpi__value ' + (pnl > 0 ? 'kpi__value--green' : pnl < 0 ? 'kpi__value--red' : '');
+
+    const pnlPct = total > 0 ? ((pnl / total) * 100).toFixed(1) : 0;
+    document.getElementById('kpi-pnl-pct').textContent = `${pnl >= 0 ? '+' : ''}${pnlPct}%`;
+    document.getElementById('kpi-pnl-pct').style.color = pnl >= 0 ? 'var(--status-success)' : 'var(--status-error)';
+
+    document.getElementById('kpi-winrate').textContent = `${Math.round(winRate * 100)}%`;
+    document.getElementById('kpi-winrate-sub').textContent = `${data.wins || 0}W / ${data.losses || 0}L of ${data.resolved || 0}`;
+
+    document.getElementById('kpi-open').textContent = openCount;
+
+    // Positions table
+    const tbody = document.getElementById('positions-body');
+    const positions = data.positions || [];
+    if (positions.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="empty">No open positions</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = positions.map(p => {
+        const sideColor = p.direction === 'YES' ? 'var(--status-success)' : 'var(--status-error)';
+        const sideLabel = p.direction === 'YES' ? 'Yes' : 'No';
+        return `
+        <tr>
+            <td>${p.market}</td>
+            <td><span style="color: ${sideColor}; font-weight: var(--weight-medium);">${sideLabel}</span></td>
+            <td class="num">${Math.round(p.edge * 100)}%</td>
+            <td class="num">$${p.deployed.toFixed(2)}</td>
+            <td class="num">${p.days_left}</td>
+        </tr>`;
+    }).join('');
+}
+
+// ============================================================
+// Render: Update History
+// ============================================================
+function renderUpdates(data) {
+    const el = document.getElementById('updates-list');
+
+    if (!data || data.length === 0) {
+        el.innerHTML = '<div class="empty"><div class="empty__icon">&#x1F504;</div>No updates recorded yet.</div>';
+        return;
+    }
+
+    el.innerHTML = data.map((entry, i) => {
+        const isLatest = i === 0;
+        const title = entry.title || 'Unknown update';
+        const details = (entry.details || []).slice(0, 3);
+
+        return `
+        <div class="evo ${isLatest ? 'evo--latest' : ''}">
+            <div class="evo__top">
+                <span class="evo__version ${isLatest ? '' : 'evo__version--old'}">${title}</span>
+            </div>
+            ${details.map(d => `<div class="evo__impact">${d}</div>`).join('')}
+        </div>`;
+    }).join('');
+}
+
+// ============================================================
+// Render: AI Activity
+// ============================================================
+function renderActivity(data) {
+    const el = document.getElementById('activity-list');
+
+    if (!data || data.length === 0) {
+        el.innerHTML = '<div class="empty"><div class="empty__icon">&#x26A1;</div>No AI sub-agent calls logged yet. These appear when R1, Qwen, or Claude are invoked.</div>';
+        return;
+    }
+
+    // Summary counts
+    const modelCounts = {};
+    data.forEach(c => {
+        const m = (c.model || 'unknown').toLowerCase();
+        let key = 'other';
+        if (m.includes('r1')) key = 'R1';
+        else if (m.includes('qwen')) key = 'Qwen';
+        else if (m.includes('claude')) key = 'Claude';
+        else if (m.includes('kimi')) key = 'Kimi';
+        modelCounts[key] = (modelCounts[key] || 0) + 1;
+    });
+
+    const summaryEl = document.getElementById('activity-summary');
+    if (Object.keys(modelCounts).length > 0) {
+        summaryEl.style.display = 'flex';
+        const colorMap = { R1: 'var(--status-warning)', Qwen: 'var(--fg-muted)', Claude: '#a78bfa', Kimi: 'var(--status-success)' };
+        let items = '<span style="font-size: var(--text-micro); font-weight: var(--weight-medium); letter-spacing: 0.04em; text-transform: uppercase; color: var(--fg-muted);">This Week</span>';
+        for (const [model, count] of Object.entries(modelCounts)) {
+            items += `<div class="act-summary__item"><span style="width:8px;height:8px;border-radius:50%;background:${colorMap[model] || 'var(--fg-ghost)'};display:inline-block;"></span> ${model}: <span>${count}</span></div>`;
+        }
+        summaryEl.innerHTML = items;
+    }
+
+    el.innerHTML = data.map(c => {
+        const m = (c.model || 'unknown').toLowerCase();
+        let modelKey = 'kimi';
+        if (m.includes('r1')) modelKey = 'r1';
+        else if (m.includes('qwen')) modelKey = 'qwen';
+        else if (m.includes('claude')) modelKey = 'claude';
+
+        const modelName = modelKey.charAt(0).toUpperCase() + modelKey.slice(1);
+        const ts = c.timestamp ? new Date(c.timestamp).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
+
+        return `
+        <div class="act">
+            <div class="act__top">
+                <span class="act__time">${ts}</span>
+            </div>
+            <div class="act__entry">
+                <span class="act__dot act__dot--${modelKey}"></span>
+                <div>
+                    <div class="act__model act__model--${modelKey}">${modelName}</div>
+                    <div class="act__task">${c.task || c.prompt || 'Task not recorded'}</div>
+                    ${c.result ? `<div class="act__result">&rarr; ${typeof c.result === 'string' ? c.result.substring(0, 200) : JSON.stringify(c.result).substring(0, 200)}</div>` : ''}
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+// ============================================================
+// Load all data
+// ============================================================
+async function loadAllData() {
+    countdown = 60;
+    updateTimestamp();
+
+    const [predictions, heuristics, reviews, portfolio, evolution, activation] = await Promise.all([
+        apiFetch('/api/predictions'),
+        apiFetch('/api/heuristics'),
+        apiFetch('/api/self-review'),
+        apiFetch('/api/portfolio'),
+        apiFetch('/api/evolution'),
+        apiFetch('/api/activation-map'),
+    ]);
+
+    renderPredictions(predictions);
+    renderRules(heuristics);
+    renderReviews(reviews);
+    renderPortfolio(portfolio);
+    renderUpdates(evolution);
+    renderActivity(activation);
+}
+
+// ============================================================
+// Fallback sample data (when API is unreachable)
+// ============================================================
+function loadSampleData() {
+    // Predictions
+    renderPredictions([
+        { market_id: "Will NYC temp exceed 15 C on March 16?", recommendation: "NO_TRADE", confidence_score: 0.67, forced_calibration: true, reasoning_summary: "Forecast shows high variance; market price already reflects most likely outcome.", failure_mode: "ECMWF model shift >3 C 24hrs pre-event", timestamp: new Date(Date.now() - 7200000).toISOString(), api_status: "YES", predicted_outcome: "NO", error_classification: "REASONING_ERROR" },
+        { market_id: "Will London see precipitation on March 17?", recommendation: "BUY", confidence_score: 0.45, reasoning_summary: "GFS shows 60% precip probability, market underpricing at 40%.", failure_mode: "GFS overestimates precip by >20% in dry spring conditions", timestamp: new Date(Date.now() - 18000000).toISOString() },
+        { market_id: "Will Tokyo temp exceed 20 C on March 15?", recommendation: "BUY", confidence_score: 0.72, reasoning_summary: "Warm front approaching, models converging on 22 C.", failure_mode: "Front stalls, cloud cover suppresses temps", timestamp: new Date(Date.now() - 86400000).toISOString(), api_status: "NO", predicted_outcome: "YES", error_classification: "DATA_ERROR" },
+    ]);
+
+    // Rules
+    renderRules([
+        { text: "Confidence below 40% should always result in NO_TRADE", status: "VALIDATED", trigger_count: 47, last_triggered: new Date(Date.now() - 43200000).toISOString() },
+        { text: "Markets with < $500 volume are unreliable regardless of edge", status: "FLAGGED", trigger_count: 23, last_triggered: new Date(Date.now() - 10800000).toISOString() },
+        { text: "Precipitation forecasts require 48hr recency, not 24hr", status: "VIOLATED", trigger_count: 15, last_triggered: new Date(Date.now() - 86400000).toISOString() },
+        { text: "Weather forecasts > 7 days out have high uncertainty", status: "UNVALIDATED", trigger_count: 0 },
+    ]);
+
+    // Reviews
+    renderReviews([
+        { timestamp: new Date(Date.now() - 86400000).toISOString(), health_score: 8, key_actions: ["Confidence scores aligned with actual outcomes (71% win rate)", "Volume filter correctly identified thin markets", "No over-trading; patience paid off", "Need faster resolution on precipitation timing rule"], predictions_total: 12, accuracy: 0.71, sessions_total: 3 },
+        { timestamp: new Date(Date.now() - 172800000).toISOString(), health_score: 4, key_actions: ["Framework applied consistently", "High confidence (72%) on wrong temperature call", "Ignored 6-hour forecast update showing model shift", "Need recency check before high-confidence trades"], predictions_total: 8, accuracy: 0.38, sessions_total: 4 },
+        { timestamp: new Date(Date.now() - 259200000).toISOString(), health_score: 6, key_actions: ["Correctly passed on 3 low-volume markets", "Edge calculation accurate", "Late to catch ECMWF model divergence"], predictions_total: 10, accuracy: 0.50, sessions_total: 2 },
+    ]);
+
+    // Portfolio
+    renderPortfolio({
+        deployed: 45.27, total: 50.00, realized_pnl: 3.42, win_rate: 0.71, wins: 5, losses: 2, resolved: 7, open_positions: 5,
+        positions: [
+            { market: "NYC temp > 18 C Mar 18", direction: "YES", edge: 0.12, deployed: 4.00, days_left: 2 },
+            { market: "London precip Mar 19", direction: "NO", edge: 0.08, deployed: 3.50, days_left: 3 },
+            { market: "Tokyo temp > 22 C Mar 20", direction: "YES", edge: 0.15, deployed: 5.00, days_left: 4 },
+            { market: "Sydney temp < 25 C Mar 21", direction: "YES", edge: 0.06, deployed: 2.75, days_left: 5 },
+            { market: "Paris precip Mar 22", direction: "NO", edge: 0.10, deployed: 4.25, days_left: 6 },
+        ]
+    });
+
+    // Updates
+    renderUpdates([
+        { title: "v2.0 — Subagent Delegation", details: ["- Kimi fixed as orchestrator, R1/Qwen/Claude as discrete subagents", "- Eliminated model-switching failures", "- 100% reliable model routing"] },
+        { title: "v1.9 — Three-Dimensional Self-Review", details: ["- Trading, session quality, framework evolution scoring", "- Holistic health scoring (1-10)"] },
+        { title: "v1.8 — Weather Market Pipeline", details: ["- Automated discovery, analysis, and prediction logging", "- First fully autonomous market analysis"] },
+    ]);
+
+    // Activity
+    renderActivity([
+        { model: "deepseek-r1", task: "Assess biggest risk to Claw before 50 resolved predictions", result: "Resolution velocity too slow; capital frozen in open positions", timestamp: new Date(Date.now() - 3600000).toISOString() },
+        { model: "qwen", task: "Alternative perspective on same risk question", result: "Attention decay from competing priorities", timestamp: new Date(Date.now() - 3600000).toISOString() },
+        { model: "claude", task: "Review SOUL.md edit: operator override clause", result: "Approved with modification: add 24hr cooldown", timestamp: new Date(Date.now() - 86400000).toISOString() },
+    ]);
+}
+
+// ============================================================
+// Init
+// ============================================================
+updateTimestamp();
+loadAllData().then(() => {
+    // Check if any section rendered empty (API down) and fall back
+    const predList = document.getElementById('predictions-list');
+    if (predList && predList.querySelector('.skel')) {
+        loadSampleData();
+    }
+});
+</script>
 </body>
 </html>
