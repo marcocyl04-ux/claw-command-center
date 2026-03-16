@@ -104,8 +104,14 @@ def get_self_review():
 
 @app.route('/api/portfolio')
 def get_portfolio():
-    """Return portfolio data (placeholder until real source found)."""
-    # TODO: Replace with actual portfolio data source
+    """Return portfolio data from bot's portfolio_state.json."""
+    portfolio_file = OPENCLAW_DIR / "portfolio_state.json"
+    
+    if portfolio_file.exists():
+        with open(portfolio_file, 'r') as f:
+            return jsonify(json.load(f))
+    
+    # Fallback to placeholder if file doesn't exist yet
     return jsonify({
         "source": "TBD",
         "deployed": 45.27,
