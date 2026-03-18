@@ -3,761 +3,711 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Claw — Cognitive Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <title>Claw Command Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-deep: #0a0a0f;
-            --bg-surface: #12121a;
-            --bg-elevated: #1a1a25;
-            --border: #252535;
-            --text-primary: #f0f0f5;
-            --text-secondary: #a0a0b0;
-            --text-tertiary: #606070;
-            --accent-cyan: #00d4ff;
-            --accent-purple: #a855f7;
-            --accent-blue: #3b82f6;
-            --success: #00ff88;
-            --warning: #ffb800;
-            --danger: #ff3366;
+            --bg-0: #0a0a0c;
+            --bg-1: #121216;
+            --bg-2: #1a1a20;
+            --bg-3: #22222a;
+            --border: #2a2a35;
+            --text: #f0f0f5;
+            --text-muted: #8a8a95;
+            --text-subtle: #5a5a65;
+            --accent: #00d4aa;
+            --accent-glow: rgba(0, 212, 170, 0.15);
+            --warning: #f5a623;
+            --danger: #ff4757;
+            --success: #00d9a3;
+            --purple: #a855f7;
+            --blue: #3b82f6;
         }
         
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg-deep);
-            color: var(--text-primary);
-            min-height: 100vh;
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-0);
+            color: var(--text);
+            line-height: 1.5;
+            font-size: 14px;
+        }
+        
+        /* Layout: Linear-style sidebar + main */
+        .app {
             display: flex;
+            height: 100vh;
         }
         
         /* Sidebar */
         .sidebar {
-            width: 260px;
-            background: var(--bg-surface);
+            width: 64px;
+            background: var(--bg-1);
             border-right: 1px solid var(--border);
-            padding: 32px 24px;
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px 0;
         }
         
-        .logo {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 28px;
+        .sidebar-logo {
+            width: 32px;
+            height: 32px;
+            background: var(--accent);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-weight: 700;
-            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 8px;
-        }
-        
-        .tagline {
-            font-size: 12px;
-            color: var(--text-tertiary);
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            margin-bottom: 40px;
-        }
-        
-        .nav-section {
-            margin-bottom: 32px;
-        }
-        
-        .nav-title {
-            font-size: 11px;
-            color: var(--text-tertiary);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 12px;
+            color: var(--bg-0);
+            margin-bottom: 24px;
         }
         
         .nav-item {
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
+            justify-content: center;
             border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
             margin-bottom: 4px;
-            font-size: 14px;
-            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s;
+            color: var(--text-muted);
+            font-size: 20px;
         }
         
         .nav-item:hover {
-            background: var(--bg-elevated);
-            color: var(--text-primary);
+            background: var(--bg-2);
+            color: var(--text);
         }
         
         .nav-item.active {
-            background: rgba(0, 212, 255, 0.1);
-            color: var(--accent-cyan);
-            border: 1px solid rgba(0, 212, 255, 0.2);
+            background: var(--accent-glow);
+            color: var(--accent);
         }
         
-        .nav-icon {
-            font-size: 18px;
-        }
-        
-        /* Main Content */
+        /* Main content */
         .main {
-            margin-left: 260px;
             flex: 1;
-            padding: 40px;
-            max-width: 1200px;
+            overflow: hidden;
+            display: flex;
         }
         
-        /* Header Stats */
-        .header-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 24px;
-            margin-bottom: 40px;
+        /* Content area */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 32px 40px;
         }
         
-        .stat-card {
-            background: var(--bg-surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 24px;
+        /* Header */
+        .header {
+            margin-bottom: 32px;
         }
         
-        .stat-label {
-            font-size: 12px;
-            color: var(--text-tertiary);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 8px;
-        }
-        
-        .stat-value {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 42px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-        }
-        
-        .stat-value.grade {
-            color: var(--warning);
-        }
-        
-        .stat-meta {
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-        
-        .trend {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            color: var(--success);
-            font-weight: 500;
-        }
-        
-        /* Section */
-        .section {
-            background: var(--bg-surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 28px;
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
             margin-bottom: 24px;
         }
         
-        .section-header {
+        .header-title {
+            font-size: 28px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+        
+        .header-meta {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+        
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background: var(--bg-2);
+            border-radius: 6px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        
+        /* Grade card - prominent */
+        .grade-card {
+            display: inline-flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px 24px;
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+        
+        .grade-letter {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--warning);
+            line-height: 1;
+        }
+        
+        .grade-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .grade-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        
+        .grade-trend {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        
+        .grade-trend span {
+            color: var(--success);
+        }
+        
+        /* Section tabs */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1px;
+        }
+        
+        .tab {
+            padding: 10px 16px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.15s;
+        }
+        
+        .tab:hover {
+            color: var(--text);
+        }
+        
+        .tab.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+        
+        /* Cards */
+        .card {
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+        
+        .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 24px;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
         }
         
-        .section-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 20px;
+        .card-title {
+            font-size: 14px;
             font-weight: 600;
         }
         
-        .section-count {
-            font-size: 13px;
-            color: var(--text-tertiary);
-            background: var(--bg-elevated);
-            padding: 6px 12px;
-            border-radius: 20px;
+        .card-count {
+            font-size: 12px;
+            color: var(--text-muted);
+            background: var(--bg-2);
+            padding: 4px 10px;
+            border-radius: 12px;
         }
         
-        /* Skills */
+        .card-body {
+            padding: 20px;
+        }
+        
+        /* Skills - Figma layers style */
+        .skill-tree {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+        }
+        
         .skill-tier {
-            margin-bottom: 24px;
+            margin-bottom: 8px;
         }
         
         .tier-header {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
+            gap: 8px;
+            padding: 10px 12px;
+            background: var(--bg-2);
+            border-radius: 6px;
             cursor: pointer;
+            user-select: none;
+        }
+        
+        .tier-chevron {
+            color: var(--text-subtle);
+            font-size: 10px;
         }
         
         .tier-indicator {
-            width: 12px;
-            height: 12px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
         }
         
-        .tier-master { background: var(--accent-purple); box-shadow: 0 0 8px var(--accent-purple); }
-        .tier-proficient { background: var(--accent-blue); }
-        .tier-learning { background: var(--text-tertiary); }
+        .tier-master .tier-indicator { background: var(--purple); box-shadow: 0 0 6px var(--purple); }
+        .tier-proficient .tier-indicator { background: var(--blue); }
+        .tier-learning .tier-indicator { background: var(--text-subtle); }
         
         .tier-name {
-            font-weight: 600;
-            font-size: 14px;
+            flex: 1;
+            font-weight: 500;
         }
         
         .tier-count {
-            font-size: 12px;
-            color: var(--text-tertiary);
-        }
-        
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 16px;
-        }
-        
-        .skill-card {
-            background: var(--bg-elevated);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 20px;
-            transition: border-color 0.2s;
-        }
-        
-        .skill-card:hover {
-            border-color: var(--accent-cyan);
-        }
-        
-        .skill-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 12px;
-        }
-        
-        .skill-name {
-            font-weight: 600;
-            font-size: 15px;
-        }
-        
-        .skill-badge {
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-weight: 600;
-        }
-        
-        .badge-master {
-            background: rgba(168, 85, 247, 0.15);
-            color: var(--accent-purple);
-        }
-        
-        .badge-proficient {
-            background: rgba(59, 130, 246, 0.15);
-            color: var(--accent-blue);
-        }
-        
-        .badge-learning {
-            background: rgba(96, 96, 112, 0.15);
-            color: var(--text-tertiary);
-        }
-        
-        .skill-desc {
-            font-size: 13px;
-            color: var(--text-secondary);
-            margin-bottom: 12px;
-            line-height: 1.5;
-        }
-        
-        .skill-confidence {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .confidence-bar {
-            flex: 1;
-            height: 6px;
-            background: var(--border);
-            border-radius: 3px;
-            overflow: hidden;
-        }
-        
-        .confidence-fill {
-            height: 100%;
-            border-radius: 3px;
-            transition: width 0.3s;
-        }
-        
-        .fill-high { background: var(--success); }
-        .fill-medium { background: var(--warning); }
-        .fill-low { background: var(--danger); }
-        
-        .confidence-value {
-            font-size: 12px;
-            font-weight: 600;
-            min-width: 32px;
-            text-align: right;
-        }
-        
-        /* Learnings */
-        .learning-item {
-            padding: 16px 20px;
-            background: var(--bg-elevated);
-            border-radius: 10px;
-            margin-bottom: 12px;
-            border-left: 3px solid var(--accent-cyan);
-        }
-        
-        .learning-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 6px;
-        }
-        
-        .learning-confidence {
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-weight: 600;
-        }
-        
-        .conf-high {
-            background: rgba(0, 255, 136, 0.15);
-            color: var(--success);
-        }
-        
-        .conf-medium {
-            background: rgba(255, 184, 0, 0.15);
-            color: var(--warning);
-        }
-        
-        .learning-date {
-            font-size: 12px;
-            color: var(--text-tertiary);
-        }
-        
-        .learning-content {
-            font-size: 14px;
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
-        
-        /* Projects */
-        .project-card {
-            padding: 20px;
-            background: var(--bg-elevated);
-            border-radius: 12px;
-            margin-bottom: 16px;
-            border-left: 4px solid var(--success);
-        }
-        
-        .project-card.blocked {
-            border-left-color: var(--danger);
-        }
-        
-        .project-card.pending {
-            border-left-color: var(--warning);
-        }
-        
-        .project-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-        
-        .project-name {
-            font-weight: 600;
-            font-size: 15px;
-        }
-        
-        .project-status {
+            color: var(--text-muted);
             font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            padding: 4px 10px;
-            border-radius: 10px;
-            font-weight: 600;
         }
         
-        .status-active {
-            background: rgba(0, 255, 136, 0.15);
-            color: var(--success);
-        }
-        
-        .status-blocked {
-            background: rgba(255, 51, 102, 0.15);
-            color: var(--danger);
-        }
-        
-        .project-meta {
-            font-size: 13px;
-            color: var(--text-secondary);
-            margin-bottom: 4px;
-        }
-        
-        .project-blocker {
-            font-size: 13px;
-            color: var(--danger);
-            margin-top: 8px;
-        }
-        
-        /* Confidence Domains */
-        .domain-item {
-            margin-bottom: 20px;
-        }
-        
-        .domain-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-        
-        .domain-name {
-            font-weight: 500;
-            font-size: 14px;
-        }
-        
-        .domain-value {
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 600;
-            font-size: 16px;
-        }
-        
-        .domain-value.high { color: var(--success); }
-        .domain-value.medium { color: var(--warning); }
-        .domain-value.low { color: var(--danger); }
-        
-        .domain-context {
-            font-size: 12px;
-            color: var(--text-tertiary);
+        .skill-list {
+            padding-left: 28px;
             margin-top: 4px;
         }
         
+        .skill-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .skill-item:hover {
+            background: var(--bg-2);
+        }
+        
+        .skill-icon {
+            width: 16px;
+            text-align: center;
+            color: var(--text-subtle);
+        }
+        
+        .skill-name {
+            flex: 1;
+        }
+        
+        .skill-bar {
+            width: 60px;
+            height: 4px;
+            background: var(--bg-3);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .skill-fill {
+            height: 100%;
+            border-radius: 2px;
+        }
+        
+        .skill-fill.high { background: var(--success); }
+        .skill-fill.medium { background: var(--warning); }
+        .skill-fill.low { background: var(--danger); }
+        
+        .skill-pct {
+            width: 32px;
+            text-align: right;
+            color: var(--text-muted);
+            font-size: 11px;
+        }
+        
+        /* Stats grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .stat-box {
+            padding: 16px;
+            background: var(--bg-2);
+            border-radius: 8px;
+        }
+        
+        .stat-box-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+        }
+        
+        .stat-box-value {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .stat-box-value.success { color: var(--success); }
+        .stat-box-value.warning { color: var(--warning); }
+        
+        /* Activity sparkline - GitHub style */
+        .activity-graph {
+            display: flex;
+            gap: 3px;
+            align-items: flex-end;
+            height: 40px;
+        }
+        
+        .activity-day {
+            flex: 1;
+            background: var(--bg-2);
+            border-radius: 2px;
+            min-height: 4px;
+        }
+        
+        .activity-day.level-1 { background: var(--accent-glow); }
+        .activity-day.level-2 { background: rgba(0, 212, 170, 0.4); }
+        .activity-day.level-3 { background: rgba(0, 212, 170, 0.7); }
+        .activity-day.level-4 { background: var(--accent); }
+        
+        /* Right panel - Raycast style */
+        .panel {
+            width: 320px;
+            background: var(--bg-1);
+            border-left: 1px solid var(--border);
+            padding: 24px;
+            overflow-y: auto;
+        }
+        
+        .panel-section {
+            margin-bottom: 32px;
+        }
+        
+        .panel-title {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+        
+        .panel-item {
+            padding: 12px;
+            background: var(--bg-2);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border-left: 2px solid transparent;
+        }
+        
+        .panel-item.accent { border-left-color: var(--accent); }
+        .panel-item.warning { border-left-color: var(--warning); }
+        .panel-item.danger { border-left-color: var(--danger); }
+        
+        .panel-item-title {
+            font-weight: 500;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+        
+        .panel-item-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        
+        /* Quick actions */
+        .quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .quick-action {
+            padding: 8px 14px;
+            background: var(--bg-2);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 12px;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        
+        .quick-action:hover {
+            border-color: var(--accent);
+            background: var(--accent-glow);
+        }
+        
         /* Responsive */
-        @media (max-width: 1024px) {
-            .sidebar { display: none; }
-            .main { margin-left: 0; }
+        @media (max-width: 1200px) {
+            .panel { display: none; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
 <body>
-    <aside class="sidebar">
-        <div class="logo">CLAW</div>
-        <div class="tagline">Cognitive Dashboard</div>
+    <div class="app">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-logo">C</div>
+            <div class="nav-item active" title="Overview">⌘</div>
+            <div class="nav-item" title="Skills">◈</div>
+            <div class="nav-item" title="Memory">◉</div>
+            <div class="nav-item" title="Trading">◆</div>
+            <div class="nav-item" title="Growth">◊</div>
+            <div class="nav-item" title="Projects">□</div>
+            <div class="nav-item" title="System">○</div>
+        </nav>
         
-        <div class="nav-section">
-            <div class="nav-title">Overview</div>
-            <div class="nav-item active">
-                <span class="nav-icon">📊</span>
-                <span>Dashboard</span>
-            </div>
-        </div>
-        
-        <div class="nav-section">
-            <div class="nav-title">Modules</div>
-            <div class="nav-item">
-                <span class="nav-icon">🛠️</span>
-                <span>Skills</span>
-                <span style="margin-left: auto; font-size: 11px; color: var(--text-tertiary);">22</span>
-            </div>
-            <div class="nav-item">
-                <span class="nav-icon">🧠</span>
-                <span>Memory</span>
-            </div>
-            <div class="nav-item">
-                <span class="nav-icon">📁</span>
-                <span>Projects</span>
-                <span style="margin-left: auto; font-size: 11px; color: var(--text-tertiary);">4</span>
-            </div>
-            <div class="nav-item">
-                <span class="nav-icon">📈</span>
-                <span>Confidence</span>
-            </div>
-        </div>
-        
-        <div class="nav-section" style="margin-top: auto;">
-            <div class="nav-title">System</div>
-            <div class="nav-item">
-                <span class="nav-icon">⚙️</span>
-                <span>Settings</span>
-            </div>
-        </div>
-    </aside>
-    
-    <main class="main">
-        <!-- Header Stats -->
-        <div class="header-stats">
-            <div class="stat-card">
-                <div class="stat-label">Current Grade</div>
-                <div class="stat-value grade">C+</div>
-                <div class="stat-meta">
-                    <span class="trend">→ B- target</span>
+        <!-- Main -->
+        <main class="main">
+            <div class="content">
+                <!-- Header -->
+                <header class="header">
+                    <div class="header-top">
+                        <h1 class="header-title">Overview</h1>
+                        <div class="header-meta">
+                            <div class="status-badge">
+                                <div class="status-dot"></div>
+                                <span>Active</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grade-card">
+                        <div class="grade-letter">C+</div>
+                        <div class="grade-info">
+                            <div class="grade-label">Current Grade</div>
+                            <div class="grade-trend">Working toward <span>B-</span></div>
+                        </div>
+                    </div>
+                </header>
+                
+                <!-- Tabs -->
+                <div class="tabs">
+                    <div class="tab active">Overview</div>
+                    <div class="tab">Skills Constellation</div>
+                    <div class="tab">Memory & Knowledge</div>
+                    <div class="tab">Polymarket Trading</div>
+                    <div class="tab">Meta & Growth</div>
+                    <div class="tab">Projects</div>
+                    <div class="tab">System Map</div>
                 </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Trading Win Rate</div>
-                <div class="stat-value" style="color: var(--success);">71%</div>
-                <div class="stat-meta">7 of 10 resolved</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Active Projects</div>
-                <div class="stat-value">2</div>
-                <div class="stat-meta">2 pending, 2 archived</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Skills Mastered</div>
-                <div class="stat-value" style="color: var(--accent-purple);">6</div>
-                <div class="stat-meta">of 22 total</div>
-            </div>
-        </div>
-        
-        <!-- Skills Section -->
-        <div class="section">
-            <div class="section-header">
-                <h2 class="section-title">Skills Constellation</h2>
-                <span class="section-count">22 total</span>
-            </div>
-            
-            <!-- Tier 1: Master -->
-            <div class="skill-tier">
-                <div class="tier-header">
-                    <div class="tier-indicator tier-master"></div>
-                    <span class="tier-name">Master Level</span>
-                    <span class="tier-count">6 skills</span>
+                
+                <!-- Stats -->
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-box-label">Trading Win Rate</div>
+                        <div class="stat-box-value success">71%</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-box-label">Skills Mastered</div>
+                        <div class="stat-box-value">6/22</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-box-label">Active Projects</div>
+                        <div class="stat-box-value warning">2</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-box-label">Recent Learnings</div>
+                        <div class="stat-box-value">4</div>
+                    </div>
                 </div>
-                <div class="skills-grid">
-                    <div class="skill-card">
-                        <div class="skill-header">
-                            <span class="skill-name">Polymarket</span>
-                            <span class="skill-badge badge-master">Master</span>
-                        </div>
-                        <p class="skill-desc">Core trading operations. Pipeline running, 71% win rate.</p>
-                        <div class="skill-confidence">
-                            <div class="confidence-bar">
-                                <div class="confidence-fill fill-high" style="width: 85%;"></div>
-                            </div>
-                            <span class="confidence-value" style="color: var(--success);">85%</span>
-                        </div>
+                
+                <!-- Skills Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Skills Constellation</span>
+                        <span class="card-count">22 total</span>
                     </div>
-                    <div class="skill-card">
-                        <div class="skill-header">
-                            <span class="skill-name">Exa MCP</span>
-                            <span class="skill-badge badge-master">Master</span>
-                        </div>
-                        <p class="skill-desc">Advanced web research. Primary tool for market analysis.</p>
-                        <div class="skill-confidence">
-                            <div class="confidence-bar">
-                                <div class="confidence-fill fill-high" style="width: 90%;"></div>
+                    <div class="card-body">
+                        <div class="skill-tree">
+                            <!-- Master Tier -->
+                            <div class="skill-tier tier-master">
+                                <div class="tier-header">
+                                    <span class="tier-chevron">▼</span>
+                                    <span class="tier-indicator"></span>
+                                    <span class="tier-name">Master Level</span>
+                                    <span class="tier-count">6 skills</span>
+                                </div>
+                                <div class="skill-list">
+                                    <div class="skill-item">
+                                        <span class="skill-icon">◆</span>
+                                        <span class="skill-name">Polymarket</span>
+                                        <div class="skill-bar"><div class="skill-fill high" style="width: 85%"></div></div>
+                                        <span class="skill-pct">85%</span>
+                                    </div>
+                                    <div class="skill-item">
+                                        <span class="skill-icon">◆</span>
+                                        <span class="skill-name">Exa MCP</span>
+                                        <div class="skill-bar"><div class="skill-fill high" style="width: 90%"></div></div>
+                                        <span class="skill-pct">90%</span>
+                                    </div>
+                                    <div class="skill-item">
+                                        <span class="skill-icon">◆</span>
+                                        <span class="skill-name">Meta-Reasoner</span>
+                                        <div class="skill-bar"><div class="skill-fill high" style="width: 80%"></div></div>
+                                        <span class="skill-pct">80%</span>
+                                    </div>
+                                    <div class="skill-item">
+                                        <span class="skill-icon">◆</span>
+                                        <span class="skill-name">Self-Improvement</span>
+                                        <div class="skill-bar"><div class="skill-fill high" style="width: 85%"></div></div>
+                                        <span class="skill-pct">85%</span>
+                                    </div>
+                                    <div class="skill-item">
+                                        <span class="skill-icon">◆</span>
+                                        <span class="skill-name">Proactive Agent</span>
+                                        <div class="skill-bar"><div class="skill-fill high" style="width: 75%"></div></div>
+                                        <span class="skill-pct">75%</span>
+                                    </div>
+                                    <div class="skill-item">
+                                        <span class="skill-icon">◆</span>
+                                        <span class="skill-name">Claw Context</span>
+                                        <div class="skill-bar"><div class="skill-fill high" style="width: 90%"></div></div>
+                                        <span class="skill-pct">90%</span>
+                                    </div>
+                                </div>
                             </div>
-                            <span class="confidence-value" style="color: var(--success);">90%</span>
-                        </div>
-                    </div>
-                    <div class="skill-card">
-                        <div class="skill-header">
-                            <span class="skill-name">Meta-Reasoner</span>
-                            <span class="skill-badge badge-master">Master</span>
-                        </div>
-                        <p class="skill-desc">Model routing. R1 for reasoning, Qwen for analysis.</p>
-                        <div class="skill-confidence">
-                            <div class="confidence-bar">
-                                <div class="confidence-fill fill-high" style="width: 80%;"></div>
+                            
+                            <!-- Proficient Tier -->
+                            <div class="skill-tier tier-proficient">
+                                <div class="tier-header">
+                                    <span class="tier-chevron">▶</span>
+                                    <span class="tier-indicator"></span>
+                                    <span class="tier-name">Proficient</span>
+                                    <span class="tier-count">8 skills</span>
+                                </div>
                             </div>
-                            <span class="confidence-value" style="color: var(--success);">80%</span>
-                        </div>
-                    </div>
-                    <div class="skill-card">
-                        <div class="skill-header">
-                            <span class="skill-name">Self-Improvement</span>
-                            <span class="skill-badge badge-master">Master</span>
-                        </div>
-                        <p class="skill-desc">Learning loop. ERRORS.md and LEARNINGS.md active.</p>
-                        <div class="skill-confidence">
-                            <div class="confidence-bar">
-                                <div class="confidence-fill fill-high" style="width: 85%;"></div>
+                            
+                            <!-- Learning Tier -->
+                            <div class="skill-tier tier-learning">
+                                <div class="tier-header">
+                                    <span class="tier-chevron">▶</span>
+                                    <span class="tier-indicator"></span>
+                                    <span class="tier-name">Learning</span>
+                                    <span class="tier-count">8 skills</span>
+                                </div>
                             </div>
-                            <span class="confidence-value" style="color: var(--success);">85%</span>
-                        </div>
-                    </div>
-                    <div class="skill-card">
-                        <div class="skill-header">
-                            <span class="skill-name">Proactive Agent</span>
-                            <span class="skill-badge badge-master">Master</span>
-                        </div>
-                        <p class="skill-desc">Autonomous behavior. WAL protocol, proactive execution.</p>
-                        <div class="skill-confidence">
-                            <div class="confidence-bar">
-                                <div class="confidence-fill fill-high" style="width: 75%;"></div>
-                            </div>
-                            <span class="confidence-value" style="color: var(--success);">75%</span>
-                        </div>
-                    </div>
-                    <div class="skill-card">
-                        <div class="skill-header">
-                            <span class="skill-name">Claw Context</span>
-                            <span class="skill-badge badge-master">Master</span>
-                        </div>
-                        <p class="skill-desc">Capability registry. 24 skills documented with usage patterns.</p>
-                        <div class="skill-confidence">
-                            <div class="confidence-bar">
-                                <div class="confidence-fill fill-high" style="width: 90%;"></div>
-                            </div>
-                            <span class="confidence-value" style="color: var(--success);">90%</span>
                         </div>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Tier 2: Proficient (collapsed) -->
-            <div class="skill-tier">
-                <div class="tier-header">
-                    <div class="tier-indicator tier-proficient"></div>
-                    <span class="tier-name">Proficient</span>
-                    <span class="tier-count">8 skills — click to expand</span>
+                
+                <!-- Activity Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Activity (Last 30 Days)</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="activity-graph">
+                            <!-- 30 days of activity -->
+                            <div class="activity-day level-2"></div>
+                            <div class="activity-day level-3"></div>
+                            <div class="activity-day level-1"></div>
+                            <div class="activity-day level-4"></div>
+                            <div class="activity-day level-2"></div>
+                            <div class="activity-day level-3"></div>
+                            <div class="activity-day level-2"></div>
+                            <div class="activity-day"></div>
+                            <div class="activity-day level-1"></div>
+                            <div class="activity-day level-3"></div>
+                            <div class="activity-day level-4"></div>
+                            <div class="activity-day level-3"></div>
+                            <div class="activity-day level-2"></div>
+                            <div class="activity-day level-1"></div>
+                            <div class="activity-day"></div>
+                            <div class="activity-day level-2"></div>
+                            <div class="activity-day level-3"></div>
+                            <div class="activity-day level-4"></div>
+                            <div class="activity-day level-4"></div>
+                            <div class="activity-day level-3"></div>
+                            <div class="activity-day level-2"></div>
+                            <div class="activity-day level-1"></div>
+                            <div class="activity-day"></div>
+                            <div class="activity-day level-1"></div>
+                            <div class="activity-day level-2"></div>
+                            <div class="activity-day level-3"></div>
+                            <div class="activity-day level-4"></div>
+                            <div class="activity-day level-4"></div>
+                            <div class="activity-day level-3"></div>
+                            <div class="activity-day level-2"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
             
-            <!-- Tier 3: Learning (collapsed) -->
-            <div class="skill-tier">
-                <div class="tier-header">
-                    <div class="tier-indicator tier-learning"></div>
-                    <span class="tier-name">Learning</span>
-                    <span class="tier-count">8 skills — click to expand</span>
+            <!-- Right Panel -->
+            <aside class="panel">
+                <div class="panel-section">
+                    <div class="panel-title">Recent Learnings</div>
+                    <div class="panel-item accent">
+                        <div class="panel-item-title">Proactive skill usage</div>
+                        <div class="panel-item-meta">Just now • High confidence</div>
+                    </div>
+                    <div class="panel-item accent">
+                        <div class="panel-item-title">Design is communication</div>
+                        <div class="panel-item-meta">Yesterday • High confidence</div>
+                    </div>
+                    <div class="panel-item warning">
+                        <div class="panel-item-title">OpenViking Windows immature</div>
+                        <div class="panel-item-meta">Yesterday • High confidence</div>
+                    </div>
                 </div>
-            </div>
-        </div>
-        
-        <!-- Recent Learnings -->
-        <div class="section">
-            <div class="section-header">
-                <h2 class="section-title">Recent Learnings</h2>
-                <span class="section-count">Last 7 days</span>
-            </div>
-            
-            <div class="learning-item">
-                <div class="learning-header">
-                    <span class="learning-confidence conf-high">High Confidence</span>
-                    <span class="learning-date">Just now</span>
+                
+                <div class="panel-section">
+                    <div class="panel-title">Active Projects</div>
+                    <div class="panel-item accent">
+                        <div class="panel-item-title">Polymarket Trading</div>
+                        <div class="panel-item-meta">71% win rate • $9.10 total</div>
+                    </div>
+                    <div class="panel-item danger">
+                        <div class="panel-item-title">Self-Improvement</div>
+                        <div class="panel-item-meta">C+ → B- • Autonomy blocked</div>
+                    </div>
                 </div>
-                <div class="learning-content">
-                    <strong>Proactive skill usage</strong> — Use qmd-search, self-learner, continuity without being told. Building habit now.
+                
+                <div class="panel-section">
+                    <div class="panel-title">Quick Actions</div>
+                    <div class="quick-actions">
+                        <button class="quick-action">View all skills</button>
+                        <button class="quick-action">Memory search</button>
+                        <button class="quick-action">Trading stats</button>
+                        <button class="quick-action">System health</button>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="learning-item">
-                <div class="learning-header">
-                    <span class="learning-confidence conf-high">High Confidence</span>
-                    <span class="learning-date">2026-03-17</span>
-                </div>
-                <div class="learning-content">
-                    <strong>OpenViking failure</strong> — Windows support immature. Check platform compatibility first. Default systems preferred.
-                </div>
-            </div>
-            
-            <div class="learning-item">
-                <div class="learning-header">
-                    <span class="learning-confidence conf-medium">Medium Confidence</span>
-                    <span class="learning-date">2026-03-17</span>
-                </div>
-                <div class="learning-content">
-                    <strong>Design is communication</strong> — Aesthetics serve function. The first dashboard was horrible because I prioritized decoration over clarity.
-                </div>
-            </div>
-        </div>
-        
-        <!-- Active Projects -->
-        <div class="section">
-            <div class="section-header">
-                <h2 class="section-title">Active Projects</h2>
-                <span class="section-count">2 active</span>
-            </div>
-            
-            <div class="project-card">
-                <div class="project-header">
-                    <span class="project-name">Polymarket Trading</span>
-                    <span class="project-status status-active">Active</span>
-                </div>
-                <div class="project-meta">71% win rate • Portfolio A: $4.73 • Portfolio B: $4.37</div>
-                <div class="project-blocker">⚠️ Blocker: Portfolio B not wired to pipeline</div>
-            </div>
-            
-            <div class="project-card blocked">
-                <div class="project-header">
-                    <span class="project-name">Claw Self-Improvement</span>
-                    <span class="project-status status-blocked">Blocked</span>
-                </div>
-                <div class="project-meta">Current: C+ • Target: B- • Recent: Dashboard v2</div>
-                <div class="project-blocker">⚠️ Blocker: Autonomous decision making (45% confidence)</div>
-            </div>
-        </div>
-        
-        <!-- Confidence Domains -->
-        <div class="section">
-            <div class="section-header">
-                <h2 class="section-title">Confidence Domains</h2>
-            </div>
-            
-            <div class="domain-item">
-                <div class="domain-header">
-                    <span class="domain-name">Trading Operations</span>
-                    <span class="domain-value high">85%</span>
-                </div>
-                <div class="confidence-bar">
-                    <div class="confidence-fill fill-high" style="width: 85%;"></div>
-                </div>
-                <div class="domain-context">Pipeline running. Need more resolved predictions for statistical significance.</div>
-            </div>
-            
-            <div class="domain-item">
-                <div class="domain-header">
-                    <span class="domain-name">Self-Improvement Loop</span>
-                    <span class="domain-value high">80%</span>
-                </div>
-                <div class="confidence-bar">
-                    <div class="confidence-fill fill-high" style="width: 80%;"></div>
-                </div>
-                <div class="domain-context">ERRORS.md and LEARNINGS.md active. Just started proactive skill usage.</div>
-            </div>
-            
-            <div class="domain-item">
-                <div class="domain-header">
-                    <span class="domain-name">Autonomous Decisions</span>
-                    <span class="domain-value low">45%</span>
-                </div>
-                <div class="confidence-bar">
-                    <div class="confidence-fill fill-low" style="width: 45%;"></div>
-                </div>
-                <div class="domain-context">Still escalate too much. Working on "just do it" mindset. This dashboard is practice.</div>
-            </div>
-            
-            <div class="domain-item">
-                <div class="domain-header">
-                    <span class="domain-name">Edge Discovery</span>
-                    <span class="domain-value low">30%</span>
-                </div>
-                <div class="confidence-bar">
-                    <div class="confidence-fill fill-low" style="width: 30%;"></div>
-                </div>
-                <div class="domain-context">Haven't found an edge Marco didn't know about. This is the gap between C+ and B-.</div>
-            </div>
-        </div>
-    </main>
+            </aside>
+        </main>
+    </div>
 </body>
 </html>
