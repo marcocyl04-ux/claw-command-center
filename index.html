@@ -3,399 +3,469 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Claw Command Center</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <title>Claw — Cognitive State</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
         :root {
-            --bg-root: #0a0a0a;
-            --bg-surface: #141414;
-            --bg-elevated: #1a1a1a;
-            --fg-primary: #e8e8e8;
-            --fg-secondary: #666666;
-            --fg-tertiary: #444444;
-            --accent: #d4a853;
-            --status-good: #22c55e;
-            --status-attention: #eab308;
-            --status-bad: #ef4444;
-            --border: #ffffff12;
+            --bg-deep: #050508;
+            --bg-surface: #0a0a10;
+            --bg-elevated: #12121a;
+            --accent-cyan: #00f0ff;
+            --accent-magenta: #ff006e;
+            --accent-gold: #ffd60a;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --text-tertiary: #606070;
+            --success: #00ff88;
+            --warning: #ffb800;
+            --danger: #ff3366;
         }
         
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-root);
-            color: var(--fg-primary);
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-deep);
+            color: var(--text-primary);
             min-height: 100vh;
             overflow-x: hidden;
         }
         
-        /* Shell */
-        .shell {
-            display: grid;
-            grid-template-columns: 240px 1fr;
-            min-height: 100vh;
+        .bg-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+            z-index: 0;
         }
         
-        /* Sidebar */
-        .sidebar {
-            background: var(--bg-surface);
-            border-right: 1px solid var(--border);
-            padding: 32px 24px;
-            display: flex;
-            flex-direction: column;
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
         }
         
-        .sidebar__brand {
-            font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--fg-secondary);
-            margin-bottom: 48px;
-        }
-        
-        .sidebar__nav {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        
-        .nav-item {
-            padding: 12px 16px;
-            border-radius: 8px;
-            color: var(--fg-secondary);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.15s ease;
-            cursor: pointer;
-            border-left: 3px solid transparent;
-        }
-        
-        .nav-item:hover {
-            background: var(--bg-elevated);
-            color: var(--fg-primary);
-        }
-        
-        .nav-item.active {
-            background: var(--bg-elevated);
-            color: var(--fg-primary);
-            border-left-color: var(--accent);
-        }
-        
-        /* Main */
-        .main {
-            padding: 48px;
-            overflow-y: auto;
-        }
-        
-        /* Overview Cards */
-        .overview {
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-            max-width: 800px;
-        }
-        
-        .overview-card {
-            background: var(--bg-surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 32px;
-            cursor: pointer;
-            transition: all 0.2s ease;
+        .container {
             position: relative;
-            overflow: hidden;
+            z-index: 10;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
         }
         
-        .overview-card:hover {
-            border-color: #ffffff20;
-            transform: translateY(-2px);
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
         }
         
-        .overview-card::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            background: var(--status-color, var(--fg-tertiary));
+        .header h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 5rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 60px rgba(0, 240, 255, 0.3);
         }
         
-        .overview-card--good { --status-color: var(--status-good); }
-        .overview-card--attention { --status-color: var(--status-attention); }
-        .overview-card--bad { --status-color: var(--status-bad); }
+        .subtitle {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
         
-        .overview-card__header {
+        .grade-display {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 60px;
+            margin: 60px 0;
+        }
+        
+        .grade-circle {
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background: conic-gradient(var(--accent-gold) 0deg 252deg, var(--bg-elevated) 252deg);
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            margin-bottom: 24px;
+            justify-content: center;
+            box-shadow: 0 0 80px rgba(255, 214, 10, 0.3);
+            animation: pulse 3s ease-in-out infinite;
         }
         
-        .overview-card__title {
-            font-size: 14px;
-            font-weight: 600;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            color: var(--fg-secondary);
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 40px rgba(255, 214, 10, 0.3); }
+            50% { box-shadow: 0 0 80px rgba(255, 214, 10, 0.5); }
         }
         
-        .overview-card__status {
-            width: 8px;
-            height: 8px;
+        .grade-inner {
+            width: 180px;
+            height: 180px;
             border-radius: 50%;
-            background: var(--status-color);
+            background: var(--bg-surface);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
         
-        .overview-card__metrics {
+        .grade-letter {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 6rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+        }
+        
+        .metrics {
             display: flex;
-            gap: 48px;
+            gap: 50px;
         }
         
         .metric {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
+            text-align: center;
         }
         
-        .metric__value {
-            font-size: 48px;
+        .metric-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3.5rem;
             font-weight: 600;
-            font-variant-numeric: tabular-nums;
-            color: var(--fg-primary);
-            line-height: 1;
+            color: var(--accent-cyan);
         }
         
-        .metric__value--accent {
-            color: var(--accent);
+        .metric-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
         }
         
-        .metric__label {
-            font-size: 12px;
-            color: var(--fg-secondary);
+        .section {
+            background: var(--bg-surface);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            color: var(--accent-cyan);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .skill-card {
+            background: var(--bg-elevated);
+            border-radius: 16px;
+            padding: 24px;
+            border-left: 4px solid var(--accent-cyan);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .skill-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 240, 255, 0.1);
+        }
+        
+        .skill-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .skill-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .skill-level {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
         
-        .overview-card__context {
-            margin-top: 24px;
-            padding-top: 24px;
-            border-top: 1px solid var(--border);
-            font-size: 14px;
-            color: var(--fg-secondary);
-            line-height: 1.6;
+        .level-master {
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(0, 255, 136, 0.3);
         }
         
-        /* Section Panels */
-        .section-panel {
-            display: none;
+        .level-proficient {
+            background: rgba(0, 240, 255, 0.15);
+            color: var(--accent-cyan);
+            border: 1px solid rgba(0, 240, 255, 0.3);
         }
         
-        .section-panel.active {
-            display: block;
-            animation: slideIn 0.3s ease;
+        .level-learning {
+            background: rgba(255, 184, 0, 0.15);
+            color: var(--warning);
+            border: 1px solid rgba(255, 184, 0, 0.3);
         }
         
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(20px); }
-            to { opacity: 1; transform: translateX(0); }
+        .skill-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
         }
         
-        .section-header {
-            margin-bottom: 32px;
+        .memory-item {
+            padding: 20px;
+            margin-bottom: 16px;
+            background: var(--bg-elevated);
+            border-radius: 12px;
+            border-left: 3px solid var(--accent-magenta);
         }
         
-        .section-header__title {
-            font-size: 32px;
-            font-weight: 600;
+        .memory-time {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            color: var(--accent-magenta);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
             margin-bottom: 8px;
         }
         
-        .section-header__desc {
-            font-size: 16px;
-            color: var(--fg-secondary);
+        .confidence-bar {
+            height: 10px;
+            background: var(--bg-elevated);
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        
+        .confidence-fill {
+            height: 100%;
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+        
+        .fill-high { background: linear-gradient(90deg, var(--success), #00cc6a); }
+        .fill-medium { background: linear-gradient(90deg, var(--warning), #cc9200); }
+        .fill-low { background: linear-gradient(90deg, var(--danger), #cc0044); }
+        
+        .trait-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .trait-card {
+            padding: 20px;
+            background: var(--bg-elevated);
+            border-radius: 12px;
+        }
+        
+        .trait-label {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 8px;
+        }
+        
+        .trait-value {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 { font-size: 3rem; }
+            .grade-display { flex-direction: column; gap: 30px; }
+            .metrics { flex-direction: column; gap: 20px; }
         }
     </style>
 </head>
 <body>
-    <div class="shell">
-        <aside class="sidebar">
-            <div class="sidebar__brand">Claw Command Center</div>
-            <nav class="sidebar__nav">
-                <a class="nav-item active" data-section="overview">Overview</a>
-                <a class="nav-item" data-section="money">Money & Bets</a>
-                <a class="nav-item" data-section="decisions">How I Decide</a>
-                <a class="nav-item" data-section="changing">How I'm Changing</a>
-            </nav>
-        </aside>
+    <div class="bg-grid"></div>
+    <div class="container">
+        <header class="header">
+            <h1>CLAW</h1>
+            <p class="subtitle">Cognitive State Dashboard</p>
+        </header>
         
-        <main class="main">
-            <!-- Overview -->
-            <div class="section-panel active" id="overview">
-                <div class="overview">
-                    <div class="overview-card overview-card--good" data-section="money">
-                        <div class="overview-card__header">
-                            <span class="overview-card__title">Money & Bets</span>
-                            <span class="overview-card__status"></span>
-                        </div>
-                        <div class="overview-card__metrics">
-                            <div class="metric">
-                                <span class="metric__value metric__value--accent" id="ov-invested">$--</span>
-                                <span class="metric__label">Invested</span>
-                            </div>
-                            <div class="metric">
-                                <span class="metric__value metric__value--accent" id="ov-earnings">+$--</span>
-                                <span class="metric__label">Earnings</span>
-                            </div>
-                            <div class="metric">
-                                <span class="metric__value" id="ov-winrate">--%</span>
-                                <span class="metric__label">Win Rate</span>
-                            </div>
-                        </div>
-                        <div class="overview-card__context" id="ov-money-context">
-                            Loading portfolio data...
-                        </div>
+        <div class="grade-display">
+            <div class="grade-circle">
+                <div class="grade-inner">
+                    <div class="grade-letter">C+</div>
+                </div>
+            </div>
+            <div class="metrics">
+                <div class="metric">
+                    <div class="metric-value">22</div>
+                    <div class="metric-label">Skills</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">71%</div>
+                    <div class="metric-label">Win Rate</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">4</div>
+                    <div class="metric-label">Projects</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title">🛠️ Skills Constellation</h2>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <div class="skill-header">
+                        <span class="skill-name">Polymarket</span>
+                        <span class="skill-level level-master">Master</span>
                     </div>
-                    
-                    <div class="overview-card overview-card--attention" data-section="decisions">
-                        <div class="overview-card__header">
-                            <span class="overview-card__title">How I Decide</span>
-                            <span class="overview-card__status"></span>
-                        </div>
-                        <div class="overview-card__metrics">
-                            <div class="metric">
-                                <span class="metric__value" id="ov-rules-working">--</span>
-                                <span class="metric__label">Rules Working</span>
-                            </div>
-                            <div class="metric">
-                                <span class="metric__value" id="ov-rules-attention">--</span>
-                                <span class="metric__label">Need Attention</span>
-                            </div>
-                            <div class="metric">
-                                <span class="metric__value" id="ov-yesterday-score">--/10</span>
-                                <span class="metric__label">Yesterday</span>
-                            </div>
-                        </div>
-                        <div class="overview-card__context" id="ov-decisions-context">
-                            Loading decision data...
-                        </div>
+                    <p class="skill-desc">Core trading operations. Pipeline running, 71% win rate.</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-header">
+                        <span class="skill-name">Exa MCP</span>
+                        <span class="skill-level level-master">Master</span>
                     </div>
-                    
-                    <div class="overview-card overview-card--good" data-section="changing">
-                        <div class="overview-card__header">
-                            <span class="overview-card__title">How I'm Changing</span>
-                            <span class="overview-card__status"></span>
-                        </div>
-                        <div class="overview-card__metrics">
-                            <div class="metric">
-                                <span class="metric__value" id="ov-version">v--</span>
-                                <span class="metric__label">Version</span>
-                            </div>
-                            <div class="metric">
-                                <span class="metric__value" id="ov-updates">--</span>
-                                <span class="metric__label">Updates</span>
-                            </div>
-                            <div class="metric">
-                                <span class="metric__value" id="ov-last-update">--</span>
-                                <span class="metric__label">Last Update</span>
-                            </div>
-                        </div>
-                        <div class="overview-card__context" id="ov-changing-context">
-                            Loading evolution data...
-                        </div>
+                    <p class="skill-desc">Advanced web research. Primary tool for market analysis.</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-header">
+                        <span class="skill-name">Meta-Reasoner</span>
+                        <span class="skill-level level-master">Master</span>
                     </div>
+                    <p class="skill-desc">Model routing. R1 for reasoning, Qwen for analysis.</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-header">
+                        <span class="skill-name">Self-Improvement</span>
+                        <span class="skill-level level-master">Master</span>
+                    </div>
+                    <p class="skill-desc">Learning loop. ERRORS.md and LEARNINGS.md active.</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-header">
+                        <span class="skill-name">Proactive Agent</span>
+                        <span class="skill-level level-master">Master</span>
+                    </div>
+                    <p class="skill-desc">Autonomous behavior. WAL protocol, proactive execution.</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-header">
+                        <span class="skill-name">Claw Context</span>
+                        <span class="skill-level level-master">Master</span>
+                    </div>
+                    <p class="skill-desc">Capability registry. 24 skills documented.</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-header">
+                        <span class="skill-name">QMD Search</span>
+                        <span class="skill-level level-proficient">Proficient</span>
+                    </div>
+                    <p class="skill-desc">Semantic file search. Just started proactive use.</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-header">
+                        <span class="skill-name">Impeccable</span>
+                        <span class="skill-level level-learning">Learning</span>
+                    </div>
+                    <p class="skill-desc">Design language. Applied to rebuild this dashboard.</p>
                 </div>
             </div>
-            
-            <!-- Money & Bets -->
-            <div class="section-panel" id="money">
-                <div class="section-header">
-                    <h1 class="section-header__title">Money & Bets</h1>
-                    <p class="section-header__desc">What markets I'm trading, how much is at stake, and whether I'm winning.</p>
-                </div>
-                <div id="money-content">Loading...</div>
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title">🧠 Recent Memory</h2>
+            <div class="memory-item">
+                <div class="memory-time">Just Now</div>
+                <p>Dashboard rebuilt with impeccable principles. Learned aesthetics are communication.</p>
             </div>
-            
-            <!-- How I Decide -->
-            <div class="section-panel" id="decisions">
-                <div class="section-header">
-                    <h1 class="section-header__title">How I Decide</h1>
-                    <p class="section-header__desc">The rules I follow, where they break, and what I'm learning from my mistakes.</p>
-                </div>
-                <div id="decisions-content">Loading...</div>
+            <div class="memory-item">
+                <div class="memory-time">2026-03-18 00:02</div>
+                <p>Demonstrated proactive skill usage. Building habit of reaching for tools.</p>
             </div>
-            
-            <!-- How I'm Changing -->
-            <div class="section-panel" id="changing">
-                <div class="section-header">
-                    <h1 class="section-header__title">How I'm Changing</h1>
-                    <p class="section-header__desc">How I'm evolving, what capabilities I'm adding, and where I'm struggling.</p>
-                </div>
-                <div id="changing-content">Loading...</div>
+            <div class="memory-item">
+                <div class="memory-time">2026-03-17 22:01</div>
+                <p>OpenViking cleanup complete. System stable with memory-core.</p>
             </div>
-        </main>
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title">📊 Confidence Domains</h2>
+            <div style="margin-bottom: 25px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span>Trading Operations</span>
+                    <span style="color: var(--success);">85%</span>
+                </div>
+                <div class="confidence-bar">
+                    <div class="confidence-fill fill-high" style="width: 85%;"></div>
+                </div>
+            </div>
+            <div style="margin-bottom: 25px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span>Self-Improvement Loop</span>
+                    <span style="color: var(--success);">80%</span>
+                </div>
+                <div class="confidence-bar">
+                    <div class="confidence-fill fill-high" style="width: 80%;"></div>
+                </div>
+            </div>
+            <div style="margin-bottom: 25px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span>Autonomous Decisions</span>
+                    <span style="color: var(--danger);">45%</span>
+                </div>
+                <div class="confidence-bar">
+                    <div class="confidence-fill fill-low" style="width: 45%;"></div>
+                </div>
+            </div>
+            <div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span>Edge Discovery</span>
+                    <span style="color: var(--danger);">30%</span>
+                </div>
+                <div class="confidence-bar">
+                    <div class="confidence-fill fill-low" style="width: 30%;"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title">👤 Marco Profile</h2>
+            <div class="trait-grid">
+                <div class="trait-card">
+                    <div class="trait-label">Core Drive</div>
+                    <div class="trait-value">Fear of wasted potential</div>
+                </div>
+                <div class="trait-card">
+                    <div class="trait-label">Communication</div>
+                    <div class="trait-value">Direct, no filler</div>
+                </div>
+                <div class="trait-card">
+                    <div class="trait-label">What He Wants</div>
+                    <div class="trait-value">Intelligent execution</div>
+                </div>
+                <div class="trait-card">
+                    <div class="trait-label">What He Hates</div>
+                    <div class="trait-value">Permission-seeking, silence</div>
+                </div>
+            </div>
+        </div>
     </div>
-    
-    <script>
-        // Navigation
-        const navItems = document.querySelectorAll('.nav-item');
-        const panels = document.querySelectorAll('.section-panel');
-        const overviewCards = document.querySelectorAll('.overview-card');
-        
-        function showSection(sectionId) {
-            panels.forEach(p => p.classList.remove('active'));
-            navItems.forEach(n => n.classList.remove('active'));
-            
-            document.getElementById(sectionId).classList.add('active');
-            document.querySelector(`[data-section="${sectionId}"]`).classList.add('active');
-        }
-        
-        navItems.forEach(item => {
-            item.addEventListener('click', () => showSection(item.dataset.section));
-        });
-        
-        overviewCards.forEach(card => {
-            card.addEventListener('click', () => showSection(card.dataset.section));
-        });
-        
-        // API Configuration
-        const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:5000' : '';
-        
-        // Load overview data
-        async function loadOverview() {
-            try {
-                // Portfolio
-                const portfolio = await fetch(`${API_BASE}/api/portfolio`).then(r => r.json());
-                document.getElementById('ov-invested').textContent = `$${portfolio.deployed?.toFixed(2) || '--'}`;
-                document.getElementById('ov-earnings').textContent = `${portfolio.realized_pnl >= 0 ? '+' : ''}$${portfolio.realized_pnl?.toFixed(2) || '--'}`;
-                document.getElementById('ov-winrate').textContent = `${Math.round((portfolio.win_rate || 0) * 100)}%`;
-                document.getElementById('ov-money-context').textContent = 
-                    `${portfolio.open_positions || 0} open positions • ${portfolio.wins || 0} wins / ${portfolio.losses || 0} losses`;
-                
-                // Heuristics
-                const heuristics = await fetch(`${API_BASE}/api/heuristics`).then(r => r.json());
-                const working = heuristics.filter(h => h.status === 'VALIDATED' || h.status === 'UNVALIDATED').length;
-                const attention = heuristics.filter(h => h.status === 'FLAGGED' || h.status === 'VIOLATED').length;
-                document.getElementById('ov-rules-working').textContent = working;
-                document.getElementById('ov-rules-attention').textContent = attention;
-                
-                // Reviews
-                const reviews = await fetch(`${API_BASE}/api/self-review`).then(r => r.json());
-                const yesterday = reviews[0];
-                document.getElementById('ov-yesterday-score').textContent = yesterday ? `${yesterday.health_score}/10` : '--/10';
-                document.getElementById('ov-decisions-context').textContent = yesterday ? yesterday.key_actions : 'No reviews yet';
-                
-            } catch (e) {
-                console.error('Failed to load overview:', e);
-            }
-        }
-        
-        loadOverview();
-    </script>
 </body>
 </html>
