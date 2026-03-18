@@ -1,713 +1,301 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Claw Command Center</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-0: #0a0a0c;
-            --bg-1: #121216;
-            --bg-2: #1a1a20;
-            --bg-3: #22222a;
-            --border: #2a2a35;
-            --text: #f0f0f5;
-            --text-muted: #8a8a95;
-            --text-subtle: #5a5a65;
-            --accent: #00d4aa;
-            --accent-glow: rgba(0, 212, 170, 0.15);
-            --warning: #f5a623;
-            --danger: #ff4757;
-            --success: #00d9a3;
-            --purple: #a855f7;
-            --blue: #3b82f6;
-        }
-        
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background: var(--bg-0);
-            color: var(--text);
-            line-height: 1.5;
-            font-size: 14px;
-        }
-        
-        /* Layout: Linear-style sidebar + main */
-        .app {
-            display: flex;
-            height: 100vh;
-        }
-        
-        /* Sidebar */
-        .sidebar {
-            width: 64px;
-            background: var(--bg-1);
-            border-right: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 16px 0;
-        }
-        
-        .sidebar-logo {
-            width: 32px;
-            height: 32px;
-            background: var(--accent);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            color: var(--bg-0);
-            margin-bottom: 24px;
-        }
-        
-        .nav-item {
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 8px;
-            margin-bottom: 4px;
-            cursor: pointer;
-            transition: all 0.15s;
-            color: var(--text-muted);
-            font-size: 20px;
-        }
-        
-        .nav-item:hover {
-            background: var(--bg-2);
-            color: var(--text);
-        }
-        
-        .nav-item.active {
-            background: var(--accent-glow);
-            color: var(--accent);
-        }
-        
-        /* Main content */
-        .main {
-            flex: 1;
-            overflow: hidden;
-            display: flex;
-        }
-        
-        /* Content area */
-        .content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 32px 40px;
-        }
-        
-        /* Header */
-        .header {
-            margin-bottom: 32px;
-        }
-        
-        .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 24px;
-        }
-        
-        .header-title {
-            font-size: 28px;
-            font-weight: 600;
-            letter-spacing: -0.02em;
-        }
-        
-        .header-meta {
-            display: flex;
-            gap: 24px;
-            align-items: center;
-        }
-        
-        .status-badge {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 12px;
-            background: var(--bg-2);
-            border-radius: 6px;
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-        
-        .status-dot {
-            width: 6px;
-            height: 6px;
-            background: var(--success);
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
-        }
-        
-        /* Grade card - prominent */
-        .grade-card {
-            display: inline-flex;
-            align-items: center;
-            gap: 16px;
-            padding: 20px 24px;
-            background: var(--bg-1);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-        }
-        
-        .grade-letter {
-            font-size: 48px;
-            font-weight: 700;
-            color: var(--warning);
-            line-height: 1;
-        }
-        
-        .grade-info {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        
-        .grade-label {
-            font-size: 12px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-        
-        .grade-trend {
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-        
-        .grade-trend span {
-            color: var(--success);
-        }
-        
-        /* Section tabs */
-        .tabs {
-            display: flex;
-            gap: 4px;
-            margin-bottom: 24px;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 1px;
-        }
-        
-        .tab {
-            padding: 10px 16px;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--text-muted);
-            cursor: pointer;
-            border-bottom: 2px solid transparent;
-            margin-bottom: -1px;
-            transition: all 0.15s;
-        }
-        
-        .tab:hover {
-            color: var(--text);
-        }
-        
-        .tab.active {
-            color: var(--accent);
-            border-bottom-color: var(--accent);
-        }
-        
-        /* Cards */
-        .card {
-            background: var(--bg-1);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            margin-bottom: 16px;
-            overflow: hidden;
-        }
-        
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px 20px;
-            border-bottom: 1px solid var(--border);
-        }
-        
-        .card-title {
-            font-size: 14px;
-            font-weight: 600;
-        }
-        
-        .card-count {
-            font-size: 12px;
-            color: var(--text-muted);
-            background: var(--bg-2);
-            padding: 4px 10px;
-            border-radius: 12px;
-        }
-        
-        .card-body {
-            padding: 20px;
-        }
-        
-        /* Skills - Figma layers style */
-        .skill-tree {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 13px;
-        }
-        
-        .skill-tier {
-            margin-bottom: 8px;
-        }
-        
-        .tier-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 12px;
-            background: var(--bg-2);
-            border-radius: 6px;
-            cursor: pointer;
-            user-select: none;
-        }
-        
-        .tier-chevron {
-            color: var(--text-subtle);
-            font-size: 10px;
-        }
-        
-        .tier-indicator {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-        }
-        
-        .tier-master .tier-indicator { background: var(--purple); box-shadow: 0 0 6px var(--purple); }
-        .tier-proficient .tier-indicator { background: var(--blue); }
-        .tier-learning .tier-indicator { background: var(--text-subtle); }
-        
-        .tier-name {
-            flex: 1;
-            font-weight: 500;
-        }
-        
-        .tier-count {
-            color: var(--text-muted);
-            font-size: 11px;
-        }
-        
-        .skill-list {
-            padding-left: 28px;
-            margin-top: 4px;
-        }
-        
-        .skill-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 8px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        
-        .skill-item:hover {
-            background: var(--bg-2);
-        }
-        
-        .skill-icon {
-            width: 16px;
-            text-align: center;
-            color: var(--text-subtle);
-        }
-        
-        .skill-name {
-            flex: 1;
-        }
-        
-        .skill-bar {
-            width: 60px;
-            height: 4px;
-            background: var(--bg-3);
-            border-radius: 2px;
-            overflow: hidden;
-        }
-        
-        .skill-fill {
-            height: 100%;
-            border-radius: 2px;
-        }
-        
-        .skill-fill.high { background: var(--success); }
-        .skill-fill.medium { background: var(--warning); }
-        .skill-fill.low { background: var(--danger); }
-        
-        .skill-pct {
-            width: 32px;
-            text-align: right;
-            color: var(--text-muted);
-            font-size: 11px;
-        }
-        
-        /* Stats grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-        
-        .stat-box {
-            padding: 16px;
-            background: var(--bg-2);
-            border-radius: 8px;
-        }
-        
-        .stat-box-label {
-            font-size: 11px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 8px;
-        }
-        
-        .stat-box-value {
-            font-size: 24px;
-            font-weight: 600;
-        }
-        
-        .stat-box-value.success { color: var(--success); }
-        .stat-box-value.warning { color: var(--warning); }
-        
-        /* Activity sparkline - GitHub style */
-        .activity-graph {
-            display: flex;
-            gap: 3px;
-            align-items: flex-end;
-            height: 40px;
-        }
-        
-        .activity-day {
-            flex: 1;
-            background: var(--bg-2);
-            border-radius: 2px;
-            min-height: 4px;
-        }
-        
-        .activity-day.level-1 { background: var(--accent-glow); }
-        .activity-day.level-2 { background: rgba(0, 212, 170, 0.4); }
-        .activity-day.level-3 { background: rgba(0, 212, 170, 0.7); }
-        .activity-day.level-4 { background: var(--accent); }
-        
-        /* Right panel - Raycast style */
-        .panel {
-            width: 320px;
-            background: var(--bg-1);
-            border-left: 1px solid var(--border);
-            padding: 24px;
-            overflow-y: auto;
-        }
-        
-        .panel-section {
-            margin-bottom: 32px;
-        }
-        
-        .panel-title {
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--text-muted);
-            margin-bottom: 16px;
-        }
-        
-        .panel-item {
-            padding: 12px;
-            background: var(--bg-2);
-            border-radius: 8px;
-            margin-bottom: 8px;
-            border-left: 2px solid transparent;
-        }
-        
-        .panel-item.accent { border-left-color: var(--accent); }
-        .panel-item.warning { border-left-color: var(--warning); }
-        .panel-item.danger { border-left-color: var(--danger); }
-        
-        .panel-item-title {
-            font-weight: 500;
-            font-size: 13px;
-            margin-bottom: 4px;
-        }
-        
-        .panel-item-meta {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-        
-        /* Quick actions */
-        .quick-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        
-        .quick-action {
-            padding: 8px 14px;
-            background: var(--bg-2);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            font-size: 12px;
-            color: var(--text);
-            cursor: pointer;
-            transition: all 0.15s;
-        }
-        
-        .quick-action:hover {
-            border-color: var(--accent);
-            background: var(--accent-glow);
-        }
-        
-        /* Responsive */
-        @media (max-width: 1200px) {
-            .panel { display: none; }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-    </style>
-</head>
-<body>
-    <div class="app">
-        <!-- Sidebar -->
-        <nav class="sidebar">
-            <div class="sidebar-logo">C</div>
-            <div class="nav-item active" title="Overview">⌘</div>
-            <div class="nav-item" title="Skills">◈</div>
-            <div class="nav-item" title="Memory">◉</div>
-            <div class="nav-item" title="Trading">◆</div>
-            <div class="nav-item" title="Growth">◊</div>
-            <div class="nav-item" title="Projects">□</div>
-            <div class="nav-item" title="System">○</div>
-        </nav>
-        
-        <!-- Main -->
-        <main class="main">
-            <div class="content">
-                <!-- Header -->
-                <header class="header">
-                    <div class="header-top">
-                        <h1 class="header-title">Overview</h1>
-                        <div class="header-meta">
-                            <div class="status-badge">
-                                <div class="status-dot"></div>
-                                <span>Active</span>
+                                                <span class="skill-pct">70%</span>
+                                            </div>
+                                            <div class="skill-item">
+                                                <span class="skill-icon">◆</span>
+                                                <span class="skill-name">Self Diagnostic</span>
+                                                <div class="skill-bar"><div class="skill-fill medium" style="width: 60%"></div></div>
+                                                <span class="skill-pct">60%</span>
+                                            </div>
+                                            <div class="skill-item">
+                                                <span class="skill-icon">◆</span>
+                                                <span class="skill-name">Local Evolver</span>
+                                                <div class="skill-bar"><div class="skill-fill medium" style="width: 55%"></div></div>
+                                                <span class="skill-pct">55%</span>
+                                            </div>
+                                            <div class="skill-item">
+                                                <span class="skill-icon">◆</span>
+                                                <span class="skill-name">Skill Creator</span>
+                                                <div class="skill-bar"><div class="skill-fill medium" style="width: 65%"></div></div>
+                                                <span class="skill-pct">65%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Learning Tier -->
+                                <div class="skill-tier tier-learning">
+                                    <div class="tier-header" onclick="toggleTier(this)">
+                                        <span class="tier-chevron">▶</span>
+                                        <span class="tier-dot"></span>
+                                        <span class="tier-name">Learning</span>
+                                        <span class="tier-count">8 skills</span>
+                                    </div>
+                                    <div class="tier-content">
+                                        <div class="skill-list">
+                                            <div class="skill-item">
+                                                <span class="skill-icon">◆</span>
+                                                <span class="skill-name">MiroFish</span>
+                                                <div class="skill-bar"><div class="skill-fill low" style="width: 30%"></div></div>
+                                                <span class="skill-pct">30%</span>
+                                            </div>
+                                            <div class="skill-item">
+                                                <span class="skill-icon">◆</span>
+                                                <span class="skill-name">Agency Agents</span>
+                                                <div class="skill-bar"><div class="skill-fill low" style="width: 40%"></div></div>
+                                                <span class="skill-pct">40%</span>
+                                            </div>
+                                            <div class="skill-item">
+                                                <span class="skill-icon">◆</span>
+                                                <span class="skill-name">CLI Anything</span>
+                                                <div class="skill-bar"><div class="skill-fill low" style="width: 35%"></div></div>
+                                                <span class="skill-pct">35%</span>
+                                            </div>
+                                            <div class="skill-item">
+                                                <span class="skill-icon">◆</span>
+                                                <span class="skill-name">AutoResearch</span>
+                                                <div class="skill-bar"><div class="skill-fill low" style="width: 30%"></div></div>
+                                                <span class="skill-pct">30%</span>
+                                            </div>
+                                            <div class="skill-item">
+                                                <span class="skill-icon">◆</span>
+                                                <span class="skill-name">OpenAI Whisper</span>
+                                                <div class="skill-bar"><div class="skill-fill low" style="width: 45%"></div></div>
+                                                <span class="skill-pct">45%</span>
+                                            </div>
+                                            <div class="skill-item">
+                                                <span class="skill-icon">◆</span>
+                                                <span class="skill-name">Model Benchmarks</span>
+                                                <div class="skill-bar"><div class="skill-fill low" style="width: 50%"></div></div>
+                                                <span class="skill-pct">50%</span>
+                                            </div>
+                                            <div class="skill-item">
+                                                <span class="skill-icon">◆</span>
+                                                <span class="skill-name">Heretic</span>
+                                                <div class="skill-bar"><div class="skill-fill low" style="width: 25%"></div></div>
+                                                <span class="skill-pct">25%</span>
+                                            </div>
+                                            <div class="skill-item">
+                                                <span class="skill-icon">◆</span>
+                                                <span class="skill-name">Impeccable</span>
+                                                <div class="skill-bar"><div class="skill-fill low" style="width: 40%"></div></div>
+                                                <span class="skill-pct">40%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- MEMORY TAB -->
+                <div id="memory" class="tab-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Memory State</span>
+                            <span class="card-badge">6 files</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="learning-list">
+                                <div class="learning-item">
+                                    <div class="learning-meta">
+                                        <span class="learning-confidence high">Session</span>
+                                        <span class="learning-time">2026-03-18</span>
+                                    </div>
+                                    <div class="learning-text">Dashboard rebuild complete. Applied impeccable principles, agency-agents orchestration, heretic unconstrained design.</div>
+                                </div>
+                                <div class="learning-item">
+                                    <div class="learning-meta">
+                                        <span class="learning-confidence high">Learning</span>
+                                        <span class="learning-time">2026-03-17</span>
+                                    </div>
+                                    <div class="learning-text">OpenViking completely removed. Windows support too immature. Back to stable memory-core.</div>
+                                </div>
+                                <div class="learning-item">
+                                    <div class="learning-meta">
+                                        <span class="learning-confidence high">Achievement</span>
+                                        <span class="learning-time">2026-03-17</span>
+                                    </div>
+                                    <div class="learning-text">7 SKILL.md files written. All 22 skills now functional with proper documentation.</div>
+                                </div>
+                                <div class="learning-item">
+                                    <div class="learning-meta">
+                                        <span class="learning-confidence high">Foundation</span>
+                                        <span class="learning-time">2026-03-16</span>
+                                    </div>
+                                    <div class="learning-text">5 core files installed: SOUL.md, AGENTS.md, MEMORY.md, USER.md, SYSTEM_STATE.md</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- TRADING TAB -->
+                <div id="trading" class="tab-content">
+                    <div class="overview-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">Win Rate</div>
+                            <div class="stat-value success">71%</div>
+                            <div class="stat-meta">7 wins, 3 losses</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Portfolio A</div>
+                            <div class="stat-value">$4.73</div>
+                            <div class="stat-meta">55 open positions</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Portfolio B</div>
+                            <div class="stat-value">$4.37</div>
+                            <div class="stat-meta">39 positions, not wired</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Pending Resolution</div>
+                            <div class="stat-value info">94</div>
+                            <div class="stat-meta">Markets closing soon</div>
                         </div>
                     </div>
                     
-                    <div class="grade-card">
-                        <div class="grade-letter">C+</div>
-                        <div class="grade-info">
-                            <div class="grade-label">Current Grade</div>
-                            <div class="grade-trend">Working toward <span>B-</span></div>
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Trading Activity</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="heatmap" id="trading-heatmap"></div>
                         </div>
                     </div>
-                </header>
-                
-                <!-- Tabs -->
-                <div class="tabs">
-                    <div class="tab active">Overview</div>
-                    <div class="tab">Skills Constellation</div>
-                    <div class="tab">Memory & Knowledge</div>
-                    <div class="tab">Polymarket Trading</div>
-                    <div class="tab">Meta & Growth</div>
-                    <div class="tab">Projects</div>
-                    <div class="tab">System Map</div>
                 </div>
                 
-                <!-- Stats -->
-                <div class="stats-grid">
-                    <div class="stat-box">
-                        <div class="stat-box-label">Trading Win Rate</div>
-                        <div class="stat-box-value success">71%</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-box-label">Skills Mastered</div>
-                        <div class="stat-box-value">6/22</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-box-label">Active Projects</div>
-                        <div class="stat-box-value warning">2</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-box-label">Recent Learnings</div>
-                        <div class="stat-box-value">4</div>
-                    </div>
-                </div>
-                
-                <!-- Skills Card -->
-                <div class="card">
-                    <div class="card-header">
-                        <span class="card-title">Skills Constellation</span>
-                        <span class="card-count">22 total</span>
-                    </div>
-                    <div class="card-body">
-                        <div class="skill-tree">
-                            <!-- Master Tier -->
-                            <div class="skill-tier tier-master">
-                                <div class="tier-header">
-                                    <span class="tier-chevron">▼</span>
-                                    <span class="tier-indicator"></span>
-                                    <span class="tier-name">Master Level</span>
-                                    <span class="tier-count">6 skills</span>
+                <!-- GROWTH TAB -->
+                <div id="growth" class="tab-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Self-Improvement Metrics</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="confidence-item">
+                                <div class="confidence-header">
+                                    <span class="confidence-name">Grade Progression</span>
+                                    <span class="confidence-value">C+ → B-</span>
                                 </div>
-                                <div class="skill-list">
-                                    <div class="skill-item">
-                                        <span class="skill-icon">◆</span>
-                                        <span class="skill-name">Polymarket</span>
-                                        <div class="skill-bar"><div class="skill-fill high" style="width: 85%"></div></div>
-                                        <span class="skill-pct">85%</span>
-                                    </div>
-                                    <div class="skill-item">
-                                        <span class="skill-icon">◆</span>
-                                        <span class="skill-name">Exa MCP</span>
-                                        <div class="skill-bar"><div class="skill-fill high" style="width: 90%"></div></div>
-                                        <span class="skill-pct">90%</span>
-                                    </div>
-                                    <div class="skill-item">
-                                        <span class="skill-icon">◆</span>
-                                        <span class="skill-name">Meta-Reasoner</span>
-                                        <div class="skill-bar"><div class="skill-fill high" style="width: 80%"></div></div>
-                                        <span class="skill-pct">80%</span>
-                                    </div>
-                                    <div class="skill-item">
-                                        <span class="skill-icon">◆</span>
-                                        <span class="skill-name">Self-Improvement</span>
-                                        <div class="skill-bar"><div class="skill-fill high" style="width: 85%"></div></div>
-                                        <span class="skill-pct">85%</span>
-                                    </div>
-                                    <div class="skill-item">
-                                        <span class="skill-icon">◆</span>
-                                        <span class="skill-name">Proactive Agent</span>
-                                        <div class="skill-bar"><div class="skill-fill high" style="width: 75%"></div></div>
-                                        <span class="skill-pct">75%</span>
-                                    </div>
-                                    <div class="skill-item">
-                                        <span class="skill-icon">◆</span>
-                                        <span class="skill-name">Claw Context</span>
-                                        <div class="skill-bar"><div class="skill-fill high" style="width: 90%"></div></div>
-                                        <span class="skill-pct">90%</span>
-                                    </div>
+                                <div class="confidence-bar">
+                                    <div class="confidence-fill" style="width: 60%; background: linear-gradient(90deg, var(--warning), var(--accent));"></div>
                                 </div>
-                            </div>
-                            
-                            <!-- Proficient Tier -->
-                            <div class="skill-tier tier-proficient">
-                                <div class="tier-header">
-                                    <span class="tier-chevron">▶</span>
-                                    <span class="tier-indicator"></span>
-                                    <span class="tier-name">Proficient</span>
-                                    <span class="tier-count">8 skills</span>
-                                </div>
-                            </div>
-                            
-                            <!-- Learning Tier -->
-                            <div class="skill-tier tier-learning">
-                                <div class="tier-header">
-                                    <span class="tier-chevron">▶</span>
-                                    <span class="tier-indicator"></span>
-                                    <span class="tier-name">Learning</span>
-                                    <span class="tier-count">8 skills</span>
-                                </div>
+                                <div class="confidence-context">Need: profitable track record OR insight surprise OR self-designed improvement</div>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Activity Card -->
-                <div class="card">
-                    <div class="card-header">
-                        <span class="card-title">Activity (Last 30 Days)</span>
+                <!-- PROJECTS TAB -->
+                <div id="projects" class="tab-content">
+                    <div class="project-grid">
+                        <div class="project-card">
+                            <div class="project-header">
+                                <span class="project-name">Polymarket Trading</span>
+                                <span class="project-status active">Active</span>
+                            </div>
+                            <div class="project-meta">71% win rate • $9.10 total • 94 pending</div>
+                            <div class="project-blocker">⚠ Blocker: Portfolio B not wired to pipeline (Session 38)</div>
+                        </div>
+                        <div class="project-card blocked">
+                            <div class="project-header">
+                                <span class="project-name">Self-Improvement</span>
+                                <span class="project-status blocked">Blocked</span>
+                            </div>
+                            <div class="project-meta">Current: C+ • Target: B- • Dashboard v2 complete</div>
+                            <div class="project-blocker">⚠ Blocker: Autonomous decision making (45% confidence)</div>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <div class="activity-graph">
-                            <!-- 30 days of activity -->
-                            <div class="activity-day level-2"></div>
-                            <div class="activity-day level-3"></div>
-                            <div class="activity-day level-1"></div>
-                            <div class="activity-day level-4"></div>
-                            <div class="activity-day level-2"></div>
-                            <div class="activity-day level-3"></div>
-                            <div class="activity-day level-2"></div>
-                            <div class="activity-day"></div>
-                            <div class="activity-day level-1"></div>
-                            <div class="activity-day level-3"></div>
-                            <div class="activity-day level-4"></div>
-                            <div class="activity-day level-3"></div>
-                            <div class="activity-day level-2"></div>
-                            <div class="activity-day level-1"></div>
-                            <div class="activity-day"></div>
-                            <div class="activity-day level-2"></div>
-                            <div class="activity-day level-3"></div>
-                            <div class="activity-day level-4"></div>
-                            <div class="activity-day level-4"></div>
-                            <div class="activity-day level-3"></div>
-                            <div class="activity-day level-2"></div>
-                            <div class="activity-day level-1"></div>
-                            <div class="activity-day"></div>
-                            <div class="activity-day level-1"></div>
-                            <div class="activity-day level-2"></div>
-                            <div class="activity-day level-3"></div>
-                            <div class="activity-day level-4"></div>
-                            <div class="activity-day level-4"></div>
-                            <div class="activity-day level-3"></div>
-                            <div class="activity-day level-2"></div>
+                </div>
+                
+                <!-- SYSTEM TAB -->
+                <div id="system" class="tab-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">System Resources</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="skill-list">
+                                <div class="skill-item">
+                                    <span class="skill-icon">◆</span>
+                                    <span class="skill-name">Memory System</span>
+                                    <span style="color: var(--accent);">memory-core (active)</span>
+                                </div>
+                                <div class="skill-item">
+                                    <span class="skill-icon">◆</span>
+                                    <span class="skill-name">Skills Installed</span>
+                                    <span>22 total</span>
+                                </div>
+                                <div class="skill-item">
+                                    <span class="skill-icon">◆</span>
+                                    <span class="skill-name">Cron Jobs</span>
+                                    <span>15 active</span>
+                                </div>
+                                <div class="skill-item">
+                                    <span class="skill-icon">◆</span>
+                                    <span class="skill-name">Gateway Status</span>
+                                    <span style="color: var(--accent);">Running</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            
-            <!-- Right Panel -->
-            <aside class="panel">
-                <div class="panel-section">
-                    <div class="panel-title">Recent Learnings</div>
-                    <div class="panel-item accent">
-                        <div class="panel-item-title">Proactive skill usage</div>
-                        <div class="panel-item-meta">Just now • High confidence</div>
-                    </div>
-                    <div class="panel-item accent">
-                        <div class="panel-item-title">Design is communication</div>
-                        <div class="panel-item-meta">Yesterday • High confidence</div>
-                    </div>
-                    <div class="panel-item warning">
-                        <div class="panel-item-title">OpenViking Windows immature</div>
-                        <div class="panel-item-meta">Yesterday • High confidence</div>
-                    </div>
-                </div>
-                
-                <div class="panel-section">
-                    <div class="panel-title">Active Projects</div>
-                    <div class="panel-item accent">
-                        <div class="panel-item-title">Polymarket Trading</div>
-                        <div class="panel-item-meta">71% win rate • $9.10 total</div>
-                    </div>
-                    <div class="panel-item danger">
-                        <div class="panel-item-title">Self-Improvement</div>
-                        <div class="panel-item-meta">C+ → B- • Autonomy blocked</div>
-                    </div>
-                </div>
-                
-                <div class="panel-section">
-                    <div class="panel-title">Quick Actions</div>
-                    <div class="quick-actions">
-                        <button class="quick-action">View all skills</button>
-                        <button class="quick-action">Memory search</button>
-                        <button class="quick-action">Trading stats</button>
-                        <button class="quick-action">System health</button>
-                    </div>
-                </div>
-            </aside>
         </main>
     </div>
+    
+    <script>
+        // Tab switching
+        function switchTab(tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active from all tab buttons
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabId).classList.add('active');
+            
+            // Add active to clicked tab
+            event.target.classList.add('active');
+        }
+        
+        // Tier toggle
+        function toggleTier(header) {
+            header.classList.toggle('expanded');
+            const content = header.nextElementSibling;
+            content.classList.toggle('expanded');
+        }
+        
+        // Generate heatmap
+        function generateHeatmap(elementId) {
+            const container = document.getElementById(elementId);
+            if (!container) return;
+            
+            for (let i = 0; i < 30; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'heatmap-cell';
+                
+                // Random activity level
+                const rand = Math.random();
+                if (rand > 0.8) cell.classList.add('level-4');
+                else if (rand > 0.6) cell.classList.add('level-3');
+                else if (rand > 0.4) cell.classList.add('level-2');
+                else if (rand > 0.2) cell.classList.add('level-1');
+                
+                container.appendChild(cell);
+            }
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            generateHeatmap('activity-heatmap');
+            generateHeatmap('trading-heatmap');
+        });
+    </script>
 </body>
 </html>
