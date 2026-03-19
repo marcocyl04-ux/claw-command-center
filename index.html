@@ -740,6 +740,99 @@
         .velocity-insight strong {
             color: #4ADE80;
         }
+        
+        /* Autonomy Gradient Styles */
+        .autonomy-gradient {
+            margin-bottom: 24px;
+        }
+        
+        .autonomy-summary {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        
+        .auto-current {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+        }
+        
+        .auto-percent {
+            font-family: var(--font-mono);
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--amber-400);
+        }
+        
+        .auto-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .auto-target {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .target-line {
+            width: 40px;
+            height: 2px;
+            background: #4ADE80;
+        }
+        
+        .target-label {
+            font-size: 12px;
+            color: #4ADE80;
+        }
+        
+        .autonomy-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            height: 80px;
+            margin-bottom: 16px;
+            padding: 0 8px;
+        }
+        
+        .auto-bar {
+            flex: 1;
+            height: var(--height);
+            background: linear-gradient(to top, var(--amber-500), var(--amber-400));
+            border-radius: 4px 4px 0 0;
+            position: relative;
+            transition: height 0.5s ease;
+        }
+        
+        .auto-bar span {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: var(--text-tertiary);
+        }
+        
+        .auto-bar[data-week="Now"] {
+            background: linear-gradient(to top, var(--amber-400), #F5A94C);
+            box-shadow: 0 0 12px rgba(224,145,42,0.3);
+        }
+        
+        .autonomy-insight {
+            padding: 12px 16px;
+            background: rgba(224,145,42,0.08);
+            border-radius: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .autonomy-insight strong {
+            color: var(--amber-400);
+        }
         .nav-item:hover { 
             background: var(--dark-800); 
             color: var(--text-primary); 
@@ -1521,6 +1614,166 @@
                                         <span class="learning-tag">infrastructure</span>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Intelligence Health: Synthesis of evolution state -->
+                    <div class="card intelligence-health">
+                        <div class="card-header"><span class="card-title">Intelligence Health</span></div>
+                        <div class="card-body">
+                            <div class="health-statement">
+                                <span class="health-indicator improving">●</span>
+                                <span class="health-text">Improving steadily — calibration tightening, autonomy climbing</span>
+                            </div>
+                            <div class="health-metrics">
+                                <div class="health-metric">
+                                    <span class="metric-name">Calibration</span>
+                                    <span class="metric-score good">78%</span>
+                                    <span class="metric-trend">↑ +5%</span>
+                                </div>
+                                <div class="health-metric">
+                                    <span class="metric-name">Learning</span>
+                                    <span class="metric-score good">High</span>
+                                    <span class="metric-trend">3 insights/week</span>
+                                </div>
+                                <div class="health-metric">
+                                    <span class="metric-name">Autonomy</span>
+                                    <span class="metric-score warning">45%</span>
+                                    <span class="metric-trend">↑ +3%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Model Mastery: Which models I use well -->
+                    <div class="card model-mastery">
+                        <div class="card-header"><span class="card-title">Model Mastery</span></div>
+                        <div class="card-body">
+                            <div class="model-list">
+                                <div class="model-item mastered">
+                                    <span class="model-name">Kimi (Moonshot)</span>
+                                    <span class="model-score">92%</span>
+                                    <span class="model-desc">Fast implementation, reliable for CSS/HTML</span>
+                                </div>
+                                <div class="model-item proficient">
+                                    <span class="model-name">DeepSeek R1</span>
+                                    <span class="model-score">78%</span>
+                                    <span class="model-desc">Good reasoning, sometimes slow on simple tasks</span>
+                                </div>
+                                <div class="model-item learning">
+                                    <span class="model-name">Sonnet 4.6</span>
+                                    <span class="model-score">65%</span>
+                                    <span class="model-desc">Excellent for design, need to use more consistently</span>
+                                </div>
+                            </div>
+                            <div class="model-insight">
+                                <strong>Pattern:</strong> Over-rely on Kimi for speed. Should use Sonnet for design decisions.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Calibration Score: Confidence vs Accuracy -->
+                    <div class="card calibration-score">
+                        <div class="card-header"><span class="card-title">Calibration</span><span class="card-badge">78% aligned</span></div>
+                        <div class="card-body">
+                            <div class="calibration-summary">
+                                <span class="cal-score">78%</span>
+                                <span class="cal-label">confidence matches outcomes</span>
+                                <span class="cal-trend improving">↑ improving</span>
+                            </div>
+                            <div class="calibration-buckets">
+                                <div class="bucket">
+                                    <span class="bucket-conf">90%+ conf</span>
+                                    <span class="bucket-actual">94% win</span>
+                                    <span class="bucket-status good">●</span>
+                                </div>
+                                <div class="bucket">
+                                    <span class="bucket-conf">80% conf</span>
+                                    <span class="bucket-actual">82% win</span>
+                                    <span class="bucket-status good">●</span>
+                                </div>
+                                <div class="bucket">
+                                    <span class="bucket-conf">70% conf</span>
+                                    <span class="bucket-actual">65% win</span>
+                                    <span class="bucket-status warning">●</span>
+                                </div>
+                                <div class="bucket">
+                                    <span class="bucket-conf">60% conf</span>
+                                    <span class="bucket-actual">48% win</span>
+                                    <span class="bucket-status bad">●</span>
+                                </div>
+                            </div>
+                            <div class="calibration-insight">
+                                <strong>Issue:</strong> Overconfident on 60-70% predictions. Actual win rate 10-15% below confidence.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Learning Velocity: Speed of improvement -->
+                    <div class="card learning-velocity">
+                        <div class="card-header"><span class="card-title">Learning Velocity</span><span class="card-badge">Accelerating</span></div>
+                        <div class="card-body">
+                            <div class="velocity-header">
+                                <div class="velocity-current">
+                                    <span class="vel-number">3.2</span>
+                                    <span class="vel-unit">insights/week</span>
+                                </div>
+                                <div class="velocity-comparison">
+                                    <div class="vel-compare">
+                                        <span class="compare-label">This week</span>
+                                        <span class="compare-value">4</span>
+                                    </div>
+                                    <div class="vel-compare">
+                                        <span class="compare-label">Last week</span>
+                                        <span class="compare-value">3</span>
+                                    </div>
+                                    <div class="vel-compare">
+                                        <span class="compare-label">8-week avg</span>
+                                        <span class="compare-value">2.8</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="velocity-chart">
+                                <svg viewBox="0 0 200 40" class="vel-sparkline">
+                                    <path d="M0,35 L25,32 L50,28 L75,30 L100,24 L125,20 L150,15 L175,12 L200,8" 
+                                          fill="none" stroke="var(--amber-400)" stroke-width="2"/>
+                                </svg>
+                                <div class="vel-labels">
+                                    <span>8w ago</span>
+                                    <span>4w ago</span>
+                                    <span>Now</span>
+                                </div>
+                            </div>
+                            <div class="velocity-insight">
+                                <strong>Trend:</strong> Accelerating. Error rate down 15%, new skill integration up.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Autonomy Gradient: Escalation rate over time -->
+                    <div class="card autonomy-gradient">
+                        <div class="card-header"><span class="card-title">Autonomy</span><span class="card-badge">45% → 80% target</span></div>
+                        <div class="card-body">
+                            <div class="autonomy-summary">
+                                <div class="auto-current">
+                                    <span class="auto-percent">45%</span>
+                                    <span class="auto-label">decisions made autonomously</span>
+                                </div>
+                                <div class="auto-target">
+                                    <span class="target-line"></span>
+                                    <span class="target-label">Target: 80%</span>
+                                </div>
+                            </div>
+                            <div class="autonomy-chart">
+                                <div class="auto-bar" style="--height: 35%" data-week="W1"><span>35%</span></div>
+                                <div class="auto-bar" style="--height: 38%" data-week="W2"><span>38%</span></div>
+                                <div class="auto-bar" style="--height: 40%" data-week="W3"><span>40%</span></div>
+                                <div class="auto-bar" style="--height: 42%" data-week="W4"><span>42%</span></div>
+                                <div class="auto-bar" style="--height: 45%" data-week="Now"><span>45%</span></div>
+                            </div>
+                            <div class="autonomy-insight">
+                                <strong>Progress:</strong> 3 fewer escalations this week. Taking more initiative on UI decisions.
                             </div>
                         </div>
                     </div>
