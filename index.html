@@ -189,6 +189,16 @@
         .meta-tab.active { background: var(--accent); color: var(--bg-0); font-weight: 500; }
         .meta-content { display: none; }
         .meta-content.active { display: block; }
+        .portfolio-item, .pattern-item, .checkpoint-item { padding: 12px; background: var(--bg-2); border-radius: 6px; margin-bottom: 12px; }
+        .portfolio-name { font-weight: 600; font-size: 13px; }
+        .portfolio-grade { font-size: 12px; color: var(--accent); }
+        .portfolio-desc, .pattern-text, .checkpoint-item { font-size: 12px; color: var(--text-muted); }
+        .meta-tabs { display: flex; gap: 8px; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+        .meta-tab { padding: 8px 16px; font-size: 13px; color: var(--text-muted); cursor: pointer; border-radius: 6px; transition: all 0.2s; }
+        .meta-tab:hover { background: var(--bg-2); color: var(--text); }
+        .meta-tab.active { background: var(--accent); color: var(--bg-0); font-weight: 500; }
+        .meta-content { display: none; }
+        .meta-content.active { display: block; }
         .portfolio-item, .pattern-item, .checkpoint-item, .hypothesis-item { padding: 12px; background: var(--bg-2); border-radius: 6px; margin-bottom: 12px; }
         .portfolio-name, .pattern-rule, .checkpoint-week, .hypothesis-goal { font-weight: 600; font-size: 13px; margin-bottom: 4px; }
         .portfolio-grade { font-size: 12px; color: var(--accent); margin-bottom: 4px; }
@@ -847,6 +857,40 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">Meta-Training</span><span class="card-badge">Self-Improvement</span></div>
+                        <div class="card-body">
+                            <div class="meta-tabs">
+                                <div class="meta-tab active" data-meta="portfolio" onclick="switchMetaTab('portfolio')">Portfolio</div>
+                                <div class="meta-tab" data-meta="patterns" onclick="switchMetaTab('patterns')">Patterns</div>
+                                <div class="meta-tab" data-meta="checkpoints" onclick="switchMetaTab('checkpoints')">Checkpoints</div>
+                            </div>
+                            <div id="meta-portfolio" class="meta-content active">
+                                <div class="portfolio-item">
+                                    <div class="portfolio-name">Dashboard v2</div>
+                                    <div class="portfolio-grade">A-</div>
+                                    <div class="portfolio-desc">Complete rebuild with OKLCH, radar, live activity</div>
+                                </div>
+                                <div class="portfolio-item">
+                                    <div class="portfolio-name">Activity Logger</div>
+                                    <div class="portfolio-grade">B+</div>
+                                    <div class="portfolio-desc">Real-time tracking with OpenRouter integration</div>
+                                </div>
+                            </div>
+                            <div id="meta-patterns" class="meta-content">
+                                <div class="pattern-item">
+                                    <div class="pattern-text">DeepSeek design + Kimi implement = 6-10 min/feature</div>
+                                </div>
+                                <div class="pattern-item">
+                                    <div class="pattern-text">OpenRouter API = 33x cheaper than direct Anthropic</div>
+                                </div>
+                            </div>
+                            <div id="meta-checkpoints" class="meta-content">
+                                <div class="checkpoint-item">Week 11: Model routing fixed</div>
+                                <div class="checkpoint-item">Week 11: Dashboard v2 shipped</div>
                             </div>
                         </div>
                     </div>
