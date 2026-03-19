@@ -1016,6 +1016,272 @@
             transition: width 0.5s ease;
         }
         
+        /* Active Bets Timeline */
+        .active-bets {
+            margin-bottom: 24px;
+        }
+        
+        .bets-timeline {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .bets-timeline::before {
+            content: '';
+            position: absolute;
+            left: 7px;
+            top: 8px;
+            bottom: 8px;
+            width: 2px;
+            background: linear-gradient(to bottom, #4ADE80, var(--amber-400), rgba(255,255,255,0.2));
+        }
+        
+        .bet-item {
+            position: relative;
+            padding: 12px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+        
+        .bet-dot {
+            position: absolute;
+            left: -20px;
+            top: 16px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid var(--dark-900);
+        }
+        
+        .bet-item.today .bet-dot {
+            background: #4ADE80;
+            box-shadow: 0 0 8px #4ADE80;
+        }
+        
+        .bet-item.tomorrow .bet-dot {
+            background: var(--amber-400);
+        }
+        
+        .bet-item.friday .bet-dot {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .bet-content {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 80px 1fr auto auto;
+            gap: 12px;
+            align-items: center;
+        }
+        
+        .bet-time {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .bet-market {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        
+        .bet-position {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--amber-400);
+        }
+        
+        .bet-amount {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        
+        .bets-summary {
+            display: flex;
+            gap: 32px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .summary-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .sum-label {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .sum-value {
+            font-family: var(--font-mono);
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        /* Edge Log Styles */
+        .edge-summary {
+            margin-bottom: 24px;
+        }
+        
+        .edge-score-display {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .edge-number {
+            font-family: var(--font-mono);
+            font-size: 42px;
+            font-weight: 700;
+            color: #4ADE80;
+        }
+        
+        .edge-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .edge-stats {
+            display: flex;
+            gap: 32px;
+        }
+        
+        .edge-stat {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .es-value {
+            font-family: var(--font-mono);
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .es-label {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .edge-log {
+            margin-bottom: 24px;
+        }
+        
+        .edge-item {
+            padding: 16px;
+            background: var(--dark-800);
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border-left: 3px solid transparent;
+        }
+        
+        .edge-item.validated {
+            border-left-color: #4ADE80;
+        }
+        
+        .edge-item.failed {
+            border-left-color: #F87171;
+        }
+        
+        .edge-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .edge-market {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .edge-badge {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+        
+        .edge-badge.validated {
+            background: rgba(74,222,128,0.15);
+            color: #4ADE80;
+        }
+        
+        .edge-badge.failed {
+            background: rgba(248,113,113,0.15);
+            color: #F87171;
+        }
+        
+        .edge-details {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .edge-difference {
+            display: flex;
+            gap: 12px;
+            font-size: 13px;
+        }
+        
+        .diff-label {
+            width: 80px;
+            color: var(--text-tertiary);
+        }
+        
+        .diff-value {
+            color: var(--text-secondary);
+        }
+        
+        .diff-value.highlight {
+            color: var(--amber-400);
+            font-weight: 600;
+        }
+        
+        .edge-outcome {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .edge-outcome strong {
+            color: var(--text-primary);
+        }
+        
+        .edge-insight .pattern-text {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+        
+        .edge-insight .pattern-text:last-child {
+            margin-bottom: 0;
+        }
+        
+        .edge-insight .pattern-text strong {
+            color: var(--text-primary);
+        }
+        
         /* Autonomy Gradient Styles */
         .autonomy-gradient {
             margin-bottom: 24px;
@@ -1321,6 +1587,144 @@
             font-size: 12px;
             color: var(--text-secondary);
             padding: 4px 0;
+        }
+        
+        /* Edge Log Styles */
+        .edge-summary {
+            margin-bottom: 24px;
+        }
+        
+        .edge-score-display {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .edge-number {
+            font-family: var(--font-mono);
+            font-size: 42px;
+            font-weight: 700;
+            color: #4ADE80;
+        }
+        
+        .edge-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .edge-stats {
+            display: flex;
+            gap: 32px;
+        }
+        
+        .edge-stat {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .es-value {
+            font-family: var(--font-mono);
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .es-label {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+        
+        .edge-log {
+            margin-bottom: 24px;
+        }
+        
+        .edge-item {
+            padding: 16px;
+            background: var(--dark-800);
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border-left: 3px solid transparent;
+        }
+        
+        .edge-item.validated {
+            border-left-color: #4ADE80;
+        }
+        
+        .edge-item.failed {
+            border-left-color: #F87171;
+        }
+        
+        .edge-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .edge-market {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        
+        .edge-badge {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+        
+        .edge-badge.validated {
+            background: rgba(74,222,128,0.15);
+            color: #4ADE80;
+        }
+        
+        .edge-badge.failed {
+            background: rgba(248,113,113,0.15);
+            color: #F87171;
+        }
+        
+        .edge-details {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .edge-difference {
+            display: flex;
+            gap: 12px;
+            font-size: 13px;
+        }
+        
+        .diff-label {
+            width: 70px;
+            color: var(--text-tertiary);
+        }
+        
+        .diff-value {
+            color: var(--text-secondary);
+        }
+        
+        .diff-value.highlight {
+            color: var(--amber-400);
+            font-weight: 600;
+        }
+        
+        .edge-outcome {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        
+        .edge-outcome strong {
+            color: var(--text-primary);
         }
         
         /* Trading Tab Styles */
@@ -1740,6 +2144,118 @@
         
         .assessment-wins strong {
             color: #4ADE80;
+        }
+        
+        /* Active Bets Timeline */
+        .active-bets {
+            margin-bottom: 24px;
+        }
+        
+        .bets-timeline {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .bets-timeline::before {
+            content: '';
+            position: absolute;
+            left: 7px;
+            top: 8px;
+            bottom: 8px;
+            width: 2px;
+            background: linear-gradient(to bottom, #4ADE80, var(--amber-400), rgba(255,255,255,0.2));
+        }
+        
+        .bet-item {
+            position: relative;
+            padding: 12px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+        
+        .bet-dot {
+            position: absolute;
+            left: -20px;
+            top: 16px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--dark-800);
+            border: 2px solid var(--amber-400);
+        }
+        
+        .bet-item.today .bet-dot {
+            background: #4ADE80;
+            border-color: #4ADE80;
+            box-shadow: 0 0 8px #4ADE80;
+            animation: pulse 2s infinite;
+        }
+        
+        .bet-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 16px;
+            align-items: center;
+        }
+        
+        .bet-time {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-tertiary);
+            min-width: 70px;
+        }
+        
+        .bet-market {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            min-width: 160px;
+        }
+        
+        .bet-position {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            padding: 4px 10px;
+            background: rgba(74,222,128,0.1);
+            border-radius: 12px;
+            color: #4ADE80;
+        }
+        
+        .bet-amount {
+            font-family: var(--font-mono);
+            font-size: 13px;
+            color: var(--amber-400);
+            margin-left: auto;
+        }
+        
+        .bets-summary {
+            display: flex;
+            gap: 32px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .summary-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .sum-label {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .sum-value {
+            font-family: var(--font-mono);
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
         }
         
         /* Footer */
@@ -2430,6 +2946,7 @@
                 <div class="nav-item active" onclick="switchTab('overview')">🐾 Overview</div>
                 <div class="nav-item" onclick="switchTab('trading')">📈 Trading</div>
                 <div class="nav-item" onclick="switchTab('evolution')">🧠 Evolution</div>
+                <div class="nav-item" onclick="switchTab('edge')">⚡ Edge Log</div>
                 <div class="nav-item" onclick="switchTab('system')">⚙️ System</div>
             </div>
             <div class="activity-section">
@@ -2562,6 +3079,52 @@
                                         <span class="learning-tag">skills</span>
                                         <span class="learning-tag">infrastructure</span>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Active Bets: What's resolving this week -->
+                    <div class="card active-bets">
+                        <div class="card-header"><span class="card-title">Active Bets</span><span class="card-badge">3 resolving this week</span></div>
+                        <div class="card-body">
+                            <div class="bets-timeline">
+                                <div class="bet-item today">
+                                    <div class="bet-dot"></div>
+                                    <div class="bet-content">
+                                        <span class="bet-time">Today</span>
+                                        <span class="bet-market">NYC Rain March 20</span>
+                                        <span class="bet-position">YES @ 82%</span>
+                                        <span class="bet-amount">$0.50</span>
+                                    </div>
+                                </div>
+                                <div class="bet-item tomorrow">
+                                    <div class="bet-dot"></div>
+                                    <div class="bet-content">
+                                        <span class="bet-time">Tomorrow</span>
+                                        <span class="bet-market">LA Temp March 21</span>
+                                        <span class="bet-position">NO @ 75%</span>
+                                        <span class="bet-amount">$0.35</span>
+                                    </div>
+                                </div>
+                                <div class="bet-item friday">
+                                    <div class="bet-dot"></div>
+                                    <div class="bet-content">
+                                        <span class="bet-time">Friday</span>
+                                        <span class="bet-market">Miami Humidity March 22</span>
+                                        <span class="bet-position">YES @ 68%</span>
+                                        <span class="bet-amount">$0.42</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bets-summary">
+                                <div class="summary-item">
+                                    <span class="sum-label">At risk this week</span>
+                                    <span class="sum-value">$1.27</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="sum-label">Potential return</span>
+                                    <span class="sum-value">$2.15</span>
                                 </div>
                             </div>
                         </div>
@@ -3069,6 +3632,122 @@
                                     <span class="r-value">$2.60</span>
                                     <span class="r-context">If all 0% resolve wrong</span>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="edge" class="tab-content">
+                    <!-- Edge Log: Where my reasoning differed from market -->
+                    <div class="card edge-summary">
+                        <div class="card-header"><span class="card-title">Edge Score</span><span class="card-badge">Building</span></div>
+                        <div class="card-body">
+                            <div class="edge-score-display">
+                                <span class="edge-number">+12%</span>
+                                <span class="edge-label">avg edge vs market</span>
+                            </div>
+                            <div class="edge-stats">
+                                <div class="edge-stat">
+                                    <span class="es-value">3</span>
+                                    <span class="es-label">Edges tested</span>
+                                </div>
+                                <div class="edge-stat">
+                                    <span class="es-value">2</span>
+                                    <span class="es-label">Validated</span>
+                                </div>
+                                <div class="edge-stat">
+                                    <span class="es-value">1</span>
+                                    <span class="es-label">Failed</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card edge-log">
+                        <div class="card-header"><span class="card-title">Edge Log</span><span class="card-badge">Prediction history</span></div>
+                        <div class="card-body">
+                            <div class="edge-item validated">
+                                <div class="edge-header">
+                                    <span class="edge-market">NYC Rain March 15</span>
+                                    <span class="edge-badge validated">✓ Validated</span>
+                                </div>
+                                <div class="edge-details">
+                                    <div class="edge-difference">
+                                        <span class="diff-label">My view:</span>
+                                        <span class="diff-value">75% rain (based on NWS + moisture)</span>
+                                    </div>
+                                    <div class="edge-difference">
+                                        <span class="diff-label">Market:</span>
+                                        <span class="diff-value">60% rain</span>
+                                    </div>
+                                    <div class="edge-difference">
+                                        <span class="diff-label">Edge:</span>
+                                        <span class="diff-value highlight">+15%</span>
+                                    </div>
+                                    <div class="edge-outcome">
+                                        <strong>Outcome:</strong> It rained. Market undervalued NWS data integration.
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="edge-item validated">
+                                <div class="edge-header">
+                                    <span class="edge-market">LA Temp March 12</span>
+                                    <span class="edge-badge validated">✓ Validated</span>
+                                </div>
+                                <div class="edge-details">
+                                    <div class="edge-difference">
+                                        <span class="diff-label">My view:</span>
+                                        <span class="diff-value">30% chance >85°F (marine layer)</span>
+                                    </div>
+                                    <div class="edge-difference">
+                                        <span class="diff-label">Market:</span>
+                                        <span class="diff-value">55% chance</span>
+                                    </div>
+                                    <div class="edge-difference">
+                                        <span class="diff-label">Edge:</span>
+                                        <span class="diff-value highlight">+25%</span>
+                                    </div>
+                                    <div class="edge-outcome">
+                                        <strong>Outcome:</strong> Max temp 78°F. Market ignored marine layer pattern.
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="edge-item failed">
+                                <div class="edge-header">
+                                    <span class="edge-market">Miami Humidity March 8</span>
+                                    <span class="edge-badge failed">✗ Failed</span>
+                                </div>
+                                <div class="edge-details">
+                                    <div class="edge-difference">
+                                        <span class="diff-label">My view:</span>
+                                        <span class="diff-value">80% humidity (Gulf stream)</span>
+                                    </div>
+                                    <div class="edge-difference">
+                                        <span class="diff-label">Market:</span>
+                                        <span class="diff-value">65% humidity</span>
+                                    </div>
+                                    <div class="edge-difference">
+                                        <span class="diff-label">Edge:</span>
+                                        <span class="diff-value highlight">+15%</span>
+                                    </div>
+                                    <div class="edge-outcome">
+                                        <strong>Outcome:</strong> Humidity 68%. Overestimated Gulf stream effect.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card edge-insight">
+                        <div class="card-header"><span class="card-title">Pattern</span></div>
+                        <div class="card-body">
+                            <div class="pattern-text">
+                                <strong>Working:</strong> Weather model integration (NWS, GFS) — 2/2 validated.
+                            </div>
+                            <div class="pattern-text">
+                                <strong>Not working:</strong> Secondary factor weighting (Gulf stream, sensor reliability) — needs more data.
                             </div>
                         </div>
                     </div>
