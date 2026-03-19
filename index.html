@@ -557,6 +557,189 @@
         .model-insight strong {
             color: var(--amber-400);
         }
+        
+        /* Calibration Score Styles */
+        .calibration-score {
+            margin-bottom: 24px;
+        }
+        
+        .calibration-summary {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        
+        .cal-score {
+            font-family: var(--font-mono);
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--amber-400);
+        }
+        
+        .cal-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .cal-trend {
+            font-size: 13px;
+            font-weight: 500;
+            padding: 4px 10px;
+            border-radius: 12px;
+            margin-left: auto;
+        }
+        
+        .cal-trend.improving {
+            background: rgba(74,222,128,0.15);
+            color: #4ADE80;
+        }
+        
+        .calibration-buckets {
+            margin-bottom: 16px;
+        }
+        
+        .bucket {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+        
+        .bucket:last-child {
+            border-bottom: none;
+        }
+        
+        .bucket-conf {
+            width: 80px;
+            font-size: 13px;
+            color: var(--text-tertiary);
+        }
+        
+        .bucket-actual {
+            flex: 1;
+            font-family: var(--font-mono);
+            font-size: 15px;
+            color: var(--text-primary);
+        }
+        
+        .bucket-status {
+            font-size: 10px;
+        }
+        
+        .bucket-status.good {
+            color: #4ADE80;
+        }
+        
+        .bucket-status.warning {
+            color: var(--amber-400);
+        }
+        
+        .bucket-status.bad {
+            color: #F87171;
+        }
+        
+        .calibration-insight {
+            padding: 12px 16px;
+            background: rgba(248,113,113,0.08);
+            border-radius: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .calibration-insight strong {
+            color: #F87171;
+        }
+        
+        /* Learning Velocity Styles */
+        .learning-velocity {
+            margin-bottom: 24px;
+        }
+        
+        .velocity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        
+        .velocity-current {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+        
+        .vel-number {
+            font-family: var(--font-mono);
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--amber-400);
+        }
+        
+        .vel-unit {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .velocity-comparison {
+            display: flex;
+            gap: 24px;
+        }
+        
+        .vel-compare {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .compare-label {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .compare-value {
+            font-family: var(--font-mono);
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .velocity-chart {
+            margin-bottom: 16px;
+        }
+        
+        .vel-sparkline {
+            width: 100%;
+            height: 40px;
+            margin-bottom: 8px;
+        }
+        
+        .vel-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--text-tertiary);
+        }
+        
+        .velocity-insight {
+            padding: 12px 16px;
+            background: rgba(74,222,128,0.08);
+            border-radius: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .velocity-insight strong {
+            color: #4ADE80;
+        }
         .nav-item:hover { 
             background: var(--dark-800); 
             color: var(--text-primary); 
