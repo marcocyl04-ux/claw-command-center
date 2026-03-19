@@ -147,10 +147,25 @@
             gap: var(--space-2); 
             padding: var(--space-2) var(--space-3); 
             cursor: pointer; 
-            transition: all 0.2s ease; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
             color: var(--text-secondary); 
             font-size: 14px;
             font-weight: 500;
+            position: relative;
+        }
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 0;
+            background: var(--claw-amber);
+            transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .nav-item.active::after {
+            height: 24px;
         }
         .nav-item:hover { 
             background: var(--bg-surface); 
@@ -206,6 +221,28 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 40px oklch(72% 0.155 70 / 0.12), 0 0 80px oklch(72% 0.155 70 / 0.06); }
+            50% { box-shadow: 0 0 50px oklch(72% 0.155 70 / 0.15), 0 0 100px oklch(72% 0.155 70 / 0.08); }
+        }
+        
+        /* Staggered entrance animations */
+        .hero-card { animation: fadeUp 0.5s ease-out both; }
+        .stats-stack .stat-tile:nth-child(1) { animation: fadeUp 0.5s ease-out 0.1s both; }
+        .stats-stack .stat-tile:nth-child(2) { animation: fadeUp 0.5s ease-out 0.2s both; }
+        .bento-card:nth-child(1) { animation: fadeUp 0.5s ease-out 0.3s both; }
+        .bento-card:nth-child(2) { animation: fadeUp 0.5s ease-out 0.4s both; }
+        .bento-card:nth-child(3) { animation: fadeUp 0.5s ease-out 0.5s both; }
+        
+        .hero-card.glow {
+            animation: fadeUp 0.5s ease-out both, pulse-glow 3s ease-in-out infinite;
+        }
         
         .card { background: var(--bg-1); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 20px; overflow: hidden; }
         .card-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border); background: var(--bg-2); }
