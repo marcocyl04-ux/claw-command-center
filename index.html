@@ -879,6 +879,143 @@
             color: #4ADE80;
         }
         
+        /* Velocity Dial */
+        .velocity-dial-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .velocity-dial {
+            position: relative;
+            width: 140px;
+        }
+        
+        .velocity-dial svg {
+            width: 100%;
+            height: auto;
+        }
+        
+        .dial-value {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+        
+        .dial-number {
+            font-family: var(--font-mono);
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--amber-400);
+            display: block;
+        }
+        
+        .dial-unit {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .velocity-trend-arrow {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #4ADE80;
+            font-weight: 500;
+        }
+        
+        /* Velocity Breakdown */
+        .velocity-breakdown {
+            margin-bottom: 20px;
+            padding: 16px;
+            background: rgba(20,20,20,0.5);
+            border-radius: 8px;
+        }
+        
+        .breakdown-title {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .breakdown-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .breakdown-item {
+            display: grid;
+            grid-template-columns: 120px 1fr 30px;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .bd-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        
+        .bd-bar-container {
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .bd-bar {
+            height: 100%;
+            width: var(--width);
+            background: var(--color);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        
+        .bd-count {
+            font-family: var(--font-mono);
+            font-size: 13px;
+            color: var(--text-primary);
+            text-align: right;
+        }
+        
+        /* Velocity Milestone */
+        .velocity-milestone {
+            margin-bottom: 16px;
+        }
+        
+        .milestone-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        
+        .milestone-count {
+            font-family: var(--font-mono);
+            color: var(--amber-400);
+        }
+        
+        .milestone-bar {
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .milestone-fill {
+            height: 100%;
+            width: var(--progress);
+            background: linear-gradient(90deg, var(--amber-400), #4ADE80);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+        
         /* Autonomy Gradient Styles */
         .autonomy-gradient {
             margin-bottom: 24px;
@@ -2591,39 +2728,67 @@
                     <div class="card learning-velocity">
                         <div class="card-header"><span class="card-title">Learning Velocity</span><span class="card-badge">Accelerating</span></div>
                         <div class="card-body">
-                            <div class="velocity-header">
-                                <div class="velocity-current">
-                                    <span class="vel-number">3.2</span>
-                                    <span class="vel-unit">insights/week</span>
+                            <div class="velocity-dial-container">
+                                <div class="velocity-dial">
+                                    <svg viewBox="0 0 120 70">
+                                        <!-- Dial background -->
+                                        <path d="M10,60 A50,50 0 0,1 110,60" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="8" stroke-linecap="round"/>
+                                        <!-- Dial fill (64% of max) -->
+                                        <path d="M10,60 A50,50 0 0,1 85,25" fill="none" stroke="var(--amber-400)" stroke-width="8" stroke-linecap="round"/>
+                                        <!-- Tick marks -->
+                                        <line x1="10" y1="60" x2="15" y2="55" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+                                        <line x1="60" y1="10" x2="60" y2="15" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+                                        <line x1="110" y1="60" x2="105" y2="55" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+                                    </svg>
+                                    <div class="dial-value">
+                                        <span class="dial-number">3.2</span>
+                                        <span class="dial-unit">insights/wk</span>
+                                    </div>
                                 </div>
-                                <div class="velocity-comparison">
-                                    <div class="vel-compare">
-                                        <span class="compare-label">This week</span>
-                                        <span class="compare-value">4</span>
+                                <div class="velocity-trend-arrow">↗ Accelerating</div>
+                            </div>
+                            
+                            <!-- Breakdown by type -->
+                            <div class="velocity-breakdown">
+                                <div class="breakdown-title">This week's insights</div>
+                                <div class="breakdown-bars">
+                                    <div class="breakdown-item">
+                                        <span class="bd-label">Errors learned</span>
+                                        <div class="bd-bar-container">
+                                            <div class="bd-bar" style="--width: 50%; --color: #F87171"></div>
+                                        </div>
+                                        <span class="bd-count">2</span>
                                     </div>
-                                    <div class="vel-compare">
-                                        <span class="compare-label">Last week</span>
-                                        <span class="compare-value">3</span>
+                                    <div class="breakdown-item">
+                                        <span class="bd-label">Skills acquired</span>
+                                        <div class="bd-bar-container">
+                                            <div class="bd-bar" style="--width: 25%; --color: #4ADE80"></div>
+                                        </div>
+                                        <span class="bd-count">1</span>
                                     </div>
-                                    <div class="vel-compare">
-                                        <span class="compare-label">8-week avg</span>
-                                        <span class="compare-value">2.8</span>
+                                    <div class="breakdown-item">
+                                        <span class="bd-label">Patterns recognized</span>
+                                        <div class="bd-bar-container">
+                                            <div class="bd-bar" style="--width: 25%; --color: var(--amber-400)"></div>
+                                        </div>
+                                        <span class="bd-count">1</span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="velocity-chart">
-                                <svg viewBox="0 0 200 40" class="vel-sparkline">
-                                    <path d="M0,35 L25,32 L50,28 L75,30 L100,24 L125,20 L150,15 L175,12 L200,8" 
-                                          fill="none" stroke="var(--amber-400)" stroke-width="2"/>
-                                </svg>
-                                <div class="vel-labels">
-                                    <span>8w ago</span>
-                                    <span>4w ago</span>
-                                    <span>Now</span>
+                            
+                            <!-- Milestone tracker -->
+                            <div class="velocity-milestone">
+                                <div class="milestone-label">
+                                    <span>Next milestone: 50 insights</span>
+                                    <span class="milestone-count">47 / 50</span>
+                                </div>
+                                <div class="milestone-bar">
+                                    <div class="milestone-fill" style="--progress: 94%"></div>
                                 </div>
                             </div>
+                            
                             <div class="velocity-insight">
-                                <strong>Trend:</strong> Accelerating. Error rate down 15%, new skill integration up.
+                                <strong>Trend:</strong> Error rate down 15%, new skill integration up. 3 insights to next milestone.
                             </div>
                         </div>
                     </div>
