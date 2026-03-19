@@ -1016,48 +1016,81 @@
             transition: width 0.5s ease;
         }
         
-        /* Active Bets Timeline */
+        /* Active Bets Timeline - Redesigned */
         .active-bets {
             margin-bottom: 24px;
         }
         
         .bets-timeline {
-            position: relative;
-            padding-left: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
             margin-bottom: 20px;
         }
         
-        .bets-timeline::before {
-            content: '';
-            position: absolute;
-            left: 7px;
-            top: 8px;
-            bottom: 8px;
-            width: 2px;
-            background: linear-gradient(to bottom, #4ADE80, var(--amber-400), rgba(255,255,255,0.2));
+        .bet-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            background: var(--dark-800);
+            border-radius: 12px;
+            border-left: 4px solid transparent;
+            transition: all 0.2s ease;
         }
         
-        .bet-item {
-            position: relative;
-            padding: 12px 0;
+        .bet-item:hover {
+            background: var(--dark-700);
+            transform: translateX(4px);
+        }
+        
+        .bet-item.today {
+            border-left-color: #4ADE80;
+            box-shadow: 0 0 20px rgba(74,222,128,0.1);
+        }
+        
+        .bet-item.tomorrow {
+            border-left-color: var(--amber-400);
+        }
+        
+        .bet-item.friday {
+            border-left-color: rgba(255,255,255,0.2);
+        }
+        
+        .bet-indicator {
             display: flex;
-            align-items: flex-start;
-            gap: 16px;
+            flex-direction: column;
+            align-items: center;
+            min-width: 60px;
+        }
+        
+        .bet-day {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-tertiary);
+        }
+        
+        .bet-item.today .bet-day {
+            color: #4ADE80;
+        }
+        
+        .bet-item.tomorrow .bet-day {
+            color: var(--amber-400);
         }
         
         .bet-dot {
-            position: absolute;
-            left: -20px;
-            top: 16px;
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
-            border: 2px solid var(--dark-900);
+            margin-top: 6px;
         }
         
         .bet-item.today .bet-dot {
             background: #4ADE80;
-            box-shadow: 0 0 8px #4ADE80;
+            box-shadow: 0 0 10px #4ADE80;
+            animation: pulse 2s infinite;
         }
         
         .bet-item.tomorrow .bet-dot {
@@ -1070,35 +1103,51 @@
         
         .bet-content {
             flex: 1;
-            display: grid;
-            grid-template-columns: 80px 1fr auto auto;
-            gap: 12px;
-            align-items: center;
-        }
-        
-        .bet-time {
-            font-size: 11px;
-            color: var(--text-tertiary);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
         
         .bet-market {
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 500;
             color: var(--text-primary);
         }
         
+        .bet-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+        }
+        
         .bet-position {
             font-family: var(--font-mono);
-            font-size: 12px;
-            color: var(--amber-400);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        .bet-position.yes {
+            background: rgba(74,222,128,0.15);
+            color: #4ADE80;
+        }
+        
+        .bet-position.no {
+            background: rgba(248,113,113,0.15);
+            color: #F87171;
+        }
+        
+        .bet-confidence {
+            color: var(--text-tertiary);
         }
         
         .bet-amount {
             font-family: var(--font-mono);
-            font-size: 12px;
-            color: var(--text-secondary);
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--amber-400);
+            min-width: 60px;
+            text-align: right;
         }
         
         .bets-summary {
@@ -2144,6 +2193,124 @@
         
         .assessment-wins strong {
             color: #4ADE80;
+        }
+        
+        /* Responsive Layout */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 240px;
+            }
+            .app {
+                flex-direction: row;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .app {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                max-height: 200px;
+                border-right: none;
+                border-bottom: 1px solid var(--border-subtle);
+            }
+            .nav-section {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                padding: 12px;
+            }
+            .nav-item {
+                padding: 8px 16px;
+                border-radius: 20px;
+                font-size: 13px;
+            }
+            .nav-item.active {
+                border-left: none;
+                background: var(--dark-800);
+            }
+            .activity-section {
+                display: none;
+            }
+            .main {
+                height: calc(100vh - 200px);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                padding: 16px;
+            }
+            .narrative-hero {
+                padding: 20px;
+            }
+            .state-sentence {
+                font-size: 18px;
+            }
+            .delta-strip {
+                flex-wrap: wrap;
+                gap: 16px;
+            }
+            .quick-stats {
+                flex-wrap: wrap;
+            }
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+            .health-metrics {
+                flex-wrap: wrap;
+                gap: 16px;
+            }
+            .velocity-header {
+                flex-direction: column;
+                gap: 16px;
+            }
+            .velocity-comparison {
+                width: 100%;
+                justify-content: space-around;
+            }
+            .autonomy-summary {
+                flex-direction: column;
+                gap: 12px;
+            }
+            .position-cards {
+                gap: 12px;
+            }
+            .pos-card-body {
+                flex-wrap: wrap;
+            }
+            .bet-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            .bet-amount {
+                text-align: left;
+            }
+            .skill-network-svg {
+                height: 200px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header-title {
+                font-size: 14px;
+            }
+            .status-pill {
+                font-size: 11px;
+                padding: 4px 8px;
+            }
+            .pill-value {
+                font-size: 14px;
+            }
+            .delta-value {
+                font-size: 20px;
+            }
+            .cal-score, .vel-number, .auto-percent {
+                font-size: 28px;
+            }
         }
         
         /* Active Bets Timeline */
@@ -3208,31 +3375,46 @@
                         <div class="card-body">
                             <div class="bets-timeline">
                                 <div class="bet-item today">
-                                    <div class="bet-dot"></div>
-                                    <div class="bet-content">
-                                        <span class="bet-time">Today</span>
-                                        <span class="bet-market">NYC Rain March 20</span>
-                                        <span class="bet-position">YES @ 82%</span>
-                                        <span class="bet-amount">$0.50</span>
+                                    <div class="bet-indicator">
+                                        <span class="bet-day">Today</span>
+                                        <span class="bet-dot"></span>
                                     </div>
+                                    <div class="bet-content">
+                                        <span class="bet-market">NYC Rain March 20</span>
+                                        <div class="bet-meta">
+                                            <span class="bet-position yes">YES</span>
+                                            <span class="bet-confidence">82% confidence</span>
+                                        </div>
+                                    </div>
+                                    <span class="bet-amount">$0.50</span>
                                 </div>
                                 <div class="bet-item tomorrow">
-                                    <div class="bet-dot"></div>
-                                    <div class="bet-content">
-                                        <span class="bet-time">Tomorrow</span>
-                                        <span class="bet-market">LA Temp March 21</span>
-                                        <span class="bet-position">NO @ 75%</span>
-                                        <span class="bet-amount">$0.35</span>
+                                    <div class="bet-indicator">
+                                        <span class="bet-day">Tomorrow</span>
+                                        <span class="bet-dot"></span>
                                     </div>
+                                    <div class="bet-content">
+                                        <span class="bet-market">LA Temp March 21</span>
+                                        <div class="bet-meta">
+                                            <span class="bet-position no">NO</span>
+                                            <span class="bet-confidence">75% confidence</span>
+                                        </div>
+                                    </div>
+                                    <span class="bet-amount">$0.35</span>
                                 </div>
                                 <div class="bet-item friday">
-                                    <div class="bet-dot"></div>
-                                    <div class="bet-content">
-                                        <span class="bet-time">Friday</span>
-                                        <span class="bet-market">Miami Humidity March 22</span>
-                                        <span class="bet-position">YES @ 68%</span>
-                                        <span class="bet-amount">$0.42</span>
+                                    <div class="bet-indicator">
+                                        <span class="bet-day">Friday</span>
+                                        <span class="bet-dot"></span>
                                     </div>
+                                    <div class="bet-content">
+                                        <span class="bet-market">Miami Humidity March 22</span>
+                                        <div class="bet-meta">
+                                            <span class="bet-position yes">YES</span>
+                                            <span class="bet-confidence">68% confidence</span>
+                                        </div>
+                                    </div>
+                                    <span class="bet-amount">$0.42</span>
                                 </div>
                             </div>
                             <div class="bets-summary">
