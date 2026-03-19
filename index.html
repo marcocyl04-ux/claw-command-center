@@ -185,18 +185,139 @@
         .card-badge { font-size: 11px; padding: 4px 10px; background: var(--bg-3); border-radius: 12px; color: var(--text-muted); }
         .card-body { padding: 20px; }
         
-        .overview-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
-        @media (max-width: 1024px) { .overview-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 640px) { .overview-grid { grid-template-columns: 1fr; } }
+        /* Asymmetric Bento Layout */
+        .hero-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--space-2);
+            margin-bottom: var(--space-3);
+        }
+        @media (max-width: 1024px) { .hero-section { grid-template-columns: 1fr; } }
         
-        .pulse-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: 8px; padding: 20px; transition: border-color 0.2s; }
-        .pulse-card:hover { border-color: var(--border); }
-        .pulse-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 8px; }
-        .pulse-value { font-family: var(--font-mono); font-size: 32px; font-weight: 600; color: var(--text); margin-bottom: 12px; font-variant-numeric: tabular-nums; }
-        .pulse-value.accent { color: var(--accent); }
-        .pulse-value.success { color: var(--success); }
-        .pulse-value.info { color: var(--info); }
-        .sparkline { width: 100%; height: 20px; margin-bottom: 12px; }
+        .hero-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: var(--space-3);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--claw-amber), transparent);
+        }
+        .hero-card.glow {
+            box-shadow: 
+                0 0 40px oklch(72% 0.155 70 / 0.08),
+                0 0 80px oklch(72% 0.155 70 / 0.04);
+        }
+        .hero-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-tertiary);
+            margin-bottom: var(--space-1);
+        }
+        .hero-value {
+            font-family: var(--font-mono);
+            font-size: 48px;
+            font-weight: 600;
+            color: var(--claw-amber);
+            font-variant-numeric: tabular-nums;
+            text-shadow: 0 0 30px var(--claw-amber-muted);
+        }
+        .hero-change {
+            font-size: 14px;
+            color: var(--signal-teal);
+            margin-top: var(--space-1);
+        }
+        
+        .stats-stack {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+        .stat-tile {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: var(--space-2);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .stat-tile-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-tertiary);
+            margin-bottom: 4px;
+        }
+        .stat-tile-value {
+            font-family: var(--font-mono);
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-variant-numeric: tabular-nums;
+        }
+        
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-2);
+            margin-bottom: var(--space-3);
+        }
+        @media (max-width: 1024px) { .bento-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 640px) { .bento-grid { grid-template-columns: 1fr; } }
+        
+        .bento-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: var(--space-2);
+            transition: all 0.2s ease;
+        }
+        .bento-card:hover {
+            border-color: var(--border-default);
+            transform: translateY(-2px);
+        }
+        
+        .pulse-card { 
+            background: var(--bg-surface); 
+            border: 1px solid var(--border-subtle); 
+            border-radius: var(--radius-md); 
+            padding: var(--space-3); 
+            transition: all 0.2s ease; 
+        }
+        .pulse-card:hover { 
+            border-color: var(--border-default);
+            transform: translateY(-2px);
+        }
+        .pulse-label { 
+            font-size: 11px; 
+            text-transform: uppercase; 
+            letter-spacing: 0.08em; 
+            color: var(--text-tertiary); 
+            margin-bottom: var(--space-1); 
+        }
+        .pulse-value { 
+            font-family: var(--font-mono); 
+            font-size: 32px; 
+            font-weight: 600; 
+            color: var(--text-primary); 
+            margin-bottom: var(--space-1); 
+            font-variant-numeric: tabular-nums; 
+        }
+        .pulse-value.accent { color: var(--claw-amber); }
+        .pulse-value.success { color: var(--signal-teal); }
+        .pulse-value.info { color: var(--signal-teal); }
+        .sparkline { width: 100%; height: 20px; margin-bottom: var(--space-1); }
         .pulse-context { font-size: 12px; color: var(--text-secondary); }
         
         .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
@@ -477,38 +598,41 @@
             </header>
             <div class="content">
                 <div id="overview" class="tab-content active">
-                    <div class="overview-grid">
-                        <div class="pulse-card" onclick="openSlideout('portfolio-a')" title="Click to view positions">
+                    <!-- Hero Section: Asymmetric Bento -->
+                    <div class="hero-section">
+                        <div class="hero-card glow" onclick="openSlideout('portfolio-total')">
+                            <div class="hero-label">Total Portfolio Value</div>
+                            <div class="hero-value">$9.10</div>
+                            <div class="hero-change">▲ +$0.42 (+4.8%)</div>
+                        </div>
+                        <div class="stats-stack">
+                            <div class="stat-tile" onclick="openSlideout('win-rate')">
+                                <div class="stat-tile-label">Win Rate</div>
+                                <div class="stat-tile-value" style="color: var(--signal-teal)">71%</div>
+                            </div>
+                            <div class="stat-tile" onclick="openSlideout('positions')">
+                                <div class="stat-tile-label">Open Positions</div>
+                                <div class="stat-tile-value">94</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Bento Grid: Supporting Metrics -->
+                    <div class="bento-grid">
+                        <div class="bento-card" onclick="openSlideout('portfolio-a')">
                             <div class="pulse-label">Portfolio A</div>
                             <div class="pulse-value accent">$4.73</div>
-                            <svg class="sparkline" viewBox="0 0 100 20" preserveAspectRatio="none">
-                                <path d="M0,15 L10,12 L20,14 L30,10 L40,8 L50,11 L60,7 L70,9 L80,5 L90,6 L100,3" fill="none" stroke="var(--accent)" stroke-width="1.5" opacity="0.4"/>
-                            </svg>
-                            <div class="pulse-context">55 positions • +$0.12 today</div>
+                            <div class="pulse-context">55 positions • +$0.12</div>
                         </div>
-                        <div class="pulse-card" onclick="openSlideout('portfolio-b')" title="Click to view positions">
+                        <div class="bento-card" onclick="openSlideout('portfolio-b')">
                             <div class="pulse-label">Portfolio B</div>
-                            <div class="pulse-value">$4.37</div>
-                            <svg class="sparkline" viewBox="0 0 100 20" preserveAspectRatio="none">
-                                <path d="M0,10 L10,12 L20,11 L30,13 L40,12 L50,14 L60,13 L70,15 L80,14 L90,16 L100,15" fill="none" stroke="var(--text-muted)" stroke-width="1.5" opacity="0.4"/>
-                            </svg>
+                            <div class="pulse-value" style="color: var(--text-secondary)">$4.37</div>
                             <div class="pulse-context">39 positions • Not wired</div>
                         </div>
-                        <div class="pulse-card" onclick="openSlideout('win-rate')" title="Click for win rate breakdown">
-                            <div class="pulse-label">Win Rate</div>
-                            <div class="pulse-value success">71%</div>
-                            <svg class="sparkline" viewBox="0 0 100 20" preserveAspectRatio="none">
-                                <path d="M0,18 L10,16 L20,17 L30,14 L40,15 L50,12 L60,13 L70,10 L80,8 L90,6 L100,5" fill="none" stroke="var(--success)" stroke-width="1.5" opacity="0.4"/>
-                            </svg>
-                            <div class="pulse-context">7 wins, 3 losses • 10 resolved</div>
-                        </div>
-                        <div class="pulse-card" onclick="openSlideout('pending')" title="Click for pending markets">
-                            <div class="pulse-label">Pending</div>
-                            <div class="pulse-value info">94</div>
-                            <svg class="sparkline" viewBox="0 0 100 20" preserveAspectRatio="none">
-                                <path d="M0,5 L10,6 L20,8 L30,7 L40,9 L50,10 L60,12 L70,11 L80,13 L90,14 L100,15" fill="none" stroke="var(--info)" stroke-width="1.5" opacity="0.4"/>
-                            </svg>
-                            <div class="pulse-context">Markets closing • 12 today</div>
+                        <div class="bento-card" onclick="openSlideout('resolved')">
+                            <div class="pulse-label">Resolved Today</div>
+                            <div class="pulse-value success">3</div>
+                            <div class="pulse-context">2 wins, 1 loss</div>
                         </div>
                     </div>
                     <div class="two-column">
