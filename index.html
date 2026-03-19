@@ -223,6 +223,146 @@
         .nav-item.active::after {
             height: 24px;
         }
+        
+        /* Narrative Hero Styles */
+        .narrative-hero {
+            background: linear-gradient(145deg, rgba(30,30,30,0.9) 0%, rgba(20,20,20,0.95) 100%);
+            border: 1px solid rgba(224,145,42,0.15);
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow:
+                0 20px 60px rgba(0,0,0,0.5),
+                0 0 0 1px rgba(224,145,42,0.05);
+        }
+        
+        .state-sentence {
+            font-size: 24px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+        
+        .state-sentence strong {
+            color: var(--amber-400);
+            font-weight: 600;
+        }
+        
+        .state-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 12px;
+            animation: pulse 2s infinite;
+        }
+        
+        .state-indicator.improving {
+            background: var(--amber-400);
+            box-shadow: 0 0 12px var(--amber-400);
+        }
+        
+        .delta-strip {
+            display: flex;
+            gap: 32px;
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        
+        .delta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .delta-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-tertiary);
+        }
+        
+        .delta-value {
+            font-family: var(--font-mono);
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .delta-value.up {
+            color: var(--amber-400);
+        }
+        
+        .delta-value.good {
+            color: #4ADE80;
+        }
+        
+        .delta-change {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .intervention-status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            border-radius: 12px;
+            background: rgba(74,222,128,0.08);
+            border: 1px solid rgba(74,222,128,0.2);
+        }
+        
+        .intervention-status.clear {
+            background: rgba(74,222,128,0.08);
+            border-color: rgba(74,222,128,0.2);
+        }
+        
+        .intervention-status.action {
+            background: rgba(224,145,42,0.08);
+            border-color: rgba(224,145,42,0.3);
+        }
+        
+        .status-icon {
+            font-size: 18px;
+        }
+        
+        .status-text {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        
+        .quick-stats {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .stat-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: rgba(30,30,30,0.6);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 100px;
+        }
+        
+        .pill-label {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .pill-value {
+            font-family: var(--font-mono);
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
         .nav-item:hover { 
             background: var(--dark-800); 
             color: var(--text-primary); 
@@ -908,41 +1048,48 @@
             </header>
             <div class="content">
                 <div id="overview" class="tab-content active">
-                    <!-- Hero Section: Asymmetric Bento -->
-                    <div class="hero-section">
-                        <div class="hero-card glow" onclick="openSlideout('portfolio-total')">
-                            <div class="hero-label">Total Portfolio Value</div>
-                            <div class="hero-value">$9.10</div>
-                            <div class="hero-change">▲ +$0.42 (+4.8%)</div>
+                    <!-- Narrative Hero: State of Claw -->
+                    <div class="narrative-hero">
+                        <div class="state-sentence">
+                            <span class="state-indicator improving">●</span>
+                            Claw is <strong>improving</strong> — best win rate in 5 days
                         </div>
-                        <div class="stats-stack">
-                            <div class="stat-tile" onclick="openSlideout('win-rate')">
-                                <div class="stat-tile-label">Win Rate</div>
-                                <div class="stat-tile-value" style="color: var(--amber-400)">71%</div>
+                        <div class="delta-strip">
+                            <div class="delta-item">
+                                <span class="delta-label">Win Rate</span>
+                                <span class="delta-value up">71%</span>
+                                <span class="delta-change">+5% this week</span>
                             </div>
-                            <div class="stat-tile" onclick="openSlideout('positions')">
-                                <div class="stat-tile-label">Open Positions</div>
-                                <div class="stat-tile-value">94</div>
+                            <div class="delta-item">
+                                <span class="delta-label">Calibration</span>
+                                <span class="delta-value good">78%</span>
+                                <span class="delta-change">confidence matches outcomes</span>
                             </div>
+                            <div class="delta-item">
+                                <span class="delta-label">Autonomy</span>
+                                <span class="delta-value up">45%</span>
+                                <span class="delta-change">+3% this week</span>
+                            </div>
+                        </div>
+                        <div class="intervention-status clear">
+                            <span class="status-icon">✓</span>
+                            <span class="status-text">Nothing needs you — running well</span>
                         </div>
                     </div>
                     
-                    <!-- Bento Grid: Supporting Metrics -->
-                    <div class="bento-grid">
-                        <div class="bento-card" onclick="openSlideout('portfolio-a')">
-                            <div class="pulse-label">Portfolio A</div>
-                            <div class="pulse-value accent">$4.73</div>
-                            <div class="pulse-context">55 positions • +$0.12</div>
+                    <!-- Quick Stats -->
+                    <div class="quick-stats">
+                        <div class="stat-pill">
+                            <span class="pill-label">Portfolio</span>
+                            <span class="pill-value">$9.10</span>
                         </div>
-                        <div class="bento-card" onclick="openSlideout('portfolio-b')">
-                            <div class="pulse-label">Portfolio B</div>
-                            <div class="pulse-value" style="color: var(--text-secondary)">$4.37</div>
-                            <div class="pulse-context">39 positions • Not wired</div>
+                        <div class="stat-pill">
+                            <span class="pill-label">Positions</span>
+                            <span class="pill-value">94</span>
                         </div>
-                        <div class="bento-card" onclick="openSlideout('resolved')">
-                            <div class="pulse-label">Resolved Today</div>
-                            <div class="pulse-value success">3</div>
-                            <div class="pulse-context">2 wins, 1 loss</div>
+                        <div class="stat-pill">
+                            <span class="pill-label">Today</span>
+                            <span class="pill-value">+3</span>
                         </div>
                     </div>
                     <div class="two-column">
