@@ -66,7 +66,35 @@
         .app { 
             display: flex; 
             height: 100vh;
-            background: radial-gradient(ellipse at 30% 50%, oklch(72% 0.155 70 / 0.03) 0%, transparent 70%);
+            position: relative;
+            background: var(--bg-deepest);
+        }
+        
+        /* Ambient Background Orbs */
+        .app::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, oklch(72% 0.155 70 / 0.15) 0%, transparent 70%);
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .app::after {
+            content: '';
+            position: absolute;
+            bottom: -10%;
+            left: -5%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, oklch(73% 0.12 170 / 0.1) 0%, transparent 70%);
+            filter: blur(60px);
+            pointer-events: none;
+            z-index: 0;
         }
         
         .sidebar { 
@@ -213,8 +241,21 @@
         }
         .hero-card.glow {
             box-shadow: 
-                0 0 40px oklch(72% 0.155 70 / 0.08),
-                0 0 80px oklch(72% 0.155 70 / 0.04);
+                0 0 40px oklch(72% 0.155 70 / 0.12),
+                0 0 80px oklch(72% 0.155 70 / 0.06),
+                inset 0 1px 0 oklch(72% 0.155 70 / 0.1);
+        }
+        
+        .hero-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(165deg, oklch(72% 0.155 70 / 0.03) 0%, transparent 50%);
+            border-radius: var(--radius-md);
+            pointer-events: none;
         }
         .hero-label {
             font-size: 12px;
@@ -284,8 +325,9 @@
             transition: all 0.2s ease;
         }
         .bento-card:hover {
-            border-color: var(--border-default);
+            border-color: var(--claw-amber);
             transform: translateY(-2px);
+            box-shadow: 0 4px 24px oklch(72% 0.155 70 / 0.08);
         }
         
         .pulse-card { 
