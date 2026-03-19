@@ -1,5 +1,14 @@
 [
   {
+    "timestamp": "2026-03-19T00:38:55.919353Z",
+    "time": "12:38 AM",
+    "type": "model",
+    "text": "Routing to Sonnet 4.6 via OpenRouter for designing project timeline view",
+    "highlights": [
+      "Sonnet 4.6 via OpenRouter"
+    ]
+  },
+  {
     "timestamp": "2026-03-19T00:34:12.713235Z",
     "time": "12:34 AM",
     "type": "model",
@@ -175,15 +184,6 @@
     "text": "Complete: Activity logger \u2014 real-time tracking working",
     "highlights": [
       "Complete"
-    ]
-  },
-  {
-    "timestamp": "2026-03-18T20:39:24.836849Z",
-    "time": "8:39 PM",
-    "type": "skill",
-    "text": "Using impeccable to design polish",
-    "highlights": [
-      "impeccable"
     ]
   }
 ]
