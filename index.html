@@ -654,6 +654,144 @@
             color: #F87171;
         }
         
+        /* Calibration Scatter Plot Styles */
+        .calibration-chart-container {
+            position: relative;
+            cursor: pointer;
+            margin-bottom: 16px;
+            padding: 12px;
+            background: rgba(20,20,20,0.5);
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: border-color 0.2s;
+        }
+        
+        .calibration-chart-container:hover {
+            border-color: rgba(224,145,42,0.3);
+        }
+        
+        .calibration-svg {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .cal-dot {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .cal-dot:hover {
+            r: 12;
+            filter: drop-shadow(0 0 8px currentColor);
+        }
+        
+        .cal-legend {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 12px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        
+        .cal-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .cal-legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        
+        .cal-legend-dot.good {
+            background: #4ADE80;
+        }
+        
+        .cal-legend-dot.bad {
+            background: #F87171;
+        }
+        
+        .cal-hint {
+            text-align: center;
+            font-size: 11px;
+            color: var(--text-tertiary);
+            margin-top: 8px;
+            font-style: italic;
+        }
+        
+        /* Calibration Detail Expand */
+        .calibration-detail {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, opacity 0.3s ease;
+            opacity: 0;
+            margin-top: 0;
+        }
+        
+        .calibration-chart-container.expanded + .calibration-detail {
+            max-height: 300px;
+            opacity: 1;
+            margin-top: 16px;
+        }
+        
+        .detail-header {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .detail-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .detail-row {
+            display: grid;
+            grid-template-columns: 100px 60px 1fr;
+            gap: 12px;
+            align-items: center;
+            padding: 10px 12px;
+            background: var(--dark-800);
+            border-radius: 6px;
+            font-size: 12px;
+        }
+        
+        .detail-row.good {
+            border-left: 3px solid #4ADE80;
+        }
+        
+        .detail-row:not(.good) {
+            border-left: 3px solid #F87171;
+        }
+        
+        .detail-conf {
+            font-family: var(--font-mono);
+            color: var(--text-primary);
+        }
+        
+        .detail-gap {
+            font-family: var(--font-mono);
+            color: #F87171;
+            font-weight: 600;
+        }
+        
+        .detail-row.good .detail-gap {
+            color: #4ADE80;
+        }
+        
+        .detail-lesson {
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+        
         /* Learning Velocity Styles */
         .learning-velocity {
             margin-bottom: 24px;
@@ -1068,6 +1206,158 @@
             flex: 1;
             font-size: 12px;
             color: var(--text-tertiary);
+        }
+        
+        /* Position Cards */
+        .position-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .pos-card {
+            background: var(--dark-800);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .pos-card:hover {
+            border-color: rgba(224,145,42,0.3);
+            transform: translateY(-2px);
+        }
+        
+        .pos-card.resolving {
+            border-color: rgba(224,145,42,0.5);
+            box-shadow: 0 0 20px rgba(224,145,42,0.1);
+        }
+        
+        .pos-card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        
+        .pos-icon {
+            font-size: 18px;
+        }
+        
+        .pos-market-name {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        
+        .pos-countdown {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            padding: 4px 8px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+        }
+        
+        .pos-countdown.pulse-text {
+            color: var(--amber-400);
+            animation: pulse 2s infinite;
+        }
+        
+        .pos-card-body {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .pos-dir-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: var(--font-mono);
+        }
+        
+        .pos-dir-badge.yes {
+            background: rgba(74,222,128,0.15);
+            color: #4ADE80;
+        }
+        
+        .pos-dir-badge.no {
+            background: rgba(248,113,113,0.15);
+            color: #F87171;
+        }
+        
+        .pos-conf-ring {
+            position: relative;
+            width: 44px;
+            height: 44px;
+        }
+        
+        .pos-conf-ring svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .ring-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .pos-card-amount {
+            margin-left: auto;
+            font-family: var(--font-mono);
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--amber-400);
+        }
+        
+        .pos-card-expand {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, opacity 0.3s ease, margin 0.3s ease;
+            opacity: 0;
+            margin-top: 0;
+        }
+        
+        .pos-card.expanded .pos-card-expand {
+            max-height: 200px;
+            opacity: 1;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .pos-reasoning {
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+        
+        .pos-reasoning strong {
+            color: var(--text-primary);
+        }
+        
+        .pos-data-sources {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .source-tag {
+            font-size: 11px;
+            padding: 4px 10px;
+            background: rgba(224,145,42,0.1);
+            border: 1px solid rgba(224,145,42,0.2);
+            border-radius: 12px;
+            color: var(--amber-400);
         }
         
         /* Honest Assessment Styles */
@@ -2066,30 +2356,92 @@
                                 <span class="cal-label">confidence matches outcomes</span>
                                 <span class="cal-trend improving">↑ improving</span>
                             </div>
-                            <div class="calibration-buckets">
-                                <div class="bucket">
-                                    <span class="bucket-conf">90%+ conf</span>
-                                    <span class="bucket-actual">94% win</span>
-                                    <span class="bucket-status good">●</span>
+                            
+                            <!-- Calibration Scatter Plot -->
+                            <div class="calibration-chart-container" onclick="toggleCalibrationDetail(this)">
+                                <svg viewBox="0 0 300 200" class="calibration-svg">
+                                    <!-- Background zones -->
+                                    <defs>
+                                        <pattern id="overconfident" patternUnits="userSpaceOnUse" width="8" height="8">
+                                            <path d="M0,8 L8,0" stroke="rgba(248,113,113,0.1)" stroke-width="1"/>
+                                        </pattern>
+                                        <pattern id="underconfident" patternUnits="userSpaceOnUse" width="8" height="8">
+                                            <path d="M0,0 L8,8" stroke="rgba(74,222,128,0.1)" stroke-width="1"/>
+                                        </pattern>
+                                    </defs>
+                                    
+                                    <!-- Zone fills -->
+                                    <polygon points="50,150 250,150 250,50" fill="url(#overconfident)"/>
+                                    <polygon points="50,150 50,50 250,50" fill="url(#underconfident)"/>
+                                    
+                                    <!-- Axes -->
+                                    <line x1="50" y1="150" x2="250" y2="150" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                                    <line x1="50" y1="150" x2="50" y2="50" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                                    
+                                    <!-- Perfect calibration line (45°) -->
+                                    <line x1="50" y1="150" x2="250" y2="50" stroke="rgba(224,145,42,0.5)" stroke-width="2" stroke-dasharray="5,5"/>
+                                    
+                                    <!-- Data points -->
+                                    <circle cx="70" cy="145" r="6" fill="#4ADE80" opacity="0.8" class="cal-dot good" data-predicted="55" data-actual="52"/>
+                                    <circle cx="90" cy="128" r="8" fill="#4ADE80" opacity="0.8" class="cal-dot good" data-predicted="60" data-actual="58"/>
+                                    <circle cx="110" cy="105" r="10" fill="#F87171" opacity="0.8" class="cal-dot bad" data-predicted="65" data-actual="55"/>
+                                    <circle cx="130" cy="88" r="10" fill="#F87171" opacity="0.8" class="cal-dot bad" data-predicted="70" data-actual="62"/>
+                                    <circle cx="170" cy="65" r="8" fill="#4ADE80" opacity="0.8" class="cal-dot good" data-predicted="80" data-actual="78"/>
+                                    <circle cx="210" cy="42" r="6" fill="#4ADE80" opacity="0.8" class="cal-dot good" data-predicted="90" data-actual="88"/>
+                                    
+                                    <!-- Labels -->
+                                    <text x="150" y="175" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="10">Predicted Confidence →</text>
+                                    <text x="25" y="100" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="10" transform="rotate(-90 25 100)">Actual Win Rate →</text>
+                                    
+                                    <!-- Axis ticks -->
+                                    <text x="50" y="165" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="9">50%</text>
+                                    <text x="150" y="165" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="9">75%</text>
+                                    <text x="250" y="165" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="9">100%</text>
+                                    
+                                    <text x="40" y="153" text-anchor="end" fill="rgba(255,255,255,0.4)" font-size="9">50%</text>
+                                    <text x="40" y="102" text-anchor="end" fill="rgba(255,255,255,0.4)" font-size="9">75%</text>
+                                    <text x="40" y="52" text-anchor="end" fill="rgba(255,255,255,0.4)" font-size="9">100%</text>
+                                </svg>
+                                
+                                <!-- Legend -->
+                                <div class="cal-legend">
+                                    <div class="cal-legend-item">
+                                        <span class="cal-legend-dot good"></span>
+                                        <span>Well calibrated</span>
+                                    </div>
+                                    <div class="cal-legend-item">
+                                        <span class="cal-legend-dot bad"></span>
+                                        <span>Overconfident</span>
+                                    </div>
                                 </div>
-                                <div class="bucket">
-                                    <span class="bucket-conf">80% conf</span>
-                                    <span class="bucket-actual">82% win</span>
-                                    <span class="bucket-status good">●</span>
-                                </div>
-                                <div class="bucket">
-                                    <span class="bucket-conf">70% conf</span>
-                                    <span class="bucket-actual">65% win</span>
-                                    <span class="bucket-status warning">●</span>
-                                </div>
-                                <div class="bucket">
-                                    <span class="bucket-conf">60% conf</span>
-                                    <span class="bucket-actual">48% win</span>
-                                    <span class="bucket-status bad">●</span>
+                                
+                                <div class="cal-hint">Click for details</div>
+                            </div>
+                            
+                            <!-- Expandable Detail View -->
+                            <div class="calibration-detail">
+                                <div class="detail-header">Prediction Breakdown</div>
+                                <div class="detail-list">
+                                    <div class="detail-row">
+                                        <span class="detail-conf">70% → 62%</span>
+                                        <span class="detail-gap">-8%</span>
+                                        <span class="detail-lesson">Overestimated NYC rain pattern</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span class="detail-conf">65% → 55%</span>
+                                        <span class="detail-gap">-10%</span>
+                                        <span class="detail-lesson">Missed humidity factor</span>
+                                    </div>
+                                    <div class="detail-row good">
+                                        <span class="detail-conf">90% → 88%</span>
+                                        <span class="detail-gap">-2%</span>
+                                        <span class="detail-lesson">High confidence = accurate</span>
+                                    </div>
                                 </div>
                             </div>
+                            
                             <div class="calibration-insight">
-                                <strong>Issue:</strong> Overconfident on 60-70% predictions. Actual win rate 10-15% below confidence.
+                                <strong>Pattern:</strong> Dots above the line = overconfident. Size = number of predictions. Click chart to see breakdown.
                             </div>
                         </div>
                     </div>
@@ -2223,25 +2575,95 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="position-list">
-                                <div class="position-item">
-                                    <span class="pos-market">NYC Rain March 20</span>
-                                    <span class="pos-direction">YES</span>
-                                    <span class="pos-confidence">82%</span>
-                                    <span class="pos-amount">$0.50</span>
+                            <div class="position-cards">
+                                <div class="pos-card" onclick="togglePosDetail(this)">
+                                    <div class="pos-card-header">
+                                        <span class="pos-icon">🌧️</span>
+                                        <span class="pos-market-name">NYC Rain March 20</span>
+                                        <span class="pos-countdown">18h left</span>
+                                    </div>
+                                    <div class="pos-card-body">
+                                        <div class="pos-dir-badge yes">YES</div>
+                                        <div class="pos-conf-ring" style="--conf: 82">
+                                            <svg viewBox="0 0 40 40">
+                                                <circle cx="20" cy="20" r="16" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="3"/>
+                                                <circle cx="20" cy="20" r="16" fill="none" stroke="var(--amber-400)" stroke-width="3" 
+                                                    stroke-dasharray="82.4 100" stroke-dashoffset="25" transform="rotate(-90 20 20)"/>
+                                            </svg>
+                                            <span class="ring-text">82%</span>
+                                        </div>
+                                        <span class="pos-card-amount">$0.50</span>
+                                    </div>
+                                    <div class="pos-card-expand">
+                                        <div class="pos-reasoning">
+                                            <strong>Why YES:</strong> NWS forecast shows 80% precipitation probability. Historical March rain rate for NYC is 45%. Current atmospheric moisture index above average. Market priced at 70% — I see 12% edge.
+                                        </div>
+                                        <div class="pos-data-sources">
+                                            <span class="source-tag">NWS</span>
+                                            <span class="source-tag">Historical</span>
+                                            <span class="source-tag">Moisture Index</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="position-item">
-                                    <span class="pos-market">LA Temp March 21</span>
-                                    <span class="pos-direction">NO</span>
-                                    <span class="pos-confidence">75%</span>
-                                    <span class="pos-amount">$0.35</span>
+                                
+                                <div class="pos-card" onclick="togglePosDetail(this)">
+                                    <div class="pos-card-header">
+                                        <span class="pos-icon">🌡️</span>
+                                        <span class="pos-market-name">LA Temp March 21</span>
+                                        <span class="pos-countdown">42h left</span>
+                                    </div>
+                                    <div class="pos-card-body">
+                                        <div class="pos-dir-badge no">NO</div>
+                                        <div class="pos-conf-ring" style="--conf: 75">
+                                            <svg viewBox="0 0 40 40">
+                                                <circle cx="20" cy="20" r="16" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="3"/>
+                                                <circle cx="20" cy="20" r="16" fill="none" stroke="var(--amber-400)" stroke-width="3" 
+                                                    stroke-dasharray="75.4 100" stroke-dashoffset="25" transform="rotate(-90 20 20)"/>
+                                            </svg>
+                                            <span class="ring-text">75%</span>
+                                        </div>
+                                        <span class="pos-card-amount">$0.35</span>
+                                    </div>
+                                    <div class="pos-card-expand">
+                                        <div class="pos-reasoning">
+                                            <strong>Why NO:</strong> Market asks "Will LA exceed 85°F?" — GFS model shows max 78°F. Marine layer persists through afternoon. Historical probability of 85°F+ in March is only 15%.
+                                        </div>
+                                        <div class="pos-data-sources">
+                                            <span class="source-tag">GFS Model</span>
+                                            <span class="source-tag">Marine Layer</span>
+                                            <span class="source-tag">Seasonal Avg</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="position-item highlight">
-                                    <span class="pos-market">Miami Humidity March 22</span>
-                                    <span class="pos-direction">YES</span>
-                                    <span class="pos-confidence">68%</span>
-                                    <span class="pos-amount">$0.42</span>
-                                    <span class="pos-note">Resolves tomorrow</span>
+                                
+                                <div class="pos-card resolving" onclick="togglePosDetail(this)">
+                                    <div class="pos-card-header">
+                                        <span class="pos-icon">💧</span>
+                                        <span class="pos-market-name">Miami Humidity March 22</span>
+                                        <span class="pos-countdown pulse-text">Resolves tomorrow</span>
+                                    </div>
+                                    <div class="pos-card-body">
+                                        <div class="pos-dir-badge yes">YES</div>
+                                        <div class="pos-conf-ring" style="--conf: 68">
+                                            <svg viewBox="0 0 40 40">
+                                                <circle cx="20" cy="20" r="16" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="3"/>
+                                                <circle cx="20" cy="20" r="16" fill="none" stroke="var(--amber-400)" stroke-width="3" 
+                                                    stroke-dasharray="68 100" stroke-dashoffset="25" transform="rotate(-90 20 20)"/>
+                                            </svg>
+                                            <span class="ring-text">68%</span>
+                                        </div>
+                                        <span class="pos-card-amount">$0.42</span>
+                                    </div>
+                                    <div class="pos-card-expand">
+                                        <div class="pos-reasoning">
+                                            <strong>Why YES:</strong> "Humidity > 75%?" — Miami's March avg humidity is 72%, but Gulf stream warming cycle pushes it to 78-82% this week. Confidence lower because sensor reliability in coastal zones.
+                                        </div>
+                                        <div class="pos-data-sources">
+                                            <span class="source-tag">NOAA Humidity</span>
+                                            <span class="source-tag">Gulf Stream</span>
+                                            <span class="source-tag">Sensor Risk</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -2707,6 +3129,21 @@
             const wasExpanded = card.classList.contains('expanded');
             // Close other projects
             document.querySelectorAll('.project-card.expanded').forEach(el => {
+                if (el !== card) el.classList.remove('expanded');
+            });
+            card.classList.toggle('expanded', !wasExpanded);
+        }
+
+        // ═══════ 6. CALIBRATION CHART → EXPAND DETAILS ═══════
+        function toggleCalibrationDetail(container) {
+            container.classList.toggle('expanded');
+        }
+
+        // ═══════ 7. POSITION CARDS → EXPAND REASONING ═══════
+        function togglePosDetail(card) {
+            const wasExpanded = card.classList.contains('expanded');
+            // Close other position cards
+            document.querySelectorAll('.pos-card.expanded').forEach(el => {
                 if (el !== card) el.classList.remove('expanded');
             });
             card.classList.toggle('expanded', !wasExpanded);
