@@ -419,6 +419,37 @@
             document.getElementById(tabId).classList.add('active');
             event.target.classList.add('active');
         }
+
+        // Live Activity Feed
+        async function loadActivity() {
+            try {
+                const response = await fetch('activity.json');
+                const activities = await response.json();
+                const container = document.querySelector('.activity-section');
+                
+                let html = '<div class="activity-header"><div class="activity-pulse"></div>Live Activity</div>';
+                
+                activities.forEach(act => {
+                    const highlights = act.highlights || [];
+                    let text = act.text;
+                    highlights.forEach(h => {
+                        text = text.replace(h, '<span class="highlight">' + h + '</span>');
+                    });
+                    
+                    html += '<div class="activity-item">';
+                    html += '<div class="activity-time">' + act.time + '</div>';
+                    html += '<div class="activity-text">' + text + '</div>';
+                    html += '</div>';
+                });
+                
+                container.innerHTML = html;
+            } catch (e) {
+                console.log('Activity feed offline');
+            }
+        }
+
+        loadActivity();
+        setInterval(loadActivity, 30000);
     </script>
 </body>
 </html>
