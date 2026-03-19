@@ -2298,6 +2298,124 @@
         .main {
             padding-bottom: 60px;
         }
+        
+        /* ═══════ MOTION POLISH ═══════ */
+        
+        /* Number tick animation */
+        @keyframes tickUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .animate-number {
+            display: inline-block;
+            animation: tickUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        /* Card entrance stagger */
+        .card {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: cardEnter 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        
+        @keyframes cardEnter {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Stagger delays for cards in same container */
+        .tab-content .card:nth-child(1) { animation-delay: 0.05s; }
+        .tab-content .card:nth-child(2) { animation-delay: 0.1s; }
+        .tab-content .card:nth-child(3) { animation-delay: 0.15s; }
+        .tab-content .card:nth-child(4) { animation-delay: 0.2s; }
+        .tab-content .card:nth-child(5) { animation-delay: 0.25s; }
+        .tab-content .card:nth-child(6) { animation-delay: 0.3s; }
+        
+        /* Success checkmark draw */
+        @keyframes checkDraw {
+            from { stroke-dashoffset: 20; }
+            to { stroke-dashoffset: 0; }
+        }
+        
+        .checkmark-animate {
+            stroke-dasharray: 20;
+            stroke-dashoffset: 20;
+            animation: checkDraw 0.4s ease forwards;
+        }
+        
+        /* Pulse glow for active elements */
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(224,145,42,0.4); }
+            50% { box-shadow: 0 0 0 8px rgba(224,145,42,0); }
+        }
+        
+        .pulse-glow {
+            animation: pulseGlow 2s infinite;
+        }
+        
+        /* Hover lift effect */
+        .card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+        }
+        
+        /* Button press feedback */
+        .nav-item:active,
+        .pos-card:active,
+        .skill-node:active {
+            transform: scale(0.98);
+        }
+        
+        /* Smooth tab transition */
+        .tab-content {
+            opacity: 0;
+            transform: translateX(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        
+        .tab-content.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        /* Sparkline draw animation */
+        @keyframes drawLine {
+            from { stroke-dashoffset: 200; }
+            to { stroke-dashoffset: 0; }
+        }
+        
+        .vel-sparkline path,
+        .calibration-svg path[stroke-dasharray] {
+            stroke-dasharray: 200;
+            animation: drawLine 1s ease forwards;
+        }
+        
+        /* Bar fill animation */
+        @keyframes barFill {
+            from { width: 0; }
+        }
+        
+        .bd-bar,
+        .milestone-fill,
+        .auto-bar {
+            animation: barFill 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        
+        /* Ring progress animation */
+        @keyframes ringProgress {
+            from { stroke-dasharray: 0 100; }
+        }
+        
+        .pos-conf-ring circle:last-child {
+            animation: ringProgress 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
         .nav-item:hover { 
             background: var(--dark-800); 
             color: var(--text-primary); 
