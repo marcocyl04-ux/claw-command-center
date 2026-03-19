@@ -833,6 +833,79 @@
         .autonomy-insight strong {
             color: var(--amber-400);
         }
+        
+        /* Skill Synergy Styles */
+        .skill-synergy {
+            margin-bottom: 24px;
+        }
+        
+        .synergy-intro {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+        
+        .synergy-pairs {
+            margin-bottom: 16px;
+        }
+        
+        .synergy-pair {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+        
+        .synergy-pair:last-child {
+            border-bottom: none;
+        }
+        
+        .pair-skills {
+            flex: 1;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+        }
+        
+        .pair-count {
+            font-family: var(--font-mono);
+            font-size: 14px;
+            font-weight: 600;
+            min-width: 40px;
+            text-align: right;
+        }
+        
+        .synergy-pair.high .pair-count {
+            color: #4ADE80;
+        }
+        
+        .synergy-pair.medium .pair-count {
+            color: var(--amber-400);
+        }
+        
+        .synergy-pair.low .pair-count {
+            color: var(--text-tertiary);
+        }
+        
+        .pair-desc {
+            flex: 1;
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+        
+        .synergy-insight {
+            padding: 12px 16px;
+            background: rgba(224,145,42,0.08);
+            border-radius: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .synergy-insight strong {
+            color: var(--amber-400);
+        }
         .nav-item:hover { 
             background: var(--dark-800); 
             color: var(--text-primary); 
@@ -1774,6 +1847,41 @@
                             </div>
                             <div class="autonomy-insight">
                                 <strong>Progress:</strong> 3 fewer escalations this week. Taking more initiative on UI decisions.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Skill Synergy: Cross-skill usage patterns -->
+                    <div class="card skill-synergy">
+                        <div class="card-header"><span class="card-title">Skill Synergy</span><span class="card-badge">Cross-system</span></div>
+                        <div class="card-body">
+                            <div class="synergy-intro">
+                                Skills used together in recent sessions
+                            </div>
+                            <div class="synergy-pairs">
+                                <div class="synergy-pair high">
+                                    <span class="pair-skills">impeccable + structured-workflow</span>
+                                    <span class="pair-count">12×</span>
+                                    <span class="pair-desc">Design → Breakdown → Execute pattern</span>
+                                </div>
+                                <div class="synergy-pair medium">
+                                    <span class="pair-skills">qmd-search + memory_search</span>
+                                    <span class="pair-count">8×</span>
+                                    <span class="pair-desc">Context retrieval before decisions</span>
+                                </div>
+                                <div class="synergy-pair medium">
+                                    <span class="pair-skills">proactive-agent + self-learner</span>
+                                    <span class="pair-count">6×</span>
+                                    <span class="pair-desc">Anticipate needs → Log learnings</span>
+                                </div>
+                                <div class="synergy-pair low">
+                                    <span class="pair-skills">agency-agents + mirofish</span>
+                                    <span class="pair-count">2×</span>
+                                    <span class="pair-desc">Prediction + simulation (underused)</span>
+                                </div>
+                            </div>
+                            <div class="synergy-insight">
+                                <strong>Gap:</strong> agency-agents and mirofish underutilized. Could enhance prediction quality.
                             </div>
                         </div>
                     </div>
