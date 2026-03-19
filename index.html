@@ -1016,55 +1016,42 @@
             transition: width 0.5s ease;
         }
         
-        /* Active Bets Timeline - Redesigned */
+        /* Active Bets - Clean Design */
         .active-bets {
             margin-bottom: 24px;
         }
         
-        .bets-timeline {
+        .bets-list {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 12px;
             margin-bottom: 20px;
         }
         
-        .bet-item {
+        .bet-row {
             display: flex;
             align-items: center;
-            gap: 16px;
-            padding: 16px;
+            padding: 16px 20px;
             background: var(--dark-800);
-            border-radius: 12px;
-            border-left: 4px solid transparent;
-            transition: all 0.2s ease;
+            border-radius: 8px;
+            border-left: 3px solid transparent;
         }
         
-        .bet-item:hover {
-            background: var(--dark-700);
-            transform: translateX(4px);
-        }
-        
-        .bet-item.today {
+        .bet-row.today {
             border-left-color: #4ADE80;
-            box-shadow: 0 0 20px rgba(74,222,128,0.1);
+            background: linear-gradient(90deg, rgba(74,222,128,0.05) 0%, var(--dark-800) 100%);
         }
         
-        .bet-item.tomorrow {
+        .bet-row.tomorrow {
             border-left-color: var(--amber-400);
         }
         
-        .bet-item.friday {
-            border-left-color: rgba(255,255,255,0.2);
+        .bet-row.friday {
+            border-left-color: rgba(255,255,255,0.15);
         }
         
-        .bet-indicator {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-width: 60px;
-        }
-        
-        .bet-day {
+        .bet-when {
+            width: 80px;
             font-size: 11px;
             font-weight: 600;
             text-transform: uppercase;
@@ -1072,82 +1059,49 @@
             color: var(--text-tertiary);
         }
         
-        .bet-item.today .bet-day {
+        .bet-row.today .bet-when {
             color: #4ADE80;
         }
         
-        .bet-item.tomorrow .bet-day {
+        .bet-row.tomorrow .bet-when {
             color: var(--amber-400);
         }
         
-        .bet-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            margin-top: 6px;
-        }
-        
-        .bet-item.today .bet-dot {
-            background: #4ADE80;
-            box-shadow: 0 0 10px #4ADE80;
-            animation: pulse 2s infinite;
-        }
-        
-        .bet-item.tomorrow .bet-dot {
-            background: var(--amber-400);
-        }
-        
-        .bet-item.friday .bet-dot {
-            background: rgba(255,255,255,0.3);
-        }
-        
-        .bet-content {
+        .bet-info {
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 2px;
         }
         
-        .bet-market {
+        .bet-name {
             font-size: 14px;
             font-weight: 500;
             color: var(--text-primary);
         }
         
-        .bet-meta {
-            display: flex;
-            gap: 12px;
+        .bet-details {
             font-size: 12px;
+            color: var(--text-secondary);
         }
         
-        .bet-position {
-            font-family: var(--font-mono);
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-weight: 600;
-        }
-        
-        .bet-position.yes {
-            background: rgba(74,222,128,0.15);
+        .bet-details .dir-yes {
             color: #4ADE80;
-        }
-        
-        .bet-position.no {
-            background: rgba(248,113,113,0.15);
-            color: #F87171;
-        }
-        
-        .bet-confidence {
-            color: var(--text-tertiary);
-        }
-        
-        .bet-amount {
-            font-family: var(--font-mono);
-            font-size: 16px;
             font-weight: 600;
-            color: var(--amber-400);
-            min-width: 60px;
+        }
+        
+        .bet-details .dir-no {
+            color: #F87171;
+            font-weight: 600;
+        }
+        
+        .bet-stake {
+            font-family: var(--font-mono);
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
             text-align: right;
+            min-width: 50px;
         }
         
         .bets-summary {
@@ -2540,17 +2494,7 @@
             transform: scale(0.98);
         }
         
-        /* Smooth tab transition */
-        .tab-content {
-            opacity: 0;
-            transform: translateX(10px);
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-        
-        .tab-content.active {
-            opacity: 1;
-            transform: translateX(0);
-        }
+
         
         /* Sparkline draw animation */
         @keyframes drawLine {
@@ -3373,48 +3317,30 @@
                     <div class="card active-bets">
                         <div class="card-header"><span class="card-title">Active Bets</span><span class="card-badge">3 resolving this week</span></div>
                         <div class="card-body">
-                            <div class="bets-timeline">
-                                <div class="bet-item today">
-                                    <div class="bet-indicator">
-                                        <span class="bet-day">Today</span>
-                                        <span class="bet-dot"></span>
+                            <div class="bets-list">
+                                <div class="bet-row today">
+                                    <span class="bet-when">Today</span>
+                                    <div class="bet-info">
+                                        <span class="bet-name">NYC Rain March 20</span>
+                                        <span class="bet-details"><span class="dir-yes">YES</span> at 82% confidence</span>
                                     </div>
-                                    <div class="bet-content">
-                                        <span class="bet-market">NYC Rain March 20</span>
-                                        <div class="bet-meta">
-                                            <span class="bet-position yes">YES</span>
-                                            <span class="bet-confidence">82% confidence</span>
-                                        </div>
-                                    </div>
-                                    <span class="bet-amount">$0.50</span>
+                                    <span class="bet-stake">$0.50</span>
                                 </div>
-                                <div class="bet-item tomorrow">
-                                    <div class="bet-indicator">
-                                        <span class="bet-day">Tomorrow</span>
-                                        <span class="bet-dot"></span>
+                                <div class="bet-row tomorrow">
+                                    <span class="bet-when">Tomorrow</span>
+                                    <div class="bet-info">
+                                        <span class="bet-name">LA Temp March 21</span>
+                                        <span class="bet-details"><span class="dir-no">NO</span> at 75% confidence</span>
                                     </div>
-                                    <div class="bet-content">
-                                        <span class="bet-market">LA Temp March 21</span>
-                                        <div class="bet-meta">
-                                            <span class="bet-position no">NO</span>
-                                            <span class="bet-confidence">75% confidence</span>
-                                        </div>
-                                    </div>
-                                    <span class="bet-amount">$0.35</span>
+                                    <span class="bet-stake">$0.35</span>
                                 </div>
-                                <div class="bet-item friday">
-                                    <div class="bet-indicator">
-                                        <span class="bet-day">Friday</span>
-                                        <span class="bet-dot"></span>
+                                <div class="bet-row friday">
+                                    <span class="bet-when">Friday</span>
+                                    <div class="bet-info">
+                                        <span class="bet-name">Miami Humidity March 22</span>
+                                        <span class="bet-details"><span class="dir-yes">YES</span> at 68% confidence</span>
                                     </div>
-                                    <div class="bet-content">
-                                        <span class="bet-market">Miami Humidity March 22</span>
-                                        <div class="bet-meta">
-                                            <span class="bet-position yes">YES</span>
-                                            <span class="bet-confidence">68% confidence</span>
-                                        </div>
-                                    </div>
-                                    <span class="bet-amount">$0.42</span>
+                                    <span class="bet-stake">$0.42</span>
                                 </div>
                             </div>
                             <div class="bets-summary">
