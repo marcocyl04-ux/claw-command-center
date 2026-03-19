@@ -1045,6 +1045,147 @@
             color: var(--amber-400);
         }
         
+        /* Skill Network Visualization */
+        .skill-network-container {
+            position: relative;
+            margin-bottom: 16px;
+        }
+        
+        .skill-network-svg {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .skill-node {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .skill-node:hover {
+            filter: drop-shadow(0 0 12px currentColor);
+        }
+        
+        .skill-node:hover circle {
+            r: 32;
+        }
+        
+        .network-legend {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 12px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        
+        .net-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .net-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .net-dot.high {
+            background: #4ADE80;
+            box-shadow: 0 0 8px #4ADE80;
+        }
+        
+        .net-dot.medium {
+            background: #E0912A;
+        }
+        
+        .net-dot.low {
+            background: #6B6B6B;
+        }
+        
+        /* Skill Detail Panel */
+        .skill-detail-panel {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, opacity 0.3s ease, margin 0.3s ease;
+            opacity: 0;
+            margin-top: 0;
+            background: var(--dark-800);
+            border-radius: 8px;
+            border: 1px solid rgba(224,145,42,0.2);
+        }
+        
+        .skill-detail-panel.active {
+            max-height: 200px;
+            opacity: 1;
+            margin-top: 16px;
+        }
+        
+        .skill-detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .skill-detail-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+        }
+        
+        .skill-detail-close {
+            width: 24px;
+            height: 24px;
+            border: none;
+            background: transparent;
+            color: var(--text-tertiary);
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        
+        .skill-detail-close:hover {
+            background: rgba(248,113,113,0.2);
+            color: #F87171;
+        }
+        
+        .skill-detail-content {
+            padding: 16px;
+        }
+        
+        .detail-stat {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+        
+        .detail-stat-label {
+            color: var(--text-tertiary);
+        }
+        
+        .detail-stat-value {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        
+        .detail-synergy-list {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .detail-synergy-item {
+            font-size: 12px;
+            color: var(--text-secondary);
+            padding: 4px 0;
+        }
+        
         /* Trading Tab Styles */
         .trading-narrative {
             margin-bottom: 24px;
@@ -2521,30 +2662,104 @@
                             <div class="synergy-intro">
                                 Skills used together in recent sessions
                             </div>
-                            <div class="synergy-pairs">
-                                <div class="synergy-pair high">
-                                    <span class="pair-skills">impeccable + structured-workflow</span>
-                                    <span class="pair-count">12×</span>
-                                    <span class="pair-desc">Design → Breakdown → Execute pattern</span>
-                                </div>
-                                <div class="synergy-pair medium">
-                                    <span class="pair-skills">qmd-search + memory_search</span>
-                                    <span class="pair-count">8×</span>
-                                    <span class="pair-desc">Context retrieval before decisions</span>
-                                </div>
-                                <div class="synergy-pair medium">
-                                    <span class="pair-skills">proactive-agent + self-learner</span>
-                                    <span class="pair-count">6×</span>
-                                    <span class="pair-desc">Anticipate needs → Log learnings</span>
-                                </div>
-                                <div class="synergy-pair low">
-                                    <span class="pair-skills">agency-agents + mirofish</span>
-                                    <span class="pair-count">2×</span>
-                                    <span class="pair-desc">Prediction + simulation (underused)</span>
+                            
+                            <!-- Skill Network Visualization -->
+                            <div class="skill-network-container">
+                                <svg viewBox="0 0 400 280" class="skill-network-svg">
+                                    <!-- Connection lines -->
+                                    <line x1="80" y1="80" x2="200" y2="60" stroke="rgba(74,222,128,0.4)" stroke-width="4"/>
+                                    <line x1="200" y1="60" x2="320" y2="100" stroke="rgba(74,222,128,0.3)" stroke-width="3"/>
+                                    <line x1="80" y1="80" x2="120" y2="180" stroke="rgba(224,145,42,0.4)" stroke-width="3"/>
+                                    <line x1="120" y1="180" x2="280" y2="200" stroke="rgba(224,145,42,0.3)" stroke-width="2"/>
+                                    <line x1="200" y1="60" x2="120" y2="180" stroke="rgba(224,145,42,0.25)" stroke-width="2"/>
+                                    <line x1="320" y1="100" x2="280" y2="200" stroke="rgba(100,100,100,0.3)" stroke-width="1"/>
+                                    
+                                    <!-- Skill nodes -->
+                                    <!-- Design Cluster -->
+                                    <g class="skill-node high" transform="translate(80,80)" onclick="showSkillDetail('impeccable')">
+                                        <circle r="28" fill="rgba(74,222,128,0.15)" stroke="#4ADE80" stroke-width="2"/>
+                                        <text y="-5" text-anchor="middle" fill="#4ADE80" font-size="10" font-weight="600">impeccable</text>
+                                        <text y="8" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="9">15×</text>
+                                    </g>
+                                    
+                                    <g class="skill-node high" transform="translate(200,60)" onclick="showSkillDetail('structured-workflow')">
+                                        <circle r="26" fill="rgba(74,222,128,0.15)" stroke="#4ADE80" stroke-width="2"/>
+                                        <text y="-5" text-anchor="middle" fill="#4ADE80" font-size="9" font-weight="600">structured</text>
+                                        <text y="8" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="9">12×</text>
+                                    </g>
+                                    
+                                    <!-- Research Cluster -->
+                                    <g class="skill-node medium" transform="translate(120,180)" onclick="showSkillDetail('qmd-search')">
+                                        <circle r="22" fill="rgba(224,145,42,0.15)" stroke="#E0912A" stroke-width="2"/>
+                                        <text y="-5" text-anchor="middle" fill="#E0912A" font-size="9" font-weight="600">qmd-search</text>
+                                        <text y="8" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="9">8×</text>
+                                    </g>
+                                    
+                                    <g class="skill-node medium" transform="translate(320,100)" onclick="showSkillDetail('memory_search')">
+                                        <circle r="20" fill="rgba(224,145,42,0.15)" stroke="#E0912A" stroke-width="2"/>
+                                        <text y="-5" text-anchor="middle" fill="#E0912A" font-size="8" font-weight="600">memory</text>
+                                        <text y="8" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="9">7×</text>
+                                    </g>
+                                    
+                                    <!-- Autonomy Cluster -->
+                                    <g class="skill-node medium" transform="translate(280,200)" onclick="showSkillDetail('proactive-agent')">
+                                        <circle r="22" fill="rgba(224,145,42,0.15)" stroke="#E0912A" stroke-width="2"/>
+                                        <text y="-5" text-anchor="middle" fill="#E0912A" font-size="8" font-weight="600">proactive</text>
+                                        <text y="8" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="9">6×</text>
+                                    </g>
+                                    
+                                    <!-- Untapped -->
+                                    <g class="skill-node low" transform="translate(60,220)" onclick="showSkillDetail('agency-agents')">
+                                        <circle r="16" fill="rgba(100,100,100,0.1)" stroke="#6B6B6B" stroke-width="1"/>
+                                        <text y="-4" text-anchor="middle" fill="#6B6B6B" font-size="7">agency</text>
+                                        <text y="6" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="8">2×</text>
+                                    </g>
+                                    
+                                    <!-- Cluster labels -->
+                                    <text x="140" y="30" text-anchor="middle" fill="rgba(74,222,128,0.6)" font-size="10" font-weight="500">Design Cluster</text>
+                                    <text x="220" y="250" text-anchor="middle" fill="rgba(224,145,42,0.6)" font-size="10" font-weight="500">Research Cluster</text>
+                                </svg>
+                                
+                                <div class="network-legend">
+                                    <div class="net-legend-item">
+                                        <span class="net-dot high"></span>
+                                        <span>High usage (10+×)</span>
+                                    </div>
+                                    <div class="net-legend-item">
+                                        <span class="net-dot medium"></span>
+                                        <span>Medium (5-9×)</span>
+                                    </div>
+                                    <div class="net-legend-item">
+                                        <span class="net-dot low"></span>
+                                        <span>Untapped (&lt;3×)</span>
+                                    </div>
                                 </div>
                             </div>
+                            
+                            <!-- Skill Detail Panel -->
+                            <div class="skill-detail-panel" id="skillDetailPanel">
+                                <div class="skill-detail-header">
+                                    <span class="skill-detail-name" id="detailSkillName">impeccable</span>
+                                    <button class="skill-detail-close" onclick="closeSkillDetail()">×</button>
+                                </div>
+                                <div class="skill-detail-content">
+                                    <div class="detail-stat">
+                                        <span class="detail-stat-label">Used</span>
+                                        <span class="detail-stat-value" id="detailUsage">15×</span>
+                                    </div>
+                                    <div class="detail-stat">
+                                        <span class="detail-stat-label">Synergies</span>
+                                        <span class="detail-stat-value" id="detailSynergies">3 skills</span>
+                                    </div>
+                                    <div class="detail-synergy-list" id="detailSynergyList">
+                                        <div class="detail-synergy-item">structured-workflow (12×)</div>
+                                        <div class="detail-synergy-item">frontend-design (8×)</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
                             <div class="synergy-insight">
-                                <strong>Gap:</strong> agency-agents and mirofish underutilized. Could enhance prediction quality.
+                                <strong>Gap:</strong> agency-agents and mirofish underutilized. Click nodes to explore skill relationships.
                             </div>
                         </div>
                     </div>
@@ -3147,6 +3362,37 @@
                 if (el !== card) el.classList.remove('expanded');
             });
             card.classList.toggle('expanded', !wasExpanded);
+        }
+
+        // ═══════ 8. SKILL NETWORK → SHOW DETAILS ═══════
+        const skillData = {
+            'impeccable': { usage: '15×', synergies: 3, pairs: ['structured-workflow (12×)', 'frontend-design (8×)', 'polish (5×)'] },
+            'structured-workflow': { usage: '12×', synergies: 2, pairs: ['impeccable (12×)', 'qmd-search (4×)'] },
+            'qmd-search': { usage: '8×', synergies: 2, pairs: ['memory_search (8×)', 'structured-workflow (4×)'] },
+            'memory_search': { usage: '7×', synergies: 2, pairs: ['qmd-search (8×)', 'proactive-agent (3×)'] },
+            'proactive-agent': { usage: '6×', synergies: 2, pairs: ['self-learner (6×)', 'memory_search (3×)'] },
+            'agency-agents': { usage: '2×', synergies: 1, pairs: ['mirofish (2×)'] }
+        };
+
+        function showSkillDetail(skillName) {
+            const panel = document.getElementById('skillDetailPanel');
+            const nameEl = document.getElementById('detailSkillName');
+            const usageEl = document.getElementById('detailUsage');
+            const synergyEl = document.getElementById('detailSynergies');
+            const listEl = document.getElementById('detailSynergyList');
+            
+            const data = skillData[skillName] || { usage: '?', synergies: 0, pairs: [] };
+            
+            nameEl.textContent = skillName;
+            usageEl.textContent = data.usage;
+            synergyEl.textContent = data.synergies + ' skills';
+            listEl.innerHTML = data.pairs.map(p => `<div class="detail-synergy-item">${p}</div>`).join('');
+            
+            panel.classList.add('active');
+        }
+
+        function closeSkillDetail() {
+            document.getElementById('skillDetailPanel').classList.remove('active');
         }
     </script>
     
