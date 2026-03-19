@@ -183,6 +183,16 @@
         .timeline-item.blocked::before { background: var(--danger); }
         .timeline-label { font-weight: 500; font-size: 13px; margin-bottom: 4px; }
         .timeline-desc { font-size: 12px; color: var(--text-muted); }
+        .meta-tabs { display: flex; gap: 8px; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+        .meta-tab { padding: 8px 16px; font-size: 13px; color: var(--text-muted); cursor: pointer; border-radius: 6px; transition: all 0.2s; }
+        .meta-tab:hover { background: var(--bg-2); color: var(--text); }
+        .meta-tab.active { background: var(--accent); color: var(--bg-0); font-weight: 500; }
+        .meta-content { display: none; }
+        .meta-content.active { display: block; }
+        .portfolio-item, .pattern-item, .checkpoint-item, .hypothesis-item { padding: 12px; background: var(--bg-2); border-radius: 6px; margin-bottom: 12px; }
+        .portfolio-name, .pattern-rule, .checkpoint-week, .hypothesis-goal { font-weight: 600; font-size: 13px; margin-bottom: 4px; }
+        .portfolio-grade { font-size: 12px; color: var(--accent); margin-bottom: 4px; }
+        .portfolio-desc, .portfolio-learned, .pattern-success, .checkpoint-status, .hypothesis-actions, .hypothesis-timeline { font-size: 12px; color: var(--text-muted); }
 
         /* ═══════ INTERACTION PATTERNS ═══════ */
 
@@ -903,9 +913,16 @@
         function toggleMemory(item) {
             item.classList.toggle('expanded');
         }
-        
+
         function toggleProject(card) {
             card.classList.toggle('expanded');
+        }
+
+        function switchMetaTab(tab) {
+            document.querySelectorAll('.meta-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.meta-content').forEach(c => c.classList.remove('active'));
+            document.querySelector('[data-meta="' + tab + '"]').classList.add('active');
+            document.getElementById('meta-' + tab).classList.add('active');
         }
         
         function toggleLearning(item) {
