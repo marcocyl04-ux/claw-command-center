@@ -83,6 +83,14 @@
         
         .learning-item { padding: 16px; background: var(--bg-2); border-radius: 6px; margin-bottom: 12px; border-left: 3px solid var(--accent); }
         .learning-item.warning { border-left-color: var(--danger); }
+        .learning-item { cursor: pointer; transition: all 0.2s; }
+        .learning-item:hover { background: var(--bg-3); }
+        .learning-expand { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+        .learning-item.expanded .learning-expand { display: block; }
+        .learning-detail { display: grid; grid-template-columns: 80px 1fr; gap: 8px; font-size: 12px; margin-bottom: 12px; }
+        .learning-detail-label { color: var(--text-muted); }
+        .learning-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+        .learning-tag { font-size: 11px; padding: 4px 10px; background: var(--bg-3); border-radius: 12px; color: var(--text-secondary); }
         .learning-item { cursor: pointer; transition: background 0.2s; }
         .learning-item:hover { background: var(--bg-3); }
         .learning-chevron { margin-left: auto; color: var(--text-muted); font-size: 10px; }
@@ -877,6 +885,10 @@
         
         function toggleTier(header) {
             header.nextElementSibling.classList.toggle('expanded');
+        }
+        
+        function toggleMemory(item) {
+            item.classList.toggle('expanded');
         }
         
         function toggleLearning(item) {
