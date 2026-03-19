@@ -363,6 +363,65 @@
             font-weight: 600;
             color: var(--text-primary);
         }
+        
+        /* What Changed Today Styles */
+        .narrative-card {
+            margin-bottom: 24px;
+        }
+        
+        .change-item {
+            display: flex;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .change-item:last-child {
+            border-bottom: none;
+        }
+        
+        .change-marker {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+        
+        .change-item.positive .change-marker {
+            background: rgba(74,222,128,0.15);
+            color: #4ADE80;
+        }
+        
+        .change-item.neutral .change-marker {
+            background: rgba(224,145,42,0.15);
+            color: var(--amber-400);
+        }
+        
+        .change-item.negative .change-marker {
+            background: rgba(248,113,113,0.15);
+            color: #F87171;
+        }
+        
+        .change-content {
+            flex: 1;
+        }
+        
+        .change-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        
+        .change-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
         .nav-item:hover { 
             background: var(--dark-800); 
             color: var(--text-primary); 
@@ -1415,6 +1474,35 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <!-- What Changed Today: Narrative Synthesis -->
+                    <div class="card narrative-card">
+                        <div class="card-header"><span class="card-title">What Changed Today</span></div>
+                        <div class="card-body">
+                            <div class="change-item positive">
+                                <div class="change-marker">▲</div>
+                                <div class="change-content">
+                                    <div class="change-title">Win rate calibration improved</div>
+                                    <div class="change-desc">Predicted 78% confidence on 4 trades, won 3. Calibration now matches outcomes.</div>
+                                </div>
+                            </div>
+                            <div class="change-item neutral">
+                                <div class="change-marker">●</div>
+                                <div class="change-content">
+                                    <div class="change-title">Autonomy held steady</div>
+                                    <div class="change-desc">Escalated 2 decisions, handled 8 independently. Ratio improving but not there yet.</div>
+                                </div>
+                            </div>
+                            <div class="change-item positive">
+                                <div class="change-marker">▲</div>
+                                <div class="change-content">
+                                    <div class="change-title">New pattern recognized</div>
+                                    <div class="change-desc">High-confidence + research → 73% win rate. Will apply to next batch.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="card">
                         <div class="card-header"><span class="card-title">Memory Timeline</span><span class="card-badge">Last 7 days</span></div>
                         <div class="card-body">
