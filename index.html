@@ -550,13 +550,13 @@
         // Live Activity Feed
         async function loadActivity() {
             try {
-                const response = await fetch('activity.json');
+                const response = await fetch('activity.json?t=' + Date.now());
                 const activities = await response.json();
                 const container = document.querySelector('.activity-section');
                 
                 let html = '<div class="activity-header"><div class="activity-pulse"></div>Live Activity</div>';
                 
-                activities.forEach(act => {
+                activities.slice(0, 8).forEach(act => {
                     const highlights = act.highlights || [];
                     let text = act.text;
                     highlights.forEach(h => {
@@ -571,12 +571,12 @@
                 
                 container.innerHTML = html;
             } catch (e) {
-                console.log('Activity feed offline');
+                console.log('Activity feed offline:', e);
             }
         }
 
         loadActivity();
-        setInterval(loadActivity, 30000);
+        setInterval(loadActivity, 5000);
         
         function toggleTier(header) {
             header.nextElementSibling.classList.toggle('expanded');
