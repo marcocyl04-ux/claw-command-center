@@ -117,6 +117,38 @@
         .auto-bar { flex: 1; background: linear-gradient(to top, var(--amber-500), var(--amber-400)); border-radius: 4px 4px 0 0; position: relative; }
         .auto-bar span { position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); font-size: 10px; color: var(--text-tertiary); }
         .skill-network { height: 200px; background: rgba(255,255,255,0.02); border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+        
+        /* System Tab Styles */
+        .file-item { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .file-status { width: 8px; height: 8px; border-radius: 50%; margin-right: 12px; }
+        .file-status.active { background: var(--success); box-shadow: 0 0 8px var(--success); }
+        .file-name { flex: 1; font-family: var(--font-mono); font-size: 13px; }
+        .file-meta { font-size: 12px; color: var(--text-tertiary); }
+        .timeline-item { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
+        .timeline-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--text-tertiary); margin-top: 4px; }
+        .timeline-item.completed .timeline-dot { background: var(--success); }
+        .timeline-item.active .timeline-dot { background: var(--amber-400); box-shadow: 0 0 8px var(--amber-400); }
+        .grade-display { display: flex; align-items: center; gap: 16px; margin-top: 12px; }
+        .grade-letter { font-family: var(--font-mono); font-size: 36px; font-weight: 700; color: var(--amber-400); }
+        .grade-bar { flex: 1; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; }
+        .grade-fill { height: 100%; background: linear-gradient(90deg, var(--amber-400), var(--success)); border-radius: 4px; }
+        .gap-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .gap-number { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; background: var(--dark-800); border-radius: 50%; font-family: var(--font-mono); font-size: 12px; }
+        .gap-content { flex: 1; }
+        .gap-name { font-weight: 500; margin-bottom: 2px; }
+        .gap-status { font-size: 13px; color: var(--danger); }
+        
+        /* Edge Log Styles */
+        .edge-score-big { font-family: var(--font-mono); font-size: 64px; font-weight: 700; color: var(--success); text-align: center; margin: 20px 0; }
+        .edge-stats { display: flex; justify-content: center; gap: 40px; margin-bottom: 30px; }
+        .edge-stat { text-align: center; }
+        .edge-stat-value { font-size: 28px; font-weight: 600; }
+        .edge-stat-label { font-size: 12px; color: var(--text-tertiary); text-transform: uppercase; }
+        .prediction-item { padding: 16px; background: rgba(255,255,255,0.03); border-radius: 10px; margin-bottom: 12px; border-left: 3px solid var(--success); }
+        .prediction-item.failed { border-left-color: var(--danger); }
+        .prediction-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
+        .prediction-badge { font-size: 11px; padding: 2px 8px; border-radius: 10px; background: rgba(74,222,128,0.15); color: var(--success); }
+        .prediction-item.failed .prediction-badge { background: rgba(248,113,113,0.15); color: var(--danger); }
     </style>
 </head>
 <body>
@@ -406,22 +438,143 @@
                 </div>
             </div>
             <div id="system" class="tab">
+                <!-- Core Files -->
                 <div class="card">
-                    <div class="card-header"><span class="card-title">Core Files</span></div>
-                    <p>SOUL.md ✓ MEMORY.md ✓ AGENTS.md ✓ USER.md ✓</p>
+                    <div class="card-header"><span class="card-title">Core Files</span><span class="card-badge">4 active</span></div>
+                    <div class="file-item">
+                        <div class="file-status active"></div>
+                        <div class="file-name">SOUL.md</div>
+                        <div class="file-meta">Identity & principles</div>
+                    </div>
+                    <div class="file-item">
+                        <div class="file-status active"></div>
+                        <div class="file-name">MEMORY.md</div>
+                        <div class="file-meta">Lessons & knowledge</div>
+                    </div>
+                    <div class="file-item">
+                        <div class="file-status active"></div>
+                        <div class="file-name">AGENTS.md</div>
+                        <div class="file-meta">System protocols</div>
+                    </div>
+                    <div class="file-item">
+                        <div class="file-status active"></div>
+                        <div class="file-name">USER.md</div>
+                        <div class="file-meta">Marco's profile</div>
+                    </div>
                 </div>
+                
+                <!-- Projects -->
                 <div class="card">
-                    <div class="card-header"><span class="card-title">Honest Assessment</span></div>
-                    <p>Grade: C+ → B-</p>
-                    <p>Gap 1: Autonomous decisions (45% → 80%)</p>
-                    <p>Gap 2: Edge discovery (0 found)</p>
+                    <div class="card-header"><span class="card-title">Projects</span><span class="card-badge">Active</span></div>
+                    <div style="margin-bottom: 16px;"><strong>Polymarket Trading</strong> — In Progress</div>
+                    <div class="timeline-item completed">
+                        <div class="timeline-dot"></div>
+                        <div><strong>Foundation</strong><br><span style="font-size: 12px; color: var(--text-tertiary);">Week 1-2</span></div>
+                    </div>
+                    <div class="timeline-item completed">
+                        <div class="timeline-dot"></div>
+                        <div><strong>Weather Pipeline</strong><br><span style="font-size: 12px; color: var(--text-tertiary);">Week 3-4</span></div>
+                    </div>
+                    <div class="timeline-item active">
+                        <div class="timeline-dot"></div>
+                        <div><strong>Edge Validation</strong><br><span style="font-size: 12px; color: var(--text-tertiary);">Week 5-6 (current)</span></div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div><strong>Live Trading</strong><br><span style="font-size: 12px; color: var(--text-tertiary);">Week 7+</span></div>
+                    </div>
+                </div>
+                
+                <!-- Honest Assessment -->
+                <div class="card">
+                    <div class="card-header"><span class="card-title">Honest Assessment</span><span class="card-badge">C+ → B-</span></div>
+                    <div class="grade-display">
+                        <div class="grade-letter">C+</div>
+                        <div class="grade-bar"><div class="grade-fill" style="width: 65%;"></div></div>
+                    </div>
+                    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+                        <div style="font-weight: 600; margin-bottom: 12px;">Gaps to Close:</div>
+                        <div class="gap-item">
+                            <div class="gap-number">1</div>
+                            <div class="gap-content">
+                                <div class="gap-name">Autonomous Decisions</div>
+                                <div class="gap-status">45% — still escalate too much</div>
+                            </div>
+                        </div>
+                        <div class="gap-item">
+                            <div class="gap-number">2</div>
+                            <div class="gap-content">
+                                <div class="gap-name">Edge Discovery</div>
+                                <div class="gap-status">0 found — all edges were Marco's</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 16px; padding: 12px; background: rgba(74,222,128,0.1); border-radius: 8px;">
+                        <strong style="color: var(--success);">What's Working:</strong> Proactive skill usage, faster execution, better design quality
+                    </div>
                 </div>
             </div>
             <div id="edge" class="tab">
+                <!-- Edge Score -->
                 <div class="card">
-                    <div class="card-header"><span class="card-title">Edge Score</span></div>
-                    <p style="font-size: 48px; color: var(--success);">+12%</p>
-                    <p>3 tested | 2 validated | 1 failed</p>
+                    <div class="card-header"><span class="card-title">Edge Score</span><span class="card-badge">+12%</span></div>
+                    <div class="edge-score-big">+12%</div>
+                    <p style="text-align: center; color: var(--text-secondary); margin-bottom: 20px;">Markets undervalue weather volatility</p>
+                    <div class="edge-stats">
+                        <div class="edge-stat">
+                            <div class="edge-stat-value">3</div>
+                            <div class="edge-stat-label">Tested</div>
+                        </div>
+                        <div class="edge-stat">
+                            <div class="edge-stat-value" style="color: var(--success);">2</div>
+                            <div class="edge-stat-label">Validated</div>
+                        </div>
+                        <div class="edge-stat">
+                            <div class="edge-stat-value" style="color: var(--danger);">1</div>
+                            <div class="edge-stat-label">Failed</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Prediction History -->
+                <div class="card">
+                    <div class="card-header"><span class="card-title">Edge Log</span><span class="card-badge">Recent</span></div>
+                    <div class="prediction-item">
+                        <div class="prediction-header">
+                            <span><strong>NYC Rain March 20</strong></span>
+                            <span class="prediction-badge">Validated</span>
+                        </div>
+                        <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 8px;">
+                            Claw: 72% → Market: 70% → Actual: 68%
+                        </div>
+                        <div style="font-size: 12px; color: var(--text-tertiary);">
+                            <strong>Edge:</strong> Satellite imagery showed clear cloud formation. Pressure drop of 8mb in 6 hours.
+                        </div>
+                    </div>
+                    <div class="prediction-item failed">
+                        <div class="prediction-header">
+                            <span><strong>LA Temp March 21</strong></span>
+                            <span class="prediction-badge">Failed</span>
+                        </div>
+                        <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 8px;">
+                            Claw: 45% → Market: 52% → Actual: 82%
+                        </div>
+                        <div style="font-size: 12px; color: var(--text-tertiary);">
+                            <strong>Lesson:</strong> Santa Ana winds arrived 6 hours early. Weight real-time wind data higher than historical patterns.
+                        </div>
+                    </div>
+                    <div class="prediction-item">
+                        <div class="prediction-header">
+                            <span><strong>Chicago Snow March 18</strong></span>
+                            <span class="prediction-badge">Validated</span>
+                        </div>
+                        <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 8px;">
+                            Claw: 89% → Market: 85% → Actual: 91%
+                        </div>
+                        <div style="font-size: 12px; color: var(--text-tertiary);">
+                            <strong>Edge:</strong> Jet stream dip + lake effect moisture. Multiple model convergence.
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
