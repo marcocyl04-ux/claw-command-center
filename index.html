@@ -1822,6 +1822,7 @@
                 <div class="nav-item" onclick="switchTab('trading')">📈 Trading</div>
                 <div class="nav-item" onclick="switchTab('evolution')">🧠 Evolution</div>
                 <div class="nav-item" onclick="switchTab('system')">⚙️ System</div>
+                <div class="nav-item" onclick="switchTab('edge')">⚡ Edge Log</div>
             </div>
             <div class="activity-section">
                 <div class="activity-header"><div class="activity-pulse"></div>Live Activity</div>
@@ -1851,13 +1852,7 @@
                 </div>
             </div>
         </nav>
-        <main class="main">
-            <header class="header">
-                <h1 class="header-title">Command Center</h1>
-                <div class="status-pill"><div class="status-dot"></div><span>System Active</span></div>
-            </header>
-            <div class="content">
-                <div id="overview" class="tab-content active">
+        <main class="main"><div id="overview" class="tab-content active">
                     <!-- Narrative Hero: State of Claw -->
                     <div class="narrative-hero">
                         <div class="state-sentence">
@@ -1959,6 +1954,9 @@
                     </div>
                     
                     <!-- Intelligence Health: Synthesis of evolution state -->
+                </div>
+                
+                <div id="evolution" class="tab-content">
                     <div class="card intelligence-health">
                         <div class="card-header"><span class="card-title">Intelligence Health</span></div>
                         <div class="card-body">
@@ -2153,7 +2151,7 @@
                         </div>
                     </div>
                 </div>
-
+                
                 <div id="trading" class="tab-content">
                     <!-- Trading Narrative: Position summary -->
                     <div class="card trading-narrative">
@@ -2228,6 +2226,8 @@
                     </div>
                 </div>
 
+                
+                
                 <div id="system" class="tab-content">
                     <div class="card">
                         <div class="card-header"><span class="card-title">Core Files</span><span class="card-badge">4 tracked</span></div>
@@ -2391,7 +2391,24 @@
                     </div>
                 </div>
             </div>
-        </main>
+                
+                <div id="edge" class="tab-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Edge Score</span>
+                            <span class="card-badge">+12%</span>
+                        </div>
+                        <div class="card-body" style="text-align: center; padding: 40px;">
+                            <div style="font-size: 48px; font-weight: 700; color: var(--success); margin-bottom: 16px;">+12%</div>
+                            <p style="color: var(--text-secondary); margin-bottom: 24px;">Markets undervalue weather volatility</p>
+                            <div style="display: flex; justify-content: center; gap: 32px;">
+                                <div><div style="font-size: 24px; font-weight: 600;">3</div><div style="font-size: 12px; color: var(--text-tertiary);">Tested</div></div>
+                                <div><div style="font-size: 24px; font-weight: 600; color: var(--success);">2</div><div style="font-size: 12px; color: var(--text-tertiary);">Validated</div></div>
+                                <div><div style="font-size: 24px; font-weight: 600; color: var(--danger);">1</div><div style="font-size: 12px; color: var(--text-tertiary);">Failed</div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div></main>
     </div>
     <!-- Slide-out Panel for Portfolio Drill-down -->
     <div class="slideout-overlay" id="slideoutOverlay" onclick="closeSlideout(event)">
