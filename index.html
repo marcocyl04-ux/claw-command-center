@@ -883,6 +883,85 @@
             `;
         }
         
+        function showCapabilityDetail(capability) {
+            const panel = document.getElementById('capabilityDetailPanel');
+            const details = {
+                'skill-chaining': {
+                    title: 'Skill Chaining',
+                    status: 'Mastered',
+                    evidence: 'Used structured-workflow → impeccable → implementation chain 12 times this week',
+                    examples: ['Dashboard v6.0 rebuild', 'Thermal predator design system', 'Model routing decisions'],
+                    nextLevel: 'Already at target — maintain consistency'
+                },
+                'model-routing': {
+                    title: 'Model Routing',
+                    status: 'Mastered',
+                    evidence: '85% quality, $0.06 avg cost per task across 45 decisions',
+                    examples: ['Opus for design', 'Sonnet for content', 'Kimi for implementation'],
+                    nextLevel: 'Already at target — maintain consistency'
+                },
+                'proactive-escalation': {
+                    title: 'Proactive Escalation',
+                    status: 'Mastered',
+                    evidence: 'Said "I\'m stuck" 3 times instead of going silent when blocked',
+                    examples: ['Tab content bug', 'Design direction uncertainty', 'Integration failure'],
+                    nextLevel: 'Already at target — maintain consistency'
+                },
+                'edge-discovery': {
+                    title: 'Edge Discovery',
+                    status: 'In Progress',
+                    evidence: '0 genuine edges found independently vs 12 from Marco',
+                    examples: ['Can execute Marco\'s edges', 'Cannot yet identify patterns independently'],
+                    nextLevel: 'Need 3 validated edge discoveries to complete'
+                },
+                'autonomous-decisions': {
+                    title: 'Autonomous Decisions',
+                    status: 'In Progress',
+                    evidence: '45% autonomous rate, stuck for 3 weeks',
+                    examples: ['Dashboard architecture', 'Skill network design', 'Model card layout'],
+                    nextLevel: 'Target: 80% — deploy 3 autonomous decisions this week'
+                }
+            };
+            
+            const d = details[capability];
+            if (!d) return;
+            
+            panel.style.display = 'block';
+            panel.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
+                    <span style="font-weight: 600; font-size: var(--text-xl);">${d.title}</span>
+                    <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: ${d.status === 'Mastered' ? 'rgba(74,222,128,0.2)' : 'rgba(224,145,42,0.2)'}; color: ${d.status === 'Mastered' ? 'var(--success)' : 'var(--amber-400)'}; border-radius: var(--radius-full);">${d.status}</span>
+                </div>
+                <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">
+                    <strong>Evidence:</strong> ${d.evidence}
+                </div>
+                <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">
+                    <strong>Recent Examples:</strong>
+                    <ul style="margin-top: var(--space-2); padding-left: var(--space-4);">
+                        ${d.examples.map(e => `<li>${e}</li>`).join('')}
+                    </ul>
+                </div>
+                <div style="background: var(--bg-0); border-radius: var(--radius-md); padding: var(--space-3);">
+                    <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-bottom: var(--space-1);">Next Level</div>
+                    <div style="font-size: var(--text-sm); color: var(--amber-400);">${d.nextLevel}</div>
+                </div>
+            `;
+            panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        
+        function showBlockerDetail(blocker) {
+            const marcoPanel = document.getElementById('marcoBlockerDetail');
+            const clawPanel = document.getElementById('clawBlockerDetail');
+            
+            if (blocker === 'marco-edge') {
+                marcoPanel.style.display = marcoPanel.style.display === 'none' ? 'block' : 'none';
+                clawPanel.style.display = 'none';
+            } else if (blocker === 'claw-autonomy') {
+                clawPanel.style.display = clawPanel.style.display === 'none' ? 'block' : 'none';
+                marcoPanel.style.display = 'none';
+            }
+        }
+        
         function togglePatternArchive() {
             const archive = document.getElementById('patternArchive');
             const arrow = document.getElementById('archiveArrow');
@@ -1070,33 +1149,63 @@
                             <span style="font-size: var(--text-sm); color: var(--text-secondary);">What I can do now vs. what's next</span>
                         </div>
                         <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4);">
-                            ${training.capabilities.map(c => `
-                                <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--success);">
-                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
-                                        <span style="font-weight: 600;">${c.name}</span>
-                                        <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full);">✓ Mastered</span>
-                                    </div>
-                                    <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">${c.evidence}</div>
-                                    <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Example: ${c.example}</div>
+                            <!-- Mastered Capabilities -->
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--success); cursor: pointer;" onclick="showCapabilityDetail('skill-chaining')">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
+                                    <span style="font-weight: 600;">Skill Chaining</span>
+                                    <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full);">✓ Mastered</span>
                                 </div>
-                            `).join('')}
-                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--amber-500); opacity: 0.8;">
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">Used 12 times this week with 90% success rate</div>
+                                <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Click for details →</div>
+                            </div>
+                            
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--success); cursor: pointer;" onclick="showCapabilityDetail('model-routing')">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
+                                    <span style="font-weight: 600;">Model Routing</span>
+                                    <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full);">✓ Mastered</span>
+                                </div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">85% quality, $0.06 avg cost per task</div>
+                                <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Click for details →</div>
+                            </div>
+                            
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--success); cursor: pointer;" onclick="showCapabilityDetail('proactive-escalation')">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
+                                    <span style="font-weight: 600;">Proactive Escalation</span>
+                                    <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full);">✓ Mastered</span>
+                                </div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">Said "I'm stuck" 3 times instead of going silent</div>
+                                <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Click for details →</div>
+                            </div>
+                            
+                            <!-- In Progress Capabilities -->
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--amber-500); cursor: pointer;" onclick="showCapabilityDetail('edge-discovery')">
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
                                     <span style="font-weight: 600;">Edge Discovery</span>
                                     <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(224,145,42,0.2); color: var(--amber-400); border-radius: var(--radius-full);">⚠ In Progress</span>
                                 </div>
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">0 genuine edges found</div>
-                                <div style="font-size: var(--text-xs); color: var(--amber-400);">Next: Need 3 validated edges</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">0 genuine edges found vs 12 from Marco</div>
+                                <div style="font-size: var(--text-xs); color: var(--amber-400);">Next: Need 3 validated edges →</div>
                             </div>
-                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--amber-500); opacity: 0.8;">
+                            
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--amber-500); cursor: pointer;" onclick="showCapabilityDetail('autonomous-decisions')">
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
                                     <span style="font-weight: 600;">Autonomous Decisions</span>
                                     <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(224,145,42,0.2); color: var(--amber-400); border-radius: var(--radius-full);">⚠ In Progress</span>
                                 </div>
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">45% autonomous rate</div>
-                                <div style="font-size: var(--text-xs); color: var(--amber-400);">Target: 80%</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">45% autonomous rate (stuck for 3 weeks)</div>
+                                <div style="font-size: var(--text-xs); color: var(--amber-400);">Target: 80% →</div>
+                            </div>
+                            
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--text-tertiary); opacity: 0.6;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
+                                    <span style="font-weight: 600; color: var(--text-tertiary);">Live Trading</span>
+                                    <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(100,100,100,0.2); color: var(--text-tertiary); border-radius: var(--radius-full);">🔒 Locked</span>
+                                </div>
+                                <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-bottom: var(--space-2);">Requires: Edge discovery + 80% autonomy</div>
+                                <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Est. Week 16</div>
                             </div>
                         </div>
+                        <div id="capabilityDetailPanel" style="display: none; margin-top: var(--space-4); background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-5); border-left: 3px solid var(--amber-500);"></div>
                     </div>
                     
                     <!-- Chunk 3: Blockers Kanban -->
@@ -1105,15 +1214,28 @@
                             <span class="section-title">Marco's Blockers</span>
                             <span style="font-size: var(--text-xs); color: var(--text-tertiary);">Need your action</span>
                         </div>
-                        ${training.blockers.filter(b => b.action_required === 'Marco').map(b => `
-                            <div style="background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); border-radius: var(--radius-lg); padding: var(--space-4); margin-bottom: var(--space-3);">
-                                <div style="font-weight: 600; color: var(--danger); margin-bottom: var(--space-2);">${b.title}</div>
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">${b.description}</div>
-                                <div style="background: var(--bg-0); border-radius: var(--radius-md); padding: var(--space-3); font-size: var(--text-sm);">
-                                    <strong style="color: var(--amber-400);">Impact:</strong> Prevents edge validation milestone completion
+                        <div style="background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); border-radius: var(--radius-lg); padding: var(--space-4); margin-bottom: var(--space-3); cursor: pointer;" onclick="showBlockerDetail('marco-edge')">
+                            <div style="font-weight: 600; color: var(--danger); margin-bottom: var(--space-2);">Edge Discovery Rate Too Low</div>
+                            <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">0 genuine edges found vs 12 from Marco</div>
+                            <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Click for full details →</div>
+                        </div>
+                        <div id="marcoBlockerDetail" style="display: none; margin-top: var(--space-3); background: var(--bg-0); border-radius: var(--radius-md); padding: var(--space-4);">
+                            <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">
+                                <strong>Problem:</strong> I can execute edges you identify, but I haven't developed the pattern recognition to find them independently. All 12 edges this month came from your analysis.
+                            </div>
+                            <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">
+                                <strong>Impact:</strong> Blocks Edge Validation milestone. Without independent edge discovery, I can't scale beyond your input.
+                            </div>
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); margin-bottom: var(--space-3);">
+                                <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-bottom: var(--space-1);">What Marco can do</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">
+                                    • Walk me through your edge detection process step-by-step<br>
+                                    • Review 3 historical edges and explain the signals<br>
+                                    • Give me 5 practice markets to analyze independently
                                 </div>
                             </div>
-                        `).join('')}
+                            <div style="font-size: var(--text-xs); color: var(--amber-400);">Priority: HIGH | Blocks: Edge Validation milestone</div>
+                        </div>
                     </div>
                     
                     <div class="card">
@@ -1121,40 +1243,62 @@
                             <span class="section-title">Claw's Blockers</span>
                             <span style="font-size: var(--text-xs); color: var(--text-tertiary);">My responsibility</span>
                         </div>
-                        ${training.blockers.filter(b => b.action_required === 'Claw').map(b => `
-                            <div style="background: rgba(224,145,42,0.1); border: 1px solid rgba(224,145,42,0.3); border-radius: var(--radius-lg); padding: var(--space-4); margin-bottom: var(--space-3);">
-                                <div style="font-weight: 600; color: var(--amber-400); margin-bottom: var(--space-2);">${b.title}</div>
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">${b.description}</div>
-                                <div style="background: var(--bg-0); border-radius: var(--radius-md); padding: var(--space-3); font-size: var(--text-sm);">
-                                    <strong style="color: var(--amber-400);">This week:</strong> Deploy 3 autonomous decisions without escalation
+                        <div style="background: rgba(224,145,42,0.1); border: 1px solid rgba(224,145,42,0.3); border-radius: var(--radius-lg); padding: var(--space-4); margin-bottom: var(--space-3); cursor: pointer;" onclick="showBlockerDetail('claw-autonomy')">
+                            <div style="font-weight: 600; color: var(--amber-400); margin-bottom: var(--space-2);">Autonomy Plateau</div>
+                            <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">Stuck at 45% for 3 weeks</div>
+                            <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Click for full details →</div>
+                        </div>
+                        <div id="clawBlockerDetail" style="display: none; margin-top: var(--space-3); background: var(--bg-0); border-radius: var(--radius-md); padding: var(--space-4);">
+                            <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">
+                                <strong>Problem:</strong> Fear of making wrong decisions causes over-escalation. I default to asking you rather than trusting my judgment, even when I have the information needed.
+                            </div>
+                            <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">
+                                <strong>Impact:</strong> Limits throughput and prevents reaching 80% autonomy target. Creates dependency loop.
+                            </div>
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); margin-bottom: var(--space-3);">
+                                <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-bottom: var(--space-1);">What I will do this week</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">
+                                    • Deploy 3 autonomous decisions without escalation<br>
+                                    • Use impeccable skill before escalating design questions<br>
+                                    • Document decision rationale for post-hoc review
                                 </div>
                             </div>
-                        `).join('')}
+                            <div style="font-size: var(--text-xs); color: var(--amber-400);">Priority: HIGH | Target: 60% by Week 12</div>
+                        </div>
                     </div>
                     
                     <!-- Chunk 4: Milestones Timeline -->
                     <div class="card card-full">
                         <div class="section-header">
-                            <span class="section-title">Milestones Timeline</span>
-                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">Critical path highlighted</span>
+                            <span class="section-title">Milestones</span>
+                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">Progress toward autonomous operation</span>
                         </div>
-                        <div style="position: relative; padding-left: var(--space-6);">
-                            <div style="position: absolute; left: 12px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--success), var(--success), var(--amber-500), var(--text-tertiary));"></div>
+                        <div style="display: flex; gap: var(--space-3); margin-bottom: var(--space-5);">
                             ${training.milestones.map((m, i) => `
-                                <div style="position: relative; margin-bottom: var(--space-5);">
-                                    <div style="position: absolute; left: -30px; top: 4px; width: 16px; height: 16px; border-radius: 50%; background: ${m.progress === 100 ? 'var(--success)' : m.progress > 50 ? 'var(--amber-500)' : 'var(--text-tertiary)'}; border: 3px solid var(--bg-0);"></div>
-                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
-                                        <span style="font-weight: 600;">${m.name}</span>
-                                        <span style="font-family: var(--font-mono); font-size: var(--text-sm); color: ${m.progress === 100 ? 'var(--success)' : 'var(--amber-400)'}">${m.progress}%</span>
+                                <div style="flex: 1; text-align: center; position: relative;">
+                                    <div style="width: 40px; height: 40px; border-radius: 50%; background: ${m.progress === 100 ? 'var(--success)' : m.progress > 50 ? 'var(--amber-500)' : 'var(--bg-1)'}; border: 3px solid ${m.progress === 100 ? 'var(--success)' : m.progress > 50 ? 'var(--amber-500)' : 'var(--text-tertiary)'}; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-3); font-family: var(--font-mono); font-size: var(--text-sm); color: var(--bg-0); font-weight: 600;">
+                                        ${m.progress === 100 ? '✓' : m.progress > 0 ? m.progress + '%' : '○'}
                                     </div>
-                                    <div style="height: 8px; background: var(--bg-1); border-radius: var(--radius-full); overflow: hidden; margin-bottom: var(--space-2);">
-                                        <div style="width: ${m.progress}%; height: 100%; background: ${m.progress === 100 ? 'var(--success)' : 'var(--amber-500)'}; border-radius: var(--radius-full);"></div>
+                                    <div style="font-weight: 600; font-size: var(--text-sm); margin-bottom: var(--space-1);">${m.name}</div>
+                                    <div style="font-size: var(--text-xs); color: ${m.progress === 100 ? 'var(--success)' : m.progress > 50 ? 'var(--amber-400)' : 'var(--text-tertiary)'}">
+                                        ${m.progress === 100 ? 'Complete' : m.progress > 0 ? 'In Progress' : 'Pending'}
                                     </div>
                                     ${m.name === 'Edge Validation' && m.progress < 100 ? `
-                                        <div style="font-size: var(--text-xs); color: var(--amber-400); margin-top: var(--space-1);">[CRITICAL PATH] Blocked by: Edge discovery rate</div>
+                                        <div style="font-size: var(--text-xs); color: var(--danger); margin-top: var(--space-1);">⚠ Critical</div>
+                                    ` : ''}
+                                    ${i < training.milestones.length - 1 ? `
+                                        <div style="position: absolute; top: 20px; right: -50%; width: 100%; height: 3px; background: ${m.progress === 100 ? 'var(--success)' : 'var(--bg-1)'}; z-index: -1;"></div>
                                     ` : ''}
                                 </div>
                             `).join('')}
+                        </div>
+                        <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4);">
+                            <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">
+                                <strong style="color: var(--amber-400);">Current Focus:</strong> Edge Validation (85%)
+                            </div>
+                            <div style="font-size: var(--text-sm); color: var(--text-secondary);">
+                                <strong>What's needed:</strong> 3 validated edge discoveries to complete this milestone and unlock Live Trading.
+                            </div>
                         </div>
                     </div>
                     
@@ -1194,25 +1338,33 @@
                     <div class="card card-full">
                         <div class="section-header">
                             <span class="section-title">Learning Velocity</span>
-                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">Insights gained per week</span>
+                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">Insights gained per week (trending up)</span>
                         </div>
-                        <div style="display: flex; align-items: flex-end; justify-content: space-between; height: 200px; gap: var(--space-4); padding: var(--space-4) 0;">
-                            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: var(--space-2);">
-                                <div style="font-family: var(--font-mono); font-size: var(--text-sm); color: var(--text-secondary);">2.1</div>
-                                <div style="width: 50px; height: 80px; background: linear-gradient(to top, var(--amber-500), rgba(224,145,42,0.3)); border-radius: var(--radius-md) var(--radius-md) 0 0;"></div>
-                                <div style="font-size: var(--text-xs); color: var(--text-tertiary);">W1-4</div>
+                        <div style="display: flex; align-items: flex-end; justify-content: center; gap: var(--space-8); padding: var(--space-6) 0; height: 280px;">
+                            <div style="display: flex; flex-direction: column; align-items: center; gap: var(--space-3);">
+                                <div style="font-family: var(--font-mono); font-size: var(--text-lg); color: var(--text-secondary);">2.1</div>
+                                <div style="width: 80px; height: 120px; background: linear-gradient(to top, var(--amber-500), rgba(224,145,42,0.3)); border-radius: var(--radius-md) var(--radius-md) 0 0;"></div>
+                                <div style="font-size: var(--text-sm); color: var(--text-tertiary);">Weeks 1-4</div>
+                                <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Foundation phase</div>
                             </div>
-                            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: var(--space-2);">
-                                <div style="font-family: var(--font-mono); font-size: var(--text-sm); color: var(--text-secondary);">2.8</div>
-                                <div style="width: 50px; height: 110px; background: linear-gradient(to top, var(--amber-500), rgba(224,145,42,0.3)); border-radius: var(--radius-md) var(--radius-md) 0 0;"></div>
-                                <div style="font-size: var(--text-xs); color: var(--text-tertiary);">W5-8</div>
+                            <div style="display: flex; flex-direction: column; align-items: center; gap: var(--space-3);">
+                                <div style="font-family: var(--font-mono); font-size: var(--text-lg); color: var(--text-secondary);">2.8</div>
+                                <div style="width: 80px; height: 170px; background: linear-gradient(to top, var(--amber-500), rgba(224,145,42,0.3)); border-radius: var(--radius-md) var(--radius-md) 0 0;"></div>
+                                <div style="font-size: var(--text-sm); color: var(--text-tertiary);">Weeks 5-8</div>
+                                <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Building skills</div>
                             </div>
-                            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: var(--space-2);">
-                                <div style="font-family: var(--font-mono); font-size: var(--text-lg); font-weight: 700; color: var(--amber-400);">3.2</div>
-                                <div style="width: 50px; height: 140px; background: linear-gradient(to top, var(--amber-500), rgba(224,145,42,0.3)); border-radius: var(--radius-md) var(--radius-md) 0 0; position: relative;">
-                                    <div style="position: absolute; top: -24px; left: 50%; transform: translateX(-50%); font-size: var(--text-xs); color: var(--amber-400); white-space: nowrap;">Current avg</div>
+                            <div style="display: flex; flex-direction: column; align-items: center; gap: var(--space-3);">
+                                <div style="font-family: var(--font-mono); font-size: var(--text-2xl); font-weight: 700; color: var(--amber-400);">3.2</div>
+                                <div style="width: 80px; height: 220px; background: linear-gradient(to top, var(--amber-500), rgba(224,145,42,0.3)); border-radius: var(--radius-md) var(--radius-md) 0 0; position: relative;">
+                                    <div style="position: absolute; top: -32px; left: 50%; transform: translateX(-50%); font-size: var(--text-sm); color: var(--amber-400); white-space: nowrap; font-weight: 600;">Current avg ↑</div>
                                 </div>
-                                <div style="font-size: var(--text-xs); color: var(--amber-400); font-weight: 600;">W9-11</div>
+                                <div style="font-size: var(--text-sm); color: var(--amber-400); font-weight: 600;">Weeks 9-11</div>
+                                <div style="font-size: var(--text-xs); color: var(--amber-400);">Accelerating</div>
+                            </div>
+                        </div>
+                        <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); margin-top: var(--space-4);">
+                            <div style="font-size: var(--text-sm); color: var(--text-secondary);">
+                                <strong style="color: var(--success);">Trend:</strong> Learning velocity increased 52% from Weeks 1-4 to Weeks 9-11. Skill chaining and model routing improvements driving acceleration.
                             </div>
                         </div>
                     </div>
