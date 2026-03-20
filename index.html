@@ -909,44 +909,6 @@
             `;
         }
         
-        // Helper function for model cards
-        function getModelCardHTML(model, avgCost, quality, overall, tasks) {
-            const costEfficiency = quality / (avgCost * 100 + 1);
-            const stars = Math.round(costEfficiency);
-            
-            return `
-                <div onclick="showModelDetail('${model}')" style="background: var(--bg-1); border-radius: var(--radius-lg); padding: var(--space-5); cursor: pointer; transition: transform 0.2s; border: 1px solid transparent;" onmouseover="this.style.borderColor='var(--amber-500)'" onmouseout="this.style.borderColor='transparent'">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
-                        <span style="font-weight: 600; font-size: var(--text-lg);">${model}</span>
-                        <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: ${overall === 'excellent' ? 'rgba(74,222,128,0.2)' : 'rgba(224,145,42,0.2)'}; color: ${overall === 'excellent' ? 'var(--success)' : 'var(--amber-400)'}; border-radius: var(--radius-full); text-transform: uppercase;">${overall}</span>
-                    </div>
-                    <div style="margin-bottom: var(--space-3);">
-                        <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-bottom: var(--space-1);">Cost Efficiency</div>
-                        <div style="color: var(--amber-400); font-size: var(--text-xl);">${'★'.repeat(stars)}${'☆'.repeat(5-stars)}</div>
-                    </div>
-                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); margin-bottom: var(--space-3);">
-                        <div>
-                            <div style="font-size: var(--text-sm); color: var(--text-tertiary);">Avg Cost</div>
-                            <div style="font-family: var(--font-mono); font-weight: 600;">$${avgCost.toFixed(2)}</div>
-                        </div>
-                        <div>
-                            <div style="font-size: var(--text-sm); color: var(--text-tertiary);">Quality</div>
-                            <div style="font-family: var(--font-mono); font-weight: 600; color: var(--success);">${quality}%</div>
-                        </div>
-                    </div>
-                    <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-bottom: var(--space-2);">Usage by Task</div>
-                    ${tasks.map(t => `
-                        <div style="display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-1);">
-                            <div style="flex: 1; height: 6px; background: var(--bg-0); border-radius: 3px; overflow: hidden;">
-                                <div style="width: ${t.pct}%; height: 100%; background: var(--amber-500); border-radius: 3px;"></div>
-                            </div>
-                            <span style="font-size: var(--text-xs); color: var(--text-secondary); width: 80px; text-align: right;">${t.task}</span>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-        }
-        
         function showModelDetail(model) {
             const capabilities = {
                 'Opus 4.6': {
