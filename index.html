@@ -546,6 +546,9 @@
         function renderMindTab() {
             const mind = cognitionData.mind;
             
+            // Render skill network after DOM update
+            setTimeout(() => renderSkillNetwork(mind.skill_network.nodes), 0);
+            
             return `
                 <div class="state-hero">
                     <div class="state-headline">Cognitive Stack</div>
@@ -555,26 +558,14 @@
                     <div class="card card-full">
                         <div class="section-header">
                             <span class="section-title">Skill Network</span>
+                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">Click nodes to explore</span>
                         </div>
-                        ${mind.skill_network.nodes.map(node => `
-                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); margin-bottom: var(--space-4);">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
-                                    <span style="font-weight: 600;">${node.id}</span>
-                                    <div style="display: flex; gap: var(--space-3); align-items: center;">
-                                        <span class="skill-usage">${node.usage}× used</span>
-                                        <span style="font-family: var(--font-mono); font-size: var(--text-sm); color: var(--amber-400);">${node.effectiveness}% effective</span>
-                                        <span class="skill-status ${node.status}">${node.status}</span>
-                                    </div>
-                                </div>
-                                <div style="display: flex; gap: var(--space-4); font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">
-                                    <span>Last used: ${node.last_used}</span>
-                                    <span>Synergies: ${node.synergy.join(', ') || 'None'}</span>
-                                </div>
-                                <div style="background: var(--bg-0); border-radius: var(--radius-md); padding: var(--space-3); font-size: var(--text-sm); color: var(--text-secondary); border-left: 3px solid var(--amber-500);">
-                                    <strong>Recent example:</strong> ${node.example}
-                                </div>
-                            </div>
-                        `).join('')}
+                        <div id="skillNetworkViz" style="height: 400px; background: var(--bg-1); border-radius: var(--radius-md); position: relative; overflow: hidden;">
+                            <!-- SVG skill network will be rendered here -->
+                        </div>
+                        <div id="skillDetailPanel" style="display: none; margin-top: var(--space-4); background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-5); border-left: 3px solid var(--amber-500);">
+                            <!-- Skill detail content -->
+                        </div>
                     </div>
                     <div class="card">
                         <div class="section-header">
@@ -866,6 +857,108 @@
                     </div>
                 </div>
             `;
+        }
+        
+        // Skill Network Visualization
+        function renderSkillNetwork(nodes) {
+            const container = document.getElementById('skillNetworkViz');
+            if (!container) return;
+            
+            const width = container.clientWidth;
+            const height = 400;
+            const centerX = width / 2;
+            const centerY = height / 2;
+            
+            // Calculate node positions (simple radial layout)
+            const nodePositions = {};
+            const radius = 120;
+            const angleStep = (2 * Math.PI) / nodes.length;
+            
+            nodes.forEach((node, i) => {
+                const angle = i * angleStep - Math.PI / 2;
+                nodePositions[node.id] = {
+                    x: centerX + radius * Math.cos(angle),
+                    y: centerY + radius * Math.sin(angle),
+                    r: 20 + node.usage * 2 // Size based on usage
+                };
+            });
+            
+            // Generate SVG
+            let svg = `<svg width="${width}" height="${height}" style="cursor: pointer;">`;
+            
+            // Draw synergy connections
+            nodes.forEach(node => {
+                node.synergy.forEach(synergyId => {
+                    if (nodePositions[synergyId]) {
+                        const start = nodePositions[node.id];
+                        const end = nodePositions[synergyId];
+                        svg += `<line x1="${start.x}" y1="${start.y}" x2="${end.x}" y2="${end.y}" stroke="rgba(224,145,42,0.3)" stroke-width="2" />`;
+                    }
+                });
+            });
+            
+            // Draw nodes
+            nodes.forEach(node => {
+                const pos = nodePositions[node.id];
+                const color = node.status === 'active' ? 'var(--success)' : 
+                             node.status === 'underused' ? 'var(--amber-400)' : 'var(--text-tertiary)';
+                
+                svg += `
+                    <g class="skill-node" onclick="showSkillDetail('${node.id}')" style="cursor: pointer;">
+                        <circle cx="${pos.x}" cy="${pos.y}" r="${pos.r}" fill="${color}" opacity="0.8" stroke="var(--bg-0)" stroke-width="2"/>
+                        <text x="${pos.x}" y="${pos.y}" text-anchor="middle" dominant-baseline="middle" fill="var(--bg-0)" font-size="12" font-weight="600">${node.usage}</text>
+                        <text x="${pos.x}" y="${pos.y + pos.r + 15}" text-anchor="middle" fill="var(--text-primary)" font-size="11">${node.id}</text>
+                    </g>
+                `;
+            });
+            
+            svg += '</svg>';
+            container.innerHTML = svg;
+            
+            // Store node data for detail view
+            window.skillNetworkData = {};
+            nodes.forEach(node => {
+                window.skillNetworkData[node.id] = node;
+            });
+        }
+        
+        function showSkillDetail(skillId) {
+            const node = window.skillNetworkData[skillId];
+            if (!node) return;
+            
+            const panel = document.getElementById('skillDetailPanel');
+            panel.style.display = 'block';
+            panel.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
+                    <span style="font-weight: 600; font-size: var(--text-xl);">${node.id}</span>
+                    <span class="skill-status ${node.status}">${node.status}</span>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); margin-bottom: var(--space-4);">
+                    <div>
+                        <div style="font-size: var(--text-sm); color: var(--text-tertiary);">Used</div>
+                        <div style="font-family: var(--font-mono); font-size: var(--text-2xl); font-weight: 700;">${node.usage}×</div>
+                    </div>
+                    <div>
+                        <div style="font-size: var(--text-sm); color: var(--text-tertiary);">Effectiveness</div>
+                        <div style="font-family: var(--font-mono); font-size: var(--text-2xl); font-weight: 700; color: var(--amber-400);">${node.effectiveness}%</div>
+                    </div>
+                    <div>
+                        <div style="font-size: var(--text-sm); color: var(--text-tertiary);">Last Used</div>
+                        <div style="font-family: var(--font-mono); font-size: var(--text-lg); font-weight: 600;">${node.last_used}</div>
+                    </div>
+                </div>
+                <div style="margin-bottom: var(--space-3);">
+                    <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-bottom: var(--space-1);">Synergies</div>
+                    <div style="color: var(--text-secondary);">${node.synergy.join(', ') || 'None'}</div>
+                </div>
+                <div style="background: var(--bg-0); border-radius: var(--radius-md); padding: var(--space-3);">
+                    <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-bottom: var(--space-1);">Recent Example</div>
+                    <div style="color: var(--text-secondary); font-size: var(--text-sm);">${node.example}</div>
+                </div>
+            `;
+            
+            // Scroll to panel
+            panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
         
         document.addEventListener('DOMContentLoaded', init);
