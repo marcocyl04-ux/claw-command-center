@@ -75,6 +75,14 @@
         /* Trading Tab Styles */
         .position-card { background: rgba(255,255,255,0.03); border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 1px solid transparent; transition: all 0.2s; cursor: pointer; }
         .position-card:hover { background: rgba(255,255,255,0.05); border-color: rgba(224,145,42,0.3); transform: translateY(-2px); }
+        .position-card.expanded { border-color: var(--amber-500); background: rgba(224,145,42,0.05); }
+        .position-details { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; margin-top: 0; }
+        .position-card.expanded .position-details { max-height: 300px; margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .detail-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; }
+        .detail-label { color: var(--text-tertiary); }
+        .detail-value { color: var(--text-primary); font-family: var(--font-mono); }
+        .reasoning-box { background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px; margin-top: 12px; font-size: 13px; line-height: 1.6; }
+        .reasoning-label { font-size: 11px; text-transform: uppercase; color: var(--amber-400); margin-bottom: 4px; }
         .position-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
         .position-icon { font-size: 20px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 8px; }
         .position-icon.rain { background: rgba(96,165,250,0.15); }
@@ -325,7 +333,7 @@
                         <span class="card-title">Positions</span>
                         <span class="card-badge">3 active</span>
                     </div>
-                    <div class="position-card">
+                    <div class="position-card" onclick="togglePosition(this)" data-market="NYC Rain March 20">
                         <div class="position-card-header">
                             <div class="position-icon rain">🌧️</div>
                             <div class="position-market-name">NYC Rain March 20</div>
@@ -342,8 +350,17 @@
                             </div>
                             <div class="position-amount">$0.50</div>
                         </div>
+                        <div class="position-details">
+                            <div class="detail-row"><span class="detail-label">Predicted</span><span class="detail-value">72%</span></div>
+                            <div class="detail-row"><span class="detail-label">Market</span><span class="detail-value">70%</span></div>
+                            <div class="detail-row"><span class="detail-label">Edge</span><span class="detail-value" style="color: var(--success);">+2%</span></div>
+                            <div class="reasoning-box">
+                                <div class="reasoning-label">Reasoning</div>
+                                Satellite imagery showed clear cloud formation patterns consistent with historical rain events. Pressure drop of 8mb in 6 hours.
+                            </div>
+                        </div>
                     </div>
-                    <div class="position-card">
+                    <div class="position-card" onclick="togglePosition(this)" data-market="LA Temp March 21">
                         <div class="position-card-header">
                             <div class="position-icon temp">🌡️</div>
                             <div class="position-market-name">LA Temp March 21</div>
@@ -360,8 +377,17 @@
                             </div>
                             <div class="position-amount">$0.35</div>
                         </div>
+                        <div class="position-details">
+                            <div class="detail-row"><span class="detail-label">Predicted</span><span class="detail-value">45%</span></div>
+                            <div class="detail-row"><span class="detail-label">Market</span><span class="detail-value">52%</span></div>
+                            <div class="detail-row"><span class="detail-label">Edge</span><span class="detail-value" style="color: var(--danger);">-7%</span></div>
+                            <div class="reasoning-box">
+                                <div class="reasoning-label">Lesson Learned</div>
+                                Santa Ana winds arrived 6 hours early. Weight real-time wind data higher than historical patterns. 6-hour timing errors are decisive.
+                            </div>
+                        </div>
                     </div>
-                    <div class="position-card">
+                    <div class="position-card" onclick="togglePosition(this)" data-market="Miami Humidity March 22">
                         <div class="position-card-header">
                             <div class="position-icon humidity">💧</div>
                             <div class="position-market-name">Miami Humidity March 22</div>
@@ -377,6 +403,15 @@
                                 <div class="ring-text">68%</div>
                             </div>
                             <div class="position-amount">$0.42</div>
+                        </div>
+                        <div class="position-details">
+                            <div class="detail-row"><span class="detail-label">Predicted</span><span class="detail-value">72%</span></div>
+                            <div class="detail-row"><span class="detail-label">Market</span><span class="detail-value">65%</span></div>
+                            <div class="detail-row"><span class="detail-label">Edge</span><span class="detail-value" style="color: var(--success);">+7%</span></div>
+                            <div class="reasoning-box">
+                                <div class="reasoning-label">Reasoning</div>
+                                Gulf stream warming pushes humidity to 78-82% range. March avg is 72%. Coastal sensor reliability adds uncertainty.
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -668,6 +703,17 @@
         
         // Initialize on load
         document.addEventListener('DOMContentLoaded', initDashboard);
+        
+        // Position card toggle
+        function togglePosition(card) {
+            const wasExpanded = card.classList.contains('expanded');
+            // Close all other positions
+            document.querySelectorAll('.position-card.expanded').forEach(c => {
+                if (c !== card) c.classList.remove('expanded');
+            });
+            // Toggle current
+            card.classList.toggle('expanded', !wasExpanded);
+        }
         
         function showTab(tabName) {
             // Hide all tabs
