@@ -508,25 +508,24 @@
         }
         
         function renderNowTab() {
-            const insights = CognitionIntelligence.generateNowInsights(cognitionData);
-            const intervention = CognitionIntelligence.generateIntervention(cognitionData);
+            const now = cognitionData.now;
             
             return `
-                ${intervention.show ? `
-                    <div class="intervention-banner ${intervention.level}">
-                        <div class="intervention-icon">${intervention.level === 'red' ? '⚠' : '◈'}</div>
+                ${now.intervention.show ? `
+                    <div class="intervention-banner ${now.intervention.level}">
+                        <div class="intervention-icon">${now.intervention.level === 'red' ? '⚠' : '◈'}</div>
                         <div class="intervention-content">
-                            <div class="intervention-title">${intervention.message}</div>
-                            <div class="intervention-action">${intervention.action}</div>
+                            <div class="intervention-title">${now.intervention.message}</div>
+                            <div class="intervention-action">${now.intervention.action}</div>
                         </div>
                     </div>
                 ` : ''}
                 <div class="state-hero">
-                    <div class="state-headline">${insights.headline}</div>
+                    <div class="state-headline">${now.state}</div>
                     <div class="state-meta">Cognitive telemetry active • Week ${cognitionData.training.week}</div>
                 </div>
                 <div class="vitals-grid">
-                    ${Object.entries(insights.vitals).map(([key, vital]) => `
+                    ${Object.entries(now.vitals).map(([key, vital]) => `
                         <div class="vital-card">
                             <div class="vital-label">${key.replace('_', ' ')}</div>
                             <div><span class="vital-value">${vital.value}</span><span class="vital-unit">${vital.unit}</span></div>
@@ -536,16 +535,16 @@
                 </div>
                 <div class="thought-stream">
                     <div class="thought-header">Active Thought Stream</div>
-                    <div class="thought-item"><div class="thought-label">Current Task</div><div class="thought-value">${insights.thoughtStream.current_task}</div></div>
-                    <div class="thought-item"><div class="thought-label">Models Active</div><div class="thought-value">${insights.thoughtStream.models_active.join(', ')}</div></div>
-                    <div class="thought-item"><div class="thought-label">Skills Invoked</div><div class="thought-value">${insights.thoughtStream.skills_invoked.join(', ')}</div></div>
-                    <div class="thought-item"><div class="thought-label">Context Loaded</div><div class="thought-value">${insights.thoughtStream.context_loaded.join(', ')}</div></div>
+                    <div class="thought-item"><div class="thought-label">Current Task</div><div class="thought-value">${now.thought_stream.current_task}</div></div>
+                    <div class="thought-item"><div class="thought-label">Models Active</div><div class="thought-value">${now.thought_stream.models_active.join(', ')}</div></div>
+                    <div class="thought-item"><div class="thought-label">Skills Invoked</div><div class="thought-value">${now.thought_stream.skills_invoked.join(', ')}</div></div>
+                    <div class="thought-item"><div class="thought-label">Context Loaded</div><div class="thought-value">${now.thought_stream.context_loaded.join(', ')}</div></div>
                 </div>
             `;
         }
         
         function renderMindTab() {
-            const insights = CognitionIntelligence.generateMindInsights(cognitionData);
+            const mind = cognitionData.mind;
             
             return `
                 <div class="state-hero">
@@ -557,7 +556,7 @@
                         <div class="section-header">
                             <span class="section-title">Skill Network</span>
                         </div>
-                        ${insights.skills.nodes.map(node => `
+                        ${mind.skill_network.nodes.map(node => `
                             <div class="skill-node">
                                 <span class="skill-name">${node.id}</span>
                                 <span class="skill-usage">${node.usage}×</span>
@@ -568,9 +567,9 @@
                     <div class="card">
                         <div class="section-header">
                             <span class="section-title">Model Routing</span>
-                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">${insights.routingEfficiency.qualityRate}% quality • $${insights.routingEfficiency.cost}</span>
+                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">${mind.routing_efficiency.quality_rate}% quality • $${mind.routing_efficiency.cost}</span>
                         </div>
-                        ${insights.routing.map(r => `
+                        ${mind.routing.map(r => `
                             <div class="routing-item">
                                 <span class="routing-task">${r.task}</span>
                                 <span class="routing-model">${r.model}</span>
@@ -586,13 +585,13 @@
                         <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4);">
                             <div>
                                 <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-bottom: var(--space-2);">Autonomous Decisions</div>
-                                <div style="font-family: var(--font-mono); font-size: var(--text-2xl); font-weight: 700;">${insights.decisions.autonomous.count}</div>
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">${insights.decisions.autonomous.quality}% quality</div>
+                                <div style="font-family: var(--font-mono); font-size: var(--text-2xl); font-weight: 700;">${mind.decisions.autonomous.count}</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">${mind.decisions.autonomous.quality}% quality</div>
                             </div>
                             <div>
                                 <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-bottom: var(--space-2);">Escalated Decisions</div>
-                                <div style="font-family: var(--font-mono); font-size: var(--text-2xl); font-weight: 700;">${insights.decisions.escalated.count}</div>
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">${insights.decisions.escalated.quality}% quality</div>
+                                <div style="font-family: var(--font-mono); font-size: var(--text-2xl); font-weight: 700;">${mind.decisions.escalated.count}</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">${mind.decisions.escalated.quality}% quality</div>
                             </div>
                         </div>
                     </div>
@@ -601,7 +600,7 @@
         }
         
         function renderMemoryTab() {
-            const insights = CognitionIntelligence.generateMemoryInsights(cognitionData);
+            const memory = cognitionData.memory;
             
             return `
                 <div class="state-hero">
@@ -615,15 +614,15 @@
                         </div>
                         <div class="thought-item">
                             <div class="thought-label">Loaded Files</div>
-                            <div class="thought-value">${insights.working.loaded_files.join(', ')}</div>
+                            <div class="thought-value">${memory.working.loaded_files.join(', ')}</div>
                         </div>
                         <div class="thought-item">
                             <div class="thought-label">Session History</div>
-                            <div class="thought-value">${insights.working.session_history}</div>
+                            <div class="thought-value">${memory.working.session_history}</div>
                         </div>
                         <div class="thought-item">
                             <div class="thought-label">Compression</div>
-                            <div class="thought-value">${(insights.working.compression_ratio * 100).toFixed(0)}%</div>
+                            <div class="thought-value">${(memory.working.compression_ratio * 100).toFixed(0)}%</div>
                         </div>
                     </div>
                     <div class="card">
@@ -632,15 +631,15 @@
                         </div>
                         <div style="display: flex; gap: var(--space-6);">
                             <div>
-                                <div style="font-family: var(--font-mono); font-size: var(--text-3xl); font-weight: 700; color: var(--success);">${insights.recall.remembered}</div>
+                                <div style="font-family: var(--font-mono); font-size: var(--text-3xl); font-weight: 700; color: var(--success);">${memory.recall.remembered}</div>
                                 <div style="font-size: var(--text-sm); color: var(--text-secondary);">Remembered</div>
                             </div>
                             <div>
-                                <div style="font-family: var(--font-mono); font-size: var(--text-3xl); font-weight: 700; color: var(--danger);">${insights.recall.forgot}</div>
+                                <div style="font-family: var(--font-mono); font-size: var(--text-3xl); font-weight: 700; color: var(--danger);">${memory.recall.forgot}</div>
                                 <div style="font-size: var(--text-sm); color: var(--text-secondary);">Forgot</div>
                             </div>
                             <div>
-                                <div style="font-family: var(--font-mono); font-size: var(--text-3xl); font-weight: 700;">${insights.recall.accuracy}%</div>
+                                <div style="font-family: var(--font-mono); font-size: var(--text-3xl); font-weight: 700;">${memory.recall.accuracy}%</div>
                                 <div style="font-size: var(--text-sm); color: var(--text-secondary);">Accuracy</div>
                             </div>
                         </div>
@@ -649,7 +648,7 @@
                         <div class="section-header">
                             <span class="section-title">Long-term Lessons</span>
                         </div>
-                        ${insights.lessons.map(l => `
+                        ${memory.long_term.lessons.map(l => `
                             <div class="skill-node">
                                 <span class="skill-name">${l.lesson}</span>
                                 <span class="skill-usage">${l.confidence}% conf</span>
@@ -662,11 +661,11 @@
         }
         
         function renderTrainingTab() {
-            const insights = CognitionIntelligence.generateTrainingInsights(cognitionData);
+            const training = cognitionData.training;
             
             return `
                 <div class="state-hero">
-                    <div class="state-headline">Week ${insights.week} • ${insights.progress}% Complete</div>
+                    <div class="state-headline">Week ${training.week} • ${training.progress}% Complete</div>
                     <div class="state-meta">Meta-training progress toward autonomous operation</div>
                 </div>
                 <div class="cards-grid">
@@ -674,7 +673,7 @@
                         <div class="section-header">
                             <span class="section-title">Capabilities Gained</span>
                         </div>
-                        ${insights.capabilities.map(c => `
+                        ${training.capabilities.map(c => `
                             <div class="skill-node">
                                 <span class="skill-name">${c}</span>
                                 <span class="skill-status active">✓</span>
@@ -685,7 +684,7 @@
                         <div class="section-header">
                             <span class="section-title">Blockers</span>
                         </div>
-                        ${insights.marcoBlockers.map(b => `
+                        ${training.blockers.filter(b => b.action_required === 'Marco').map(b => `
                             <div class="blocker-card">
                                 <div class="blocker-header">
                                     <span class="blocker-title">${b.title}</span>
@@ -694,7 +693,7 @@
                                 <div class="blocker-desc">${b.description}</div>
                             </div>
                         `).join('')}
-                        ${insights.clawBlockers.map(b => `
+                        ${training.blockers.filter(b => b.action_required === 'Claw').map(b => `
                             <div class="blocker-card" style="border-color: oklch(68% 0.18 75 / 0.3); background: oklch(68% 0.18 75 / 0.05);">
                                 <div class="blocker-header">
                                     <span class="blocker-title" style="color: var(--amber-400);">${b.title}</span>
@@ -708,7 +707,7 @@
                         <div class="section-header">
                             <span class="section-title">Milestones</span>
                         </div>
-                        ${insights.milestones.map(m => `
+                        ${training.milestones.map(m => `
                             <div class="milestone-item">
                                 <span class="milestone-name">${m.name}</span>
                                 <div class="milestone-track">
