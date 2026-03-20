@@ -803,8 +803,94 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <!-- Pattern Recognition Backlog -->
+                    <div class="card card-full">
+                        <div class="section-header">
+                            <span class="section-title">Patterns Detected</span>
+                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">Claw has noticed</span>
+                        </div>
+                        
+                        <!-- Active Patterns -->
+                        <div style="margin-bottom: var(--space-5);">
+                            <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-bottom: var(--space-3); text-transform: uppercase; letter-spacing: 0.05em;">Active (3)</div>
+                            
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); margin-bottom: var(--space-3); border-left: 3px solid var(--success);">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-2);">
+                                    <div>
+                                        <div style="font-weight: 600; margin-bottom: var(--space-1);">90-minute sprint pattern</div>
+                                        <div style="font-size: var(--text-sm); color: var(--text-secondary);">High output in focused 90-min blocks, then need break</div>
+                                    </div>
+                                    <span style="font-size: var(--text-xs); color: var(--text-tertiary);">Detected 2 days ago</span>
+                                </div>
+                                <div style="font-size: var(--text-xs); color: var(--amber-400);">Used in dashboard rebuild — effective</div>
+                            </div>
+                            
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); margin-bottom: var(--space-3); border-left: 3px solid var(--amber-500);">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-2);">
+                                    <div>
+                                        <div style="font-weight: 600; margin-bottom: var(--space-1);">Skill chaining drops after 6pm</div>
+                                        <div style="font-size: var(--text-sm); color: var(--text-secondary);">Evening work shows 40% less skill usage</div>
+                                    </div>
+                                    <span style="font-size: var(--text-xs); color: var(--text-tertiary);">Detected 1 week ago</span>
+                                </div>
+                                <div style="font-size: var(--text-xs); color: var(--amber-400);">Recommendation: Consider stopping at 6pm</div>
+                            </div>
+                            
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); margin-bottom: var(--space-3); border-left: 3px solid var(--amber-500);">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-2);">
+                                    <div>
+                                        <div style="font-weight: 600; margin-bottom: var(--space-1);">Model routing improves with AGENTS.md</div>
+                                        <div style="font-size: var(--text-sm); color: var(--text-secondary);">85% quality when protocol checked first</div>
+                                    </div>
+                                    <span style="font-size: var(--text-xs); color: var(--text-tertiary);">Detected today</span>
+                                </div>
+                                <div style="font-size: var(--text-xs); color: var(--amber-400);">Applied in current session</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Archive Toggle -->
+                        <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: var(--space-4);">
+                            <button onclick="togglePatternArchive()" style="background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: var(--text-sm); display: flex; align-items: center; gap: var(--space-2); width: 100%; justify-content: space-between;">
+                                <span>View 12 archived patterns</span>
+                                <span id="archiveArrow">▼</span>
+                            </button>
+                            <div id="patternArchive" style="display: none; margin-top: var(--space-4);">
+                                <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-bottom: var(--space-3);">Archived (no longer active or validated)</div>
+                                
+                                <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); margin-bottom: var(--space-2); opacity: 0.7;">
+                                    <div style="font-size: var(--text-sm); color: var(--text-secondary);">Morning vs evening code quality</div>
+                                    <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Archived: 2 weeks ago — pattern faded</div>
+                                </div>
+                                
+                                <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); margin-bottom: var(--space-2); opacity: 0.7;">
+                                    <div style="font-size: var(--text-sm); color: var(--text-secondary);">Preference for dark themes</div>
+                                    <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Archived: 1 month ago — validated, now standard</div>
+                                </div>
+                                
+                                <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); margin-bottom: var(--space-2); opacity: 0.7;">
+                                    <div style="font-size: var(--text-sm); color: var(--text-secondary);">Escalation rate on Fridays</div>
+                                    <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Archived: 3 weeks ago — no longer observed</div>
+                                </div>
+                                
+                                <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-align: center; margin-top: var(--space-3);">+ 9 more archived</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             `;
+        }
+        
+        function togglePatternArchive() {
+            const archive = document.getElementById('patternArchive');
+            const arrow = document.getElementById('archiveArrow');
+            if (archive.style.display === 'none') {
+                archive.style.display = 'block';
+                arrow.textContent = '▲';
+            } else {
+                archive.style.display = 'none';
+                arrow.textContent = '▼';
+            }
         }
         
         function renderMemoryTab() {
