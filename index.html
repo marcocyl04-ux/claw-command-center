@@ -561,48 +561,69 @@
             <div id="system" class="tab">
                 <!-- Core Files -->
                 <div class="card">
-                    <div class="card-header"><span class="card-title">Core Files</span><span class="card-badge">4 active</span></div>
-                    <div class="file-item">
-                        <div class="file-status active"></div>
-                        <div class="file-name">SOUL.md</div>
-                        <div class="file-meta">Identity & principles</div>
+                    <div class="card-header"><span class="card-title">Core Files</span><span class="card-badge" id="fileCount">4 files</span></div>
+                    <div id="filesContainer">
+                        <!-- Populated by JavaScript -->
                     </div>
-                    <div class="file-item">
-                        <div class="file-status active"></div>
-                        <div class="file-name">MEMORY.md</div>
-                        <div class="file-meta">Lessons & knowledge</div>
-                    </div>
-                    <div class="file-item">
-                        <div class="file-status active"></div>
-                        <div class="file-name">AGENTS.md</div>
-                        <div class="file-meta">System protocols</div>
-                    </div>
-                    <div class="file-item">
-                        <div class="file-status active"></div>
-                        <div class="file-name">USER.md</div>
-                        <div class="file-meta">Marco's profile</div>
+                    <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 12px; color: var(--text-tertiary);">
+                        Last scan: <span id="lastScan">--</span>
                     </div>
                 </div>
                 
-                <!-- Projects -->
+                <!-- Projects with Blockers -->
                 <div class="card">
                     <div class="card-header"><span class="card-title">Projects</span><span class="card-badge">Active</span></div>
-                    <div style="margin-bottom: 16px;"><strong>Polymarket Trading</strong> — In Progress</div>
-                    <div class="timeline-item completed">
-                        <div class="timeline-dot"></div>
-                        <div><strong>Foundation</strong><br><span style="font-size: 12px; color: var(--text-tertiary);">Week 1-2</span></div>
+                    <div style="margin-bottom: 16px;">
+                        <strong>Polymarket Trading</strong> — In Progress
+                        <div style="font-size: 12px; color: var(--text-tertiary); margin-top: 4px;">Dashboard v3.0 deployed, testing interactivity</div>
                     </div>
-                    <div class="timeline-item completed">
-                        <div class="timeline-dot"></div>
-                        <div><strong>Weather Pipeline</strong><br><span style="font-size: 12px; color: var(--text-tertiary);">Week 3-4</span></div>
+                    
+                    <!-- Blockers -->
+                    <div id="blockersContainer" style="margin-bottom: 20px;">
+                        <div style="font-weight: 600; margin-bottom: 12px; color: var(--danger);">Active Blockers:</div>
+                        <div class="blocker-item">
+                            <div class="blocker-title">Edge discovery rate too low</div>
+                            <div class="blocker-desc">0 genuine edges found vs 12 from Marco. Need to develop independent analysis patterns.</div>
+                        </div>
                     </div>
-                    <div class="timeline-item active">
-                        <div class="timeline-dot"></div>
-                        <div><strong>Edge Validation</strong><br><span style="font-size: 12px; color: var(--text-tertiary);">Week 5-6 (current)</span></div>
+                    
+                    <!-- Milestones -->
+                    <div style="font-weight: 600; margin-bottom: 12px;">Milestones:</div>
+                    <div class="milestone-bar">
+                        <span class="milestone-name">Foundation</span>
+                        <div class="milestone-progress"><div class="milestone-fill" style="width: 100%;"></div></div>
+                        <span class="milestone-percent">100%</span>
                     </div>
-                    <div class="timeline-item">
-                        <div class="timeline-dot"></div>
-                        <div><strong>Live Trading</strong><br><span style="font-size: 12px; color: var(--text-tertiary);">Week 7+</span></div>
+                    <div class="milestone-bar">
+                        <span class="milestone-name">Weather Pipeline</span>
+                        <div class="milestone-progress"><div class="milestone-fill" style="width: 100%;"></div></div>
+                        <span class="milestone-percent">100%</span>
+                    </div>
+                    <div class="milestone-bar">
+                        <span class="milestone-name">Edge Validation</span>
+                        <div class="milestone-progress"><div class="milestone-fill" style="width: 85%;"></div></div>
+                        <span class="milestone-percent">85%</span>
+                    </div>
+                    <div class="milestone-bar">
+                        <span class="milestone-name">Live Trading</span>
+                        <div class="milestone-progress"><div class="milestone-fill" style="width: 20%;"></div></div>
+                        <span class="milestone-percent">20%</span>
+                    </div>
+                </div>
+                
+                <!-- Meta-Training -->
+                <div class="card">
+                    <div class="card-header"><span class="card-title">Meta-Training</span><span class="card-badge">Week 11</span></div>
+                    <div class="milestone-bar" style="margin-bottom: 16px;">
+                        <span class="milestone-name">Overall Progress</span>
+                        <div class="milestone-progress"><div class="milestone-fill" style="width: 65%;"></div></div>
+                        <span class="milestone-percent">65%</span>
+                    </div>
+                    <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">
+                        <strong>Current Focus:</strong> Autonomous decision making, design quality, proactive skill usage
+                    </div>
+                    <div style="font-size: 13px; color: var(--text-secondary);">
+                        <strong>Next Milestone:</strong> Complete dashboard with full interactivity (Phase 6)
                     </div>
                 </div>
                 
@@ -823,11 +844,42 @@
             renderPredictions(searchQuery);
         }
         
+        // System tab functionality
+        async function initSystemTab() {
+            const { files, lastScan } = await DataLayer.getFiles();
+            
+            // Render files
+            const container = document.getElementById('filesContainer');
+            if (container) {
+                container.innerHTML = files.map(f => `
+                    <div class="file-item ${f.status}">
+                        <div class="file-status ${f.status}"></div>
+                        <div class="file-name">${f.name}</div>
+                        <div class="file-meta">${f.description}</div>
+                        <div class="file-time">${formatTime(f.lastModified)}</div>
+                    </div>
+                `).join('');
+            }
+            
+            // Update last scan
+            const scanEl = document.getElementById('lastScan');
+            if (scanEl) {
+                scanEl.textContent = formatTime(lastScan);
+            }
+            
+            // Update file count
+            const countEl = document.getElementById('fileCount');
+            if (countEl) {
+                countEl.textContent = `${files.length} files`;
+            }
+        }
+        
         // Initialize on load
         document.addEventListener('DOMContentLoaded', () => {
             initDashboard();
             initCalibrationChart();
             initEdgeLog();
+            initSystemTab();
         });
         
         // Position card toggle
