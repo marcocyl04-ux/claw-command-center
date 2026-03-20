@@ -648,6 +648,51 @@
                                 <div style="font-size: var(--text-sm); color: var(--text-secondary);">${mind.decisions.escalated.quality}% quality</div>
                             </div>
                         </div>
+                        
+                        <!-- Decision Trend Graph -->
+                        <div style="margin-bottom: var(--space-5);">
+                            <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-bottom: var(--space-3); text-transform: uppercase; letter-spacing: 0.05em;">4-Week Trend</div>
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); height: 150px; position: relative;">
+                                <svg width="100%" height="100%" viewBox="0 0 400 120" preserveAspectRatio="none">
+                                    <line x1="0" y1="30" x2="400" y2="30" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+                                    <line x1="0" y1="60" x2="400" y2="60" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+                                    <line x1="0" y1="90" x2="400" y2="90" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+                                    <polyline points="0,90 100,75 200,60 300,45 400,35" fill="none" stroke="var(--success)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <circle cx="0" cy="90" r="5" fill="var(--success)"/>
+                                    <circle cx="100" cy="75" r="5" fill="var(--success)"/>
+                                    <circle cx="200" cy="60" r="5" fill="var(--success)"/>
+                                    <circle cx="300" cy="45" r="5" fill="var(--success)"/>
+                                    <circle cx="400" cy="35" r="5" fill="var(--amber-500)"/>
+                                </svg>
+                                <div style="display: flex; justify-content: space-between; margin-top: var(--space-2); font-size: var(--text-xs); color: var(--text-tertiary);">
+                                    <span>W1: 65%</span>
+                                    <span>W2: 70%</span>
+                                    <span>W3: 75%</span>
+                                    <span>W4: 78%</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Actionable Insight Card -->
+                        <div style="background: linear-gradient(135deg, rgba(224,145,42,0.1) 0%, rgba(20,20,20,0.5) 100%); border: 1px solid rgba(224,145,42,0.3); border-radius: var(--radius-lg); padding: var(--space-5); margin-bottom: var(--space-5);">
+                            <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-3);">
+                                <div style="width: 40px; height: 40px; background: rgba(224,145,42,0.2); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: var(--text-xl);">◈</div>
+                                <div>
+                                    <div style="font-weight: 600; color: var(--amber-400);">Improvement Opportunity</div>
+                                    <div style="font-size: var(--text-sm); color: var(--text-secondary);">Pattern detected in your decisions</div>
+                                </div>
+                            </div>
+                            <div style="color: var(--text-secondary); margin-bottom: var(--space-3);">
+                                <strong>You escalate design tasks 60% of the time</strong> but implementation only 20%. This suggests high confidence in execution but uncertainty in design direction.
+                            </div>
+                            <div style="background: var(--bg-0); border-radius: var(--radius-md); padding: var(--space-3); border-left: 3px solid var(--amber-500);">
+                                <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-bottom: var(--space-1);">Recommendation</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">
+                                    Use <strong>impeccable skill</strong> BEFORE escalating design questions. You've done this successfully 12 times with 85% positive outcomes.
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-bottom: var(--space-3); text-transform: uppercase; letter-spacing: 0.05em;">Recent Examples</div>
                         ${mind.decisions.examples.map(ex => `
                             <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); margin-bottom: var(--space-3); border-left: 3px solid ${ex.type === 'autonomous' ? 'var(--success)' : 'var(--amber-500)'};">
