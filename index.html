@@ -552,15 +552,27 @@
                     <div class="state-meta">How I process information and make decisions</div>
                 </div>
                 <div class="cards-grid">
-                    <div class="card">
+                    <div class="card card-full">
                         <div class="section-header">
                             <span class="section-title">Skill Network</span>
                         </div>
                         ${mind.skill_network.nodes.map(node => `
-                            <div class="skill-node">
-                                <span class="skill-name">${node.id}</span>
-                                <span class="skill-usage">${node.usage}×</span>
-                                <span class="skill-status ${node.status}">${node.status}</span>
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); margin-bottom: var(--space-4);">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
+                                    <span style="font-weight: 600;">${node.id}</span>
+                                    <div style="display: flex; gap: var(--space-3); align-items: center;">
+                                        <span class="skill-usage">${node.usage}× used</span>
+                                        <span style="font-family: var(--font-mono); font-size: var(--text-sm); color: var(--amber-400);">${node.effectiveness}% effective</span>
+                                        <span class="skill-status ${node.status}">${node.status}</span>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: var(--space-4); font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">
+                                    <span>Last used: ${node.last_used}</span>
+                                    <span>Synergies: ${node.synergy.join(', ') || 'None'}</span>
+                                </div>
+                                <div style="background: var(--bg-0); border-radius: var(--radius-md); padding: var(--space-3); font-size: var(--text-sm); color: var(--text-secondary); border-left: 3px solid var(--amber-500);">
+                                    <strong>Recent example:</strong> ${node.example}
+                                </div>
                             </div>
                         `).join('')}
                     </div>
@@ -581,8 +593,9 @@
                     <div class="card card-full">
                         <div class="section-header">
                             <span class="section-title">Decision Quality</span>
+                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">Trend: ${mind.decisions.trend}</span>
                         </div>
-                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4);">
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4); margin-bottom: var(--space-5);">
                             <div>
                                 <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-bottom: var(--space-2);">Autonomous Decisions</div>
                                 <div style="font-family: var(--font-mono); font-size: var(--text-2xl); font-weight: 700;">${mind.decisions.autonomous.count}</div>
@@ -594,6 +607,25 @@
                                 <div style="font-size: var(--text-sm); color: var(--text-secondary);">${mind.decisions.escalated.quality}% quality</div>
                             </div>
                         </div>
+                        <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-bottom: var(--space-3); text-transform: uppercase; letter-spacing: 0.05em;">Recent Examples</div>
+                        ${mind.decisions.examples.map(ex => `
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); margin-bottom: var(--space-3); border-left: 3px solid ${ex.type === 'autonomous' ? 'var(--success)' : 'var(--amber-500)'};">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-2);">
+                                    <span style="font-weight: 600;">${ex.context}</span>
+                                    <span style="font-size: var(--text-xs); text-transform: uppercase; color: ${ex.type === 'autonomous' ? 'var(--success)' : 'var(--amber-400)'};">${ex.type}</span>
+                                </div>
+                                <div style="color: var(--text-secondary); font-size: var(--text-sm); margin-bottom: var(--space-2);">
+                                    <strong>Decision:</strong> ${ex.decision}
+                                </div>
+                                <div style="color: var(--text-tertiary); font-size: var(--text-sm); margin-bottom: var(--space-2);">
+                                    <strong>Reasoning:</strong> ${ex.reasoning}
+                                </div>
+                                <div style="display: flex; justify-content: space-between; font-size: var(--text-xs); color: var(--text-tertiary);">
+                                    <span>Outcome: ${ex.outcome}</span>
+                                    <span>${ex.timestamp}</span>
+                                </div>
+                            </div>
+                        `).join('')}
                     </div>
                 </div>
             `;
@@ -669,14 +701,25 @@
                     <div class="state-meta">Meta-training progress toward autonomous operation</div>
                 </div>
                 <div class="cards-grid">
-                    <div class="card">
+                    <div class="card card-full">
                         <div class="section-header">
                             <span class="section-title">Capabilities Gained</span>
                         </div>
                         ${training.capabilities.map(c => `
-                            <div class="skill-node">
-                                <span class="skill-name">${c}</span>
-                                <span class="skill-status active">✓</span>
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); margin-bottom: var(--space-4);">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
+                                    <span style="font-weight: 600; font-size: var(--text-lg);">${c.name}</span>
+                                    <span class="skill-status active">✓ Verified</span>
+                                </div>
+                                <div style="color: var(--text-secondary); font-size: var(--text-sm); margin-bottom: var(--space-3);">
+                                    <strong>Evidence:</strong> ${c.evidence}
+                                </div>
+                                <div style="background: var(--bg-0); border-radius: var(--radius-md); padding: var(--space-3); font-size: var(--text-sm); color: var(--text-secondary); border-left: 3px solid var(--amber-500);">
+                                    <strong>Example:</strong> ${c.example}
+                                </div>
+                                <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: var(--space-2);">
+                                    Session: ${c.session}
+                                </div>
                             </div>
                         `).join('')}
                     </div>

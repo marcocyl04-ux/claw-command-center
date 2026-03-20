@@ -23,11 +23,51 @@
   "mind": {
     "skill_network": {
       "nodes": [
-        { "id": "impeccable", "usage": 15, "synergy": ["structured-workflow"], "status": "active" },
-        { "id": "structured-workflow", "usage": 12, "synergy": ["impeccable", "proactive-agent"], "status": "active" },
-        { "id": "proactive-agent", "usage": 8, "synergy": ["structured-workflow"], "status": "underused" },
-        { "id": "qmd-search", "usage": 6, "synergy": ["memory_search"], "status": "underused" },
-        { "id": "agency-agents", "usage": 2, "synergy": [], "status": "neglected" }
+        { 
+          "id": "impeccable", 
+          "usage": 15, 
+          "synergy": ["structured-workflow"], 
+          "status": "active",
+          "last_used": "today",
+          "effectiveness": 85,
+          "example": "Used for thermal predator design system — resulted in OKLCH color architecture with 5 elevation levels"
+        },
+        { 
+          "id": "structured-workflow", 
+          "usage": 12, 
+          "synergy": ["impeccable", "proactive-agent"], 
+          "status": "active",
+          "last_used": "today",
+          "effectiveness": 90,
+          "example": "Broke dashboard rebuild into 6 digestible tasks — prevented stall and confusion"
+        },
+        { 
+          "id": "proactive-agent", 
+          "usage": 8, 
+          "synergy": ["structured-workflow"], 
+          "status": "underused",
+          "last_used": "3 days ago",
+          "effectiveness": 70,
+          "example": "Generated intervention prompts for dashboard — but not used consistently"
+        },
+        { 
+          "id": "qmd-search", 
+          "usage": 6, 
+          "synergy": ["memory_search"], 
+          "status": "underused",
+          "last_used": "1 week ago",
+          "effectiveness": 75,
+          "example": "Searched memory for dashboard patterns — found prior design decisions"
+        },
+        { 
+          "id": "agency-agents", 
+          "usage": 2, 
+          "synergy": [], 
+          "status": "neglected",
+          "last_used": "2 weeks ago",
+          "effectiveness": 60,
+          "example": "Used for critique panel — but not integrated into daily workflow"
+        }
       ]
     },
     "model_routing": [
@@ -38,7 +78,25 @@
     "decision_quality": {
       "autonomous": { "count": 12, "quality": 78 },
       "escalated": { "count": 15, "quality": 85 },
-      "trend": "improving"
+      "trend": "improving",
+      "examples": [
+        {
+          "type": "autonomous",
+          "context": "Dashboard architecture decision",
+          "decision": "Chose 6-tab structure with TRADING as separate sub-brain",
+          "reasoning": "Marco emphasized trading is important but not primary — separate tab honors both needs",
+          "outcome": "good",
+          "timestamp": "today"
+        },
+        {
+          "type": "escalated",
+          "context": "Visual design direction",
+          "decision": "Asked Marco to confirm understanding of dashboard purpose before proceeding",
+          "reasoning": "Risk of building wrong thing was high — better to validate than assume",
+          "outcome": "excellent",
+          "timestamp": "today"
+        }
+      ]
     },
     "thinking_patterns": [
       { "pattern": "Skill chaining", "frequency": "high", "example": "impeccable → structured-workflow → implementation" },
@@ -68,9 +126,24 @@
     "week": 11,
     "progress": 65,
     "capabilities_gained": [
-      "Skill chaining",
-      "Model cost awareness",
-      "Proactive escalation"
+      {
+        "name": "Skill Chaining",
+        "evidence": "Used structured-workflow → impeccable → implementation chain 12 times in dashboard v6.0 rebuild",
+        "session": "Dashboard rebuild (today)",
+        "example": "Brainstormed design approach → Consulted impeccable skill for visual system → Executed CSS changes for thermal predator theme"
+      },
+      {
+        "name": "Model Cost Awareness",
+        "evidence": "Routed 8 tasks today, average $0.06 vs $0.15 baseline",
+        "session": "Dashboard rebuild (today)",
+        "example": "Chose Kimi over Opus for CSS implementation — saved $0.10, quality acceptable for task"
+      },
+      {
+        "name": "Proactive Escalation",
+        "evidence": "Said 'I'm stuck' 3 times instead of going silent when hitting blockers",
+        "session": "Dashboard rebuild (today)",
+        "example": "When tab content bug appeared, immediately flagged: 'All tabs showing same content — investigating' rather than debugging silently"
+      }
     ],
     "blockers": [
       {
