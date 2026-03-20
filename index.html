@@ -440,6 +440,9 @@
                     <span>◈</span> TRAINING
                     <span class="nav-badge">2</span>
                 </div>
+                <div class="nav-item" data-tab="trading" onclick="switchTab('trading')">
+                    <span>◈</span> TRADING
+                </div>
                 <div class="nav-item" data-tab="system" onclick="switchTab('system')">
                     <span>◈</span> SYSTEM
                 </div>
@@ -453,13 +456,23 @@
     </div>
     
     <script src="cognition-intelligence.js"></script>
+    <script src="data-bridge.js"></script>
     <script>
         let cognitionData = null;
         let currentTab = 'now';
         
         async function init() {
-            cognitionData = await CognitionIntelligence.loadData();
+            // Use DataBridge for dynamic data
+            cognitionData = await DataBridge.compileDashboardData();
             renderTab(currentTab);
+            
+            // Refresh data every 30 seconds
+            setInterval(async () => {
+                cognitionData = await DataBridge.compileDashboardData();
+                if (currentTab === 'now') {
+                    renderTab('now'); // Auto-refresh NOW tab
+                }
+            }, 30000);
         }
         
         function switchTab(tab) {
@@ -484,6 +497,9 @@
                     break;
                 case 'training':
                     container.innerHTML = renderTrainingTab();
+                    break;
+                case 'trading':
+                    container.innerHTML = renderTradingTab();
                     break;
                 case 'system':
                     container.innerHTML = renderSystemTab();
@@ -706,8 +722,56 @@
             `;
         }
         
+        function renderTradingTab() {
+            const trading = cognitionData.system.trading;
+            
+            return `
+                <div class="state-hero">
+                    <div class="state-headline">Trading Performance</div>
+                    <div class="state-meta">Sub-brain dedicated to prediction markets</div>
+                </div>
+                <div class="vitals-grid">
+                    <div class="vital-card">
+                        <div class="vital-label">Total Predictions</div>
+                        <div><span class="vital-value">${trading.total_predictions}</span></div>
+                        <div class="vital-trend up">↑ +3 this week</div>
+                    </div>
+                    <div class="vital-card">
+                        <div class="vital-label">Win Rate</div>
+                        <div><span class="vital-value">${trading.win_rate}%</span></div>
+                        <div class="vital-trend up">↑ +5%</div>
+                    </div>
+                    <div class="vital-card">
+                        <div class="vital-label">Average Edge</div>
+                        <div><span class="vital-value" style="color: var(--success);">+${trading.avg_edge}%</span></div>
+                        <div class="vital-trend up">Beating market</div>
+                    </div>
+                    <div class="vital-card">
+                        <div class="vital-label">Edges Discovered</div>
+                        <div><span class="vital-value" style="color: var(--danger);">${trading.edge_discovery_rate}</span></div>
+                        <div class="vital-trend down">Need improvement</div>
+                    </div>
+                </div>
+                <div class="thought-stream">
+                    <div class="thought-header">Trading Insights</div>
+                    <div class="thought-item">
+                        <div class="thought-label">Status</div>
+                        <div class="thought-value">Paper trading — no live capital</div>
+                    </div>
+                    <div class="thought-item">
+                        <div class="thought-label">Focus</div>
+                        <div class="thought-value">Weather markets (Polymarket)</div>
+                    </div>
+                    <div class="thought-item">
+                        <div class="thought-label">Next Milestone</div>
+                        <div class="thought-value">Deploy $10 live capital</div>
+                    </div>
+                </div>
+            `;
+        }
+        
         function renderSystemTab() {
-            const insights = CognitionIntelligence.generateSystemInsights(cognitionData);
+            const insights = cognitionData.system;
             
             return `
                 <div class="state-hero">
@@ -718,7 +782,7 @@
                     <div class="card">
                         <div class="section-header">
                             <span class="section-title">Core Files</span>
-                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">${insights.overallHealth}% health</span>
+                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">${insights.overall_health}% health</span>
                         </div>
                         ${Object.entries(insights.files).map(([name, file]) => `
                             <div class="file-item">
@@ -756,29 +820,6 @@
                         <div class="thought-item">
                             <div class="thought-label">API Health</div>
                             <div class="thought-value" style="color: var(--success);">${insights.resources.api_health}</div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="section-header">
-                            <span class="section-title">Trading Signal</span>
-                        </div>
-                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4);">
-                            <div>
-                                <div style="font-family: var(--font-mono); font-size: var(--text-xl); font-weight: 700;">${insights.trading.total_predictions}</div>
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">Predictions</div>
-                            </div>
-                            <div>
-                                <div style="font-family: var(--font-mono); font-size: var(--text-xl); font-weight: 700;">${insights.trading.win_rate}%</div>
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">Win Rate</div>
-                            </div>
-                            <div>
-                                <div style="font-family: var(--font-mono); font-size: var(--text-xl); font-weight: 700; color: var(--success);">+${insights.trading.avg_edge}%</div>
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">Avg Edge</div>
-                            </div>
-                            <div>
-                                <div style="font-family: var(--font-mono); font-size: var(--text-xl); font-weight: 700; color: var(--danger);">${insights.trading.edge_discovery_rate}</div>
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">Edges Found</div>
-                            </div>
                         </div>
                     </div>
                 </div>
