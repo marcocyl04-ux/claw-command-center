@@ -3,1077 +3,515 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Claw Command Center v5.0</title>
+    <title>Claw Consciousness Dashboard v6.0</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="design-system.css">
     <style>
-        :root {
-            --amber-500: #E0912A;
-            --amber-400: #F5A94C;
-            --dark-950: #0A0A0A;
-            --dark-900: #141414;
-            --dark-800: #1A1A1A;
-            --text-primary: #EDEDED;
-            --text-secondary: #A1A1A1;
-            --text-tertiary: #6B6B6B;
-            --success: #4ADE80;
-            --danger: #F87171;
-            --font-mono: 'JetBrains Mono', monospace;
+        /* App Shell */
+        .app { display: flex; min-height: 100vh; background: var(--bg-0); }
+        
+        /* Sidebar */
+        .sidebar { 
+            width: 280px; 
+            background: var(--bg-1); 
+            border-right: 1px solid oklch(100% 0 0 / 0.05);
+            display: flex; 
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', system-ui, sans-serif; background: var(--dark-950); color: var(--text-primary); font-size: 14px; line-height: 1.5; }
-        .app { display: flex; height: 100vh; }
-        .sidebar { width: 260px; background: var(--dark-900); border-right: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; }
-        .logo { padding: 20px 24px; font-size: 20px; font-weight: 700; color: var(--amber-500); border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .nav-item { padding: 12px 24px; cursor: pointer; color: var(--text-secondary); border-left: 3px solid transparent; }
-        .nav-item:hover { color: var(--text-primary); background: rgba(255,255,255,0.02); }
-        .nav-item.active { color: var(--text-primary); border-left-color: var(--amber-500); background: rgba(224,145,42,0.08); }
-        .main { flex: 1; overflow-y: auto; padding: 24px; }
-        .tab { display: none; opacity: 0; }
-        .tab.active { display: block; opacity: 1; animation: tabFadeIn 0.3s ease; }
-        @keyframes tabFadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-        .card { background: var(--dark-800); border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-        .card-title { font-size: 16px; font-weight: 600; }
-        .card-badge { font-size: 12px; padding: 4px 12px; background: rgba(224,145,42,0.15); color: var(--amber-400); border-radius: 20px; }
+        .logo { 
+            padding: var(--space-6); 
+            font-size: var(--text-xl);
+            font-weight: 700; 
+            color: var(--amber-500);
+            border-bottom: 1px solid oklch(100% 0 0 / 0.05);
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+        }
+        .logo-pulse {
+            width: 12px;
+            height: 12px;
+            background: var(--amber-500);
+            border-radius: 50%;
+            box-shadow: 0 0 16px var(--amber-500);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        .nav { padding: var(--space-4); }
+        .nav-item { 
+            padding: var(--space-4) var(--space-5); 
+            cursor: pointer; 
+            color: var(--text-secondary); 
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-2);
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            transition: all var(--duration-fast) var(--ease-out-quart);
+            border: 1px solid transparent;
+            font-size: var(--text-sm);
+        }
+        .nav-item:hover { 
+            color: var(--text-primary); 
+            background: oklch(100% 0 0 / 0.03);
+        }
+        .nav-item.active { 
+            color: var(--amber-400);
+            background: oklch(68% 0.18 75 / 0.08);
+            border-color: oklch(68% 0.18 75 / 0.2);
+        }
+        .nav-badge {
+            margin-left: auto;
+            font-size: var(--text-xs);
+            padding: var(--space-1) var(--space-2);
+            background: oklch(60% 0.18 25 / 0.2);
+            color: var(--danger);
+            border-radius: var(--radius-full);
+            font-weight: 600;
+        }
         
-        /* Overview Tab Styles */
-        .narrative-hero { background: linear-gradient(135deg, rgba(224,145,42,0.1) 0%, rgba(20,20,20,0.8) 100%); border: 1px solid rgba(224,145,42,0.2); border-radius: 16px; padding: 28px; margin-bottom: 24px; }
-        .state-sentence { font-size: 22px; font-weight: 500; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
-        .state-sentence strong { color: var(--amber-400); }
-        .state-indicator { width: 12px; height: 12px; border-radius: 50%; background: var(--success); box-shadow: 0 0 12px var(--success); animation: pulse 2s infinite; }
-        .delta-strip { display: flex; gap: 32px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .delta-item { display: flex; flex-direction: column; gap: 4px; }
-        .delta-label { font-size: 11px; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.05em; }
-        .delta-value { font-family: var(--font-mono); font-size: 28px; font-weight: 600; }
-        .delta-value.up { color: var(--amber-400); }
-        .delta-value.good { color: var(--success); }
-        .delta-change { font-size: 12px; color: var(--text-tertiary); }
-        .status-pill { display: inline-flex; align-items: center; gap: 10px; padding: 14px 18px; background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.2); border-radius: 10px; }
-        .quick-stats { display: flex; gap: 16px; margin-bottom: 24px; }
-        .stat-pill { display: flex; flex-direction: column; padding: 16px 20px; background: var(--dark-800); border-radius: 12px; min-width: 120px; border: 1px solid rgba(255,255,255,0.05); }
-        .stat-label { font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; margin-bottom: 4px; }
-        .stat-value { font-family: var(--font-mono); font-size: 20px; font-weight: 600; }
-        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        @media (max-width: 1024px) { .two-column { grid-template-columns: 1fr; } }
-        .bet-row { display: flex; align-items: center; padding: 16px; background: rgba(255,255,255,0.03); border-radius: 10px; margin-bottom: 12px; border-left: 3px solid transparent; }
-        .bet-row.today { border-left-color: var(--success); background: linear-gradient(90deg, rgba(74,222,128,0.05) 0%, rgba(255,255,255,0.03) 100%); }
-        .bet-row.tomorrow { border-left-color: var(--amber-400); }
-        .bet-when { width: 90px; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--text-tertiary); }
-        .bet-row.today .bet-when { color: var(--success); }
-        .bet-row.tomorrow .bet-when { color: var(--amber-400); }
-        .bet-info { flex: 1; }
-        .bet-name { font-weight: 500; margin-bottom: 4px; }
-        .bet-details { font-size: 13px; color: var(--text-secondary); }
-        .dir-yes { color: var(--success); font-weight: 600; }
-        .dir-no { color: var(--danger); font-weight: 600; }
-        .bet-stake { font-family: var(--font-mono); font-size: 16px; font-weight: 600; }
-        .learning-item { padding: 16px; background: rgba(255,255,255,0.03); border-radius: 10px; margin-bottom: 12px; border-left: 3px solid var(--amber-500); }
-        .learning-meta { display: flex; gap: 12px; margin-bottom: 8px; font-size: 12px; }
-        .learning-confidence { color: var(--amber-400); font-weight: 600; text-transform: uppercase; }
-        .learning-time { color: var(--text-tertiary); }
+        /* Main Content */
+        .main { 
+            flex: 1; 
+            margin-left: 280px;
+            padding: var(--space-6);
+            min-height: 100vh;
+        }
         
-        /* Trading Tab Styles */
-        .position-card { background: rgba(255,255,255,0.03); border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 1px solid transparent; transition: all 0.2s; cursor: pointer; }
-        .position-card:hover { background: rgba(255,255,255,0.05); border-color: rgba(224,145,42,0.3); transform: translateY(-2px); }
-        .position-card.expanded { border-color: var(--amber-500); background: rgba(224,145,42,0.05); }
-        .position-details { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; margin-top: 0; }
-        .position-card.expanded .position-details { max-height: 300px; margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.1); }
-        .detail-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; }
-        .detail-label { color: var(--text-tertiary); }
-        .detail-value { color: var(--text-primary); font-family: var(--font-mono); }
-        .reasoning-box { background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px; margin-top: 12px; font-size: 13px; line-height: 1.6; }
-        .reasoning-label { font-size: 11px; text-transform: uppercase; color: var(--amber-400); margin-bottom: 4px; }
-        .position-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-        .position-icon { font-size: 20px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 8px; }
-        .position-icon.rain { background: rgba(96,165,250,0.15); }
-        .position-icon.temp { background: rgba(251,146,60,0.15); }
-        .position-icon.humidity { background: rgba(52,211,153,0.15); }
-        .position-market-name { flex: 1; font-weight: 500; }
-        .position-countdown { font-size: 12px; color: var(--text-tertiary); }
-        .position-card-body { display: flex; align-items: center; gap: 16px; }
-        .position-badge { padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; font-family: var(--font-mono); text-transform: uppercase; }
-        .position-badge.yes { background: rgba(74,222,128,0.15); color: var(--success); }
-        .position-badge.no { background: rgba(248,113,113,0.15); color: var(--danger); }
-        .confidence-ring { position: relative; width: 48px; height: 48px; }
-        .confidence-ring svg { transform: rotate(-90deg); }
-        .ring-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 11px; font-weight: 600; }
-        .position-amount { margin-left: auto; font-family: var(--font-mono); font-size: 16px; font-weight: 600; color: var(--amber-400); }
-        .risk-metric { display: flex; align-items: center; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .risk-metric:last-child { border-bottom: none; }
-        .r-label { width: 120px; font-size: 13px; color: var(--text-secondary); }
-        .r-value { flex: 1; font-family: var(--font-mono); font-size: 16px; font-weight: 600; }
-        .r-context { font-size: 12px; color: var(--text-tertiary); }
+        /* Tab System */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn var(--duration-slow) var(--ease-out-expo); }
         
-        /* Evolution Tab Styles */
-        .health-metrics { display: flex; gap: 32px; }
-        .health-metric { display: flex; flex-direction: column; gap: 4px; }
-        .metric-name { font-size: 11px; text-transform: uppercase; color: var(--text-tertiary); letter-spacing: 0.05em; }
-        .metric-score { font-family: var(--font-mono); font-size: 24px; font-weight: 600; }
-        .metric-score.good { color: var(--success); }
-        .metric-score.warning { color: var(--amber-400); }
-        .metric-trend { font-size: 12px; color: var(--text-secondary); }
-        .model-item { display: flex; align-items: center; gap: 16px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .model-item:last-child { border-bottom: none; }
-        .model-name { flex: 1; font-weight: 500; }
-        .model-score { font-family: var(--font-mono); font-size: 18px; font-weight: 600; width: 50px; text-align: right; }
-        .model-desc { flex: 2; font-size: 13px; color: var(--text-secondary); }
-        .calibration-chart { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 20px; }
-        .velocity-dial { position: relative; width: 140px; margin: 0 auto 20px; }
-        .dial-value { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); text-align: center; }
-        .dial-number { font-family: var(--font-mono); font-size: 28px; font-weight: 700; color: var(--amber-400); display: block; }
-        .dial-unit { font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; }
-        .autonomy-chart { display: flex; align-items: flex-end; gap: 8px; height: 80px; margin: 20px 0; }
-        .auto-bar { flex: 1; background: linear-gradient(to top, var(--amber-500), var(--amber-400)); border-radius: 4px 4px 0 0; position: relative; }
-        .auto-bar span { position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); font-size: 10px; color: var(--text-tertiary); }
-        .skill-network { height: 200px; background: rgba(255,255,255,0.02); border-radius: 10px; display: flex; align-items: center; justify-content: center; position: relative; }
-        .skill-node { cursor: pointer; transition: all 0.2s; }
-        .skill-node:hover { filter: drop-shadow(0 0 8px currentColor); }
-        .skill-node:hover circle { r: 24; }
-        .calibration-tooltip { position: absolute; background: var(--dark-800); border: 1px solid rgba(224,145,42,0.3); border-radius: 8px; padding: 12px; font-size: 12px; pointer-events: none; opacity: 0; transition: opacity 0.2s; z-index: 10; }
-        .calibration-tooltip.visible { opacity: 1; }
-        .breakdown-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-        .breakdown-label { width: 140px; font-size: 13px; }
-        .breakdown-track { flex: 1; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; }
-        .breakdown-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
-        .breakdown-value { width: 40px; font-family: var(--font-mono); font-size: 13px; text-align: right; }
+        /* Intervention Banner */
+        .intervention-banner {
+            background: oklch(60% 0.18 25 / 0.1);
+            border: 1px solid oklch(60% 0.18 25 / 0.3);
+            border-radius: var(--radius-lg);
+            padding: var(--space-5);
+            margin-bottom: var(--space-6);
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-4);
+        }
+        .intervention-banner.amber {
+            background: oklch(68% 0.18 75 / 0.1);
+            border-color: oklch(68% 0.18 75 / 0.3);
+        }
+        .intervention-icon {
+            width: 40px;
+            height: 40px;
+            background: oklch(60% 0.18 25 / 0.2);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-xl);
+            flex-shrink: 0;
+        }
+        .intervention-banner.amber .intervention-icon {
+            background: oklch(68% 0.18 75 / 0.2);
+        }
+        .intervention-content { flex: 1; }
+        .intervention-title {
+            font-weight: 600;
+            margin-bottom: var(--space-2);
+            color: var(--danger);
+        }
+        .intervention-banner.amber .intervention-title {
+            color: var(--amber-400);
+        }
+        .intervention-action {
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+        }
         
-        /* System Tab Styles */
-        .file-item { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .file-status { width: 8px; height: 8px; border-radius: 50%; margin-right: 12px; }
-        .file-status.active { background: var(--success); box-shadow: 0 0 8px var(--success); }
-        .file-name { flex: 1; font-family: var(--font-mono); font-size: 13px; }
-        .file-meta { font-size: 12px; color: var(--text-tertiary); }
-        .timeline-item { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
-        .timeline-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--text-tertiary); margin-top: 4px; }
-        .timeline-item.completed .timeline-dot { background: var(--success); }
-        .timeline-item.active .timeline-dot { background: var(--amber-400); box-shadow: 0 0 8px var(--amber-400); }
-        .grade-display { display: flex; align-items: center; gap: 16px; margin-top: 12px; }
-        .grade-letter { font-family: var(--font-mono); font-size: 36px; font-weight: 700; color: var(--amber-400); }
-        .grade-bar { flex: 1; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; }
-        .grade-fill { height: 100%; background: linear-gradient(90deg, var(--amber-400), var(--success)); border-radius: 4px; }
-        .gap-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .gap-number { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; background: var(--dark-800); border-radius: 50%; font-family: var(--font-mono); font-size: 12px; }
-        .gap-content { flex: 1; }
-        .gap-name { font-weight: 500; margin-bottom: 2px; }
-        .gap-status { font-size: 13px; color: var(--danger); }
+        /* State Hero */
+        .state-hero {
+            background: linear-gradient(135deg, oklch(68% 0.18 75 / 0.08) 0%, var(--bg-2) 50%);
+            border: 1px solid oklch(68% 0.18 75 / 0.15);
+            border-radius: var(--radius-xl);
+            padding: var(--space-8);
+            margin-bottom: var(--space-6);
+            position: relative;
+            overflow: hidden;
+        }
+        .state-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--amber-500), transparent);
+        }
+        .state-headline {
+            font-size: var(--text-2xl);
+            font-weight: 600;
+            margin-bottom: var(--space-4);
+        }
+        .state-meta {
+            font-size: var(--text-lg);
+            color: var(--text-secondary);
+        }
         
-        /* Edge Log Styles */
-        .edge-score-big { font-family: var(--font-mono); font-size: 64px; font-weight: 700; color: var(--success); text-align: center; margin: 20px 0; }
-        .edge-stats { display: flex; justify-content: center; gap: 40px; margin-bottom: 30px; }
-        .edge-stat { text-align: center; }
-        .edge-stat-value { font-size: 28px; font-weight: 600; }
-        .edge-stat-label { font-size: 12px; color: var(--text-tertiary); text-transform: uppercase; }
-        .prediction-item { padding: 16px; background: rgba(255,255,255,0.03); border-radius: 10px; margin-bottom: 12px; border-left: 3px solid var(--success); }
-        .prediction-item.failed { border-left-color: var(--danger); }
-        .prediction-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
-        .prediction-badge { font-size: 11px; padding: 2px 8px; border-radius: 10px; background: rgba(74,222,128,0.15); color: var(--success); }
-        .prediction-item.failed .prediction-badge { background: rgba(248,113,113,0.15); color: var(--danger); }
+        /* Vitals Grid */
+        .vitals-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+        .vital-card {
+            background: var(--bg-2);
+            border-radius: var(--radius-lg);
+            padding: var(--space-5);
+            border: 1px solid oklch(100% 0 0 / 0.05);
+        }
+        .vital-label {
+            font-size: var(--text-xs);
+            text-transform: uppercase;
+            color: var(--text-tertiary);
+            letter-spacing: 0.05em;
+            margin-bottom: var(--space-2);
+        }
+        .vital-value {
+            font-family: var(--font-mono);
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .vital-unit {
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+            margin-left: var(--space-2);
+        }
+        .vital-trend {
+            font-size: var(--text-sm);
+            margin-top: var(--space-2);
+        }
+        .vital-trend.up { color: var(--success); }
+        .vital-trend.down { color: var(--danger); }
+        .vital-trend.flat { color: var(--text-tertiary); }
         
-        /* Edge Log Filters */
-        .filter-bar { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
-        .filter-btn { padding: 8px 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; color: var(--text-secondary); cursor: pointer; transition: all 0.2s; font-size: 13px; }
-        .filter-btn:hover { background: rgba(255,255,255,0.1); }
-        .filter-btn.active { background: var(--amber-500); color: var(--dark-950); border-color: var(--amber-500); }
-        .search-box { flex: 1; min-width: 200px; padding: 8px 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: var(--text-primary); font-size: 14px; }
-        .search-box:focus { outline: none; border-color: var(--amber-500); }
-        .stats-summary { display: flex; gap: 24px; margin-bottom: 20px; padding: 16px; background: rgba(255,255,255,0.03); border-radius: 10px; }
-        .stats-item { text-align: center; }
-        .stats-number { font-family: var(--font-mono); font-size: 24px; font-weight: 600; }
-        .stats-label { font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; }
-        .load-more { width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: var(--text-secondary); cursor: pointer; transition: all 0.2s; margin-top: 16px; }
-        .load-more:hover { background: rgba(255,255,255,0.1); color: var(--text-primary); }
+        /* Thought Stream */
+        .thought-stream {
+            background: var(--bg-2);
+            border-radius: var(--radius-lg);
+            padding: var(--space-5);
+            border: 1px solid oklch(100% 0 0 / 0.05);
+        }
+        .thought-header {
+            font-size: var(--text-sm);
+            text-transform: uppercase;
+            color: var(--text-tertiary);
+            letter-spacing: 0.05em;
+            margin-bottom: var(--space-4);
+        }
+        .thought-item {
+            display: flex;
+            gap: var(--space-3);
+            margin-bottom: var(--space-3);
+            font-size: var(--text-sm);
+        }
+        .thought-label {
+            color: var(--text-tertiary);
+            width: 120px;
+            flex-shrink: 0;
+        }
+        .thought-value {
+            color: var(--text-primary);
+        }
         
-        /* Animations & Micro-interactions */
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
-        .pulse { animation: pulse 2s infinite; }
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-5);
+        }
+        .card-full { grid-column: 1 / -1; }
         
-        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .card { animation: slideIn 0.4s ease; }
-        .card:nth-child(1) { animation-delay: 0.05s; }
-        .card:nth-child(2) { animation-delay: 0.1s; }
-        .card:nth-child(3) { animation-delay: 0.15s; }
-        .card:nth-child(4) { animation-delay: 0.2s; }
+        /* Section Header */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-5);
+        }
+        .section-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+        }
         
-        /* Enhanced Hover States */
-        .nav-item { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
-        .card { transition: transform 0.2s, box-shadow 0.2s; }
-        .card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
-        .bet-row, .position-card, .learning-item, .model-item, .file-item, .gap-item, .prediction-item { transition: all 0.2s; }
-        .bet-row:hover, .position-card:hover, .learning-item:hover { background: rgba(255,255,255,0.05); transform: translateX(4px); }
+        /* Skill Network */
+        .skill-node {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3);
+            background: var(--bg-1);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-2);
+        }
+        .skill-name { flex: 1; font-weight: 500; }
+        .skill-usage {
+            font-family: var(--font-mono);
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+        }
+        .skill-status {
+            font-size: var(--text-xs);
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-full);
+            text-transform: uppercase;
+        }
+        .skill-status.active {
+            background: oklch(65% 0.15 145 / 0.15);
+            color: var(--success);
+        }
+        .skill-status.underused {
+            background: oklch(68% 0.18 75 / 0.15);
+            color: var(--amber-400);
+        }
+        .skill-status.neglected {
+            background: oklch(100% 0 0 / 0.1);
+            color: var(--text-tertiary);
+        }
         
-        /* Focus States for Accessibility */
-        .nav-item:focus-visible, .card:focus-visible { outline: 2px solid var(--amber-500); outline-offset: 2px; }
+        /* Model Routing */
+        .routing-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            padding: var(--space-3);
+            background: var(--bg-1);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-2);
+            font-size: var(--text-sm);
+        }
+        .routing-task { flex: 1; }
+        .routing-model {
+            font-family: var(--font-mono);
+            color: var(--amber-400);
+        }
+        .routing-cost {
+            color: var(--text-secondary);
+        }
+        .routing-outcome {
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-full);
+            font-size: var(--text-xs);
+            text-transform: uppercase;
+        }
+        .routing-outcome.excellent {
+            background: oklch(65% 0.15 145 / 0.15);
+            color: var(--success);
+        }
+        .routing-outcome.good {
+            background: oklch(68% 0.18 75 / 0.15);
+            color: var(--amber-400);
+        }
         
-        /* Loading States */
-        .skeleton { background: linear-gradient(90deg, var(--dark-800) 25%, var(--dark-700) 50%, var(--dark-800) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
-        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        /* Blocker Card */
+        .blocker-card {
+            background: oklch(60% 0.18 25 / 0.08);
+            border: 1px solid oklch(60% 0.18 25 / 0.2);
+            border-radius: var(--radius-lg);
+            padding: var(--space-5);
+            margin-bottom: var(--space-4);
+        }
+        .blocker-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+        }
+        .blocker-title {
+            color: var(--danger);
+            font-weight: 600;
+        }
+        .blocker-owner {
+            font-size: var(--text-xs);
+            padding: var(--space-1) var(--space-2);
+            background: oklch(100% 0 0 / 0.1);
+            border-radius: var(--radius-full);
+        }
+        .blocker-desc {
+            color: var(--text-secondary);
+            font-size: var(--text-sm);
+            margin-bottom: var(--space-3);
+        }
         
-        /* Responsive Improvements */
+        /* Milestone */
+        .milestone-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            margin-bottom: var(--space-4);
+        }
+        .milestone-name { flex: 1; font-weight: 500; }
+        .milestone-track {
+            width: 200px;
+            height: 8px;
+            background: var(--bg-1);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+        }
+        .milestone-fill {
+            height: 100%;
+            background: var(--amber-500);
+            border-radius: var(--radius-full);
+            transition: width var(--duration-slow) var(--ease-out-expo);
+        }
+        .milestone-percent {
+            font-family: var(--font-mono);
+            font-size: var(--text-sm);
+            width: 50px;
+            text-align: right;
+        }
+        
+        /* File Status */
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3);
+            background: var(--bg-1);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-2);
+        }
+        .file-status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        .file-status-dot.active { background: var(--success); }
+        .file-status-dot.stale { background: var(--amber-400); }
+        .file-name { flex: 1; font-weight: 500; }
+        .file-health {
+            font-family: var(--font-mono);
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+        }
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .vitals-grid { grid-template-columns: repeat(2, 1fr); }
+            .cards-grid { grid-template-columns: 1fr; }
+        }
         @media (max-width: 768px) {
-            .sidebar { width: 100%; position: fixed; bottom: 0; top: auto; height: 60px; flex-direction: row; border-right: none; border-top: 1px solid rgba(255,255,255,0.05); z-index: 100; }
-            .logo { display: none; }
-            .nav-item { flex: 1; justify-content: center; padding: 8px; border-left: none; border-top: 3px solid transparent; }
-            .nav-item.active { border-left-color: transparent; border-top-color: var(--amber-500); }
-            .main { padding: 16px; padding-bottom: 80px; }
-            .two-column { grid-template-columns: 1fr; }
-            .delta-strip { flex-wrap: wrap; gap: 16px; }
-            .health-metrics { flex-wrap: wrap; }
+            .sidebar { transform: translateX(-100%); }
+            .main { margin-left: 0; }
+            .vitals-grid { grid-template-columns: 1fr; }
         }
         
-        /* Scrollbar Styling */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: var(--dark-900); }
-        ::-webkit-scrollbar-thumb { background: var(--dark-700); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--amber-500); }
+        /* Animations */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
     <div class="app">
+        <!-- Sidebar -->
         <aside class="sidebar">
-            <div class="logo">Claw</div>
-            <nav>
-                <div class="nav-item active" onclick="showTab('overview')">Overview</div>
-                <div class="nav-item" onclick="showTab('trading')">Trading</div>
-                <div class="nav-item" onclick="showTab('evolution')">Evolution</div>
-                <div class="nav-item" onclick="showTab('system')">System</div>
-                <div class="nav-item" onclick="showTab('edge')">Edge Log</div>
+            <div class="logo">
+                <div class="logo-pulse"></div>
+                Claw
+            </div>
+            <nav class="nav">
+                <div class="nav-item active" data-tab="now" onclick="switchTab('now')">
+                    <span>◈</span> NOW
+                </div>
+                <div class="nav-item" data-tab="mind" onclick="switchTab('mind')">
+                    <span>◈</span> MIND
+                </div>
+                <div class="nav-item" data-tab="memory" onclick="switchTab('memory')">
+                    <span>◈</span> MEMORY
+                </div>
+                <div class="nav-item" data-tab="training" onclick="switchTab('training')">
+                    <span>◈</span> TRAINING
+                    <span class="nav-badge">2</span>
+                </div>
+                <div class="nav-item" data-tab="system" onclick="switchTab('system')">
+                    <span>◈</span> SYSTEM
+                </div>
             </nav>
         </aside>
-        <main class="main">
-            <div id="overview" class="tab active">
-                <!-- Narrative Hero -->
-                <div class="narrative-hero">
-                    <div class="state-sentence">
-                        <span class="state-indicator"></span>
-                        Claw is <strong>improving</strong> — best win rate in 5 days
-                    </div>
-                    <div class="delta-strip">
-                        <div class="delta-item">
-                            <span class="delta-label">Win Rate</span>
-                            <span class="delta-value up">71%</span>
-                            <span class="delta-change">+5% this week</span>
-                        </div>
-                        <div class="delta-item">
-                            <span class="delta-label">Calibration</span>
-                            <span class="delta-value good">78%</span>
-                            <span class="delta-change">confidence matches outcomes</span>
-                        </div>
-                        <div class="delta-item">
-                            <span class="delta-label">Autonomy</span>
-                            <span class="delta-value up">45%</span>
-                            <span class="delta-change">+3% this week</span>
-                        </div>
-                    </div>
-                    <div class="status-pill">
-                        <span>✓</span>
-                        <span>Nothing needs you — running well</span>
-                    </div>
-                </div>
-                
-                <!-- Quick Stats -->
-                <div class="quick-stats">
-                    <div class="stat-pill">
-                        <div class="stat-label">Portfolio</div>
-                        <div class="stat-value">$9.10</div>
-                    </div>
-                    <div class="stat-pill">
-                        <div class="stat-label">Positions</div>
-                        <div class="stat-value">94</div>
-                    </div>
-                    <div class="stat-pill">
-                        <div class="stat-label">Today</div>
-                        <div class="stat-value" style="color: var(--success);">+3</div>
-                    </div>
-                </div>
-                
-                <!-- Two Column Layout -->
-                <div class="two-column">
-                    <!-- Active Bets -->
-                    <div class="card">
-                        <div class="card-header">
-                            <span class="card-title">Active Bets</span>
-                            <span class="card-badge">3 resolving</span>
-                        </div>
-                        <div class="bet-row today">
-                            <div class="bet-when">Today</div>
-                            <div class="bet-info">
-                                <div class="bet-name">NYC Rain March 20</div>
-                                <div class="bet-details"><span class="dir-yes">YES</span> at 82% confidence</div>
-                            </div>
-                            <div class="bet-stake">$0.50</div>
-                        </div>
-                        <div class="bet-row tomorrow">
-                            <div class="bet-when">Tomorrow</div>
-                            <div class="bet-info">
-                                <div class="bet-name">LA Temp March 21</div>
-                                <div class="bet-details"><span class="dir-no">NO</span> at 75% confidence</div>
-                            </div>
-                            <div class="bet-stake">$0.35</div>
-                        </div>
-                        <div class="bet-row" style="border-left-color: rgba(255,255,255,0.2);">
-                            <div class="bet-when">Friday</div>
-                            <div class="bet-info">
-                                <div class="bet-name">Miami Humidity March 22</div>
-                                <div class="bet-details"><span class="dir-yes">YES</span> at 68% confidence</div>
-                            </div>
-                            <div class="bet-stake">$0.42</div>
-                        </div>
-                    </div>
-                    
-                    <!-- Memory Timeline -->
-                    <div class="card">
-                        <div class="card-header">
-                            <span class="card-title">Activity Feed</span>
-                            <span class="card-badge">Live</span>
-                        </div>
-                        <div class="activity-feed">
-                            <!-- Populated by JavaScript -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="trading" class="tab">
-                <!-- Positions -->
-                <div class="card">
-                    <div class="card-header">
-                        <span class="card-title">Positions</span>
-                        <span class="card-badge">3 active</span>
-                    </div>
-                    <div class="position-card" onclick="togglePosition(this)" data-market="NYC Rain March 20">
-                        <div class="position-card-header">
-                            <div class="position-icon rain">🌧️</div>
-                            <div class="position-market-name">NYC Rain March 20</div>
-                            <div class="position-countdown">18h left</div>
-                        </div>
-                        <div class="position-card-body">
-                            <span class="position-badge yes">YES</span>
-                            <div class="confidence-ring">
-                                <svg viewBox="0 0 48 48" width="48" height="48">
-                                    <circle cx="24" cy="24" r="20" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="4"/>
-                                    <circle cx="24" cy="24" r="20" fill="none" stroke="var(--amber-500)" stroke-width="4" stroke-dasharray="103 126" stroke-linecap="round"/>
-                                </svg>
-                                <div class="ring-text">82%</div>
-                            </div>
-                            <div class="position-amount">$0.50</div>
-                        </div>
-                        <div class="position-details">
-                            <div class="detail-row"><span class="detail-label">Predicted</span><span class="detail-value">72%</span></div>
-                            <div class="detail-row"><span class="detail-label">Market</span><span class="detail-value">70%</span></div>
-                            <div class="detail-row"><span class="detail-label">Edge</span><span class="detail-value" style="color: var(--success);">+2%</span></div>
-                            <div class="reasoning-box">
-                                <div class="reasoning-label">Reasoning</div>
-                                Satellite imagery showed clear cloud formation patterns consistent with historical rain events. Pressure drop of 8mb in 6 hours.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="position-card" onclick="togglePosition(this)" data-market="LA Temp March 21">
-                        <div class="position-card-header">
-                            <div class="position-icon temp">🌡️</div>
-                            <div class="position-market-name">LA Temp March 21</div>
-                            <div class="position-countdown">42h left</div>
-                        </div>
-                        <div class="position-card-body">
-                            <span class="position-badge no">NO</span>
-                            <div class="confidence-ring">
-                                <svg viewBox="0 0 48 48" width="48" height="48">
-                                    <circle cx="24" cy="24" r="20" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="4"/>
-                                    <circle cx="24" cy="24" r="20" fill="none" stroke="var(--amber-500)" stroke-width="4" stroke-dasharray="94 126" stroke-linecap="round"/>
-                                </svg>
-                                <div class="ring-text">75%</div>
-                            </div>
-                            <div class="position-amount">$0.35</div>
-                        </div>
-                        <div class="position-details">
-                            <div class="detail-row"><span class="detail-label">Predicted</span><span class="detail-value">45%</span></div>
-                            <div class="detail-row"><span class="detail-label">Market</span><span class="detail-value">52%</span></div>
-                            <div class="detail-row"><span class="detail-label">Edge</span><span class="detail-value" style="color: var(--danger);">-7%</span></div>
-                            <div class="reasoning-box">
-                                <div class="reasoning-label">Lesson Learned</div>
-                                Santa Ana winds arrived 6 hours early. Weight real-time wind data higher than historical patterns. 6-hour timing errors are decisive.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="position-card" onclick="togglePosition(this)" data-market="Miami Humidity March 22">
-                        <div class="position-card-header">
-                            <div class="position-icon humidity">💧</div>
-                            <div class="position-market-name">Miami Humidity March 22</div>
-                            <div class="position-countdown">Resolves tomorrow</div>
-                        </div>
-                        <div class="position-card-body">
-                            <span class="position-badge yes">YES</span>
-                            <div class="confidence-ring">
-                                <svg viewBox="0 0 48 48" width="48" height="48">
-                                    <circle cx="24" cy="24" r="20" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="4"/>
-                                    <circle cx="24" cy="24" r="20" fill="none" stroke="var(--amber-500)" stroke-width="4" stroke-dasharray="85 126" stroke-linecap="round"/>
-                                </svg>
-                                <div class="ring-text">68%</div>
-                            </div>
-                            <div class="position-amount">$0.42</div>
-                        </div>
-                        <div class="position-details">
-                            <div class="detail-row"><span class="detail-label">Predicted</span><span class="detail-value">72%</span></div>
-                            <div class="detail-row"><span class="detail-label">Market</span><span class="detail-value">65%</span></div>
-                            <div class="detail-row"><span class="detail-label">Edge</span><span class="detail-value" style="color: var(--success);">+7%</span></div>
-                            <div class="reasoning-box">
-                                <div class="reasoning-label">Reasoning</div>
-                                Gulf stream warming pushes humidity to 78-82% range. March avg is 72%. Coastal sensor reliability adds uncertainty.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Risk Snapshot -->
-                <div class="card">
-                    <div class="card-header">
-                        <span class="card-title">Risk Snapshot</span>
-                        <span class="card-badge">Moderate</span>
-                    </div>
-                    <div class="risk-metric">
-                        <span class="r-label">Concentration</span>
-                        <span class="r-value">Weather: 94%</span>
-                        <span class="r-context">Need diversification</span>
-                    </div>
-                    <div class="risk-metric">
-                        <span class="r-label">Exposure</span>
-                        <span class="r-value">$9.10</span>
-                        <span class="r-context">All deployed</span>
-                    </div>
-                    <div class="risk-metric">
-                        <span class="r-label">Max Loss</span>
-                        <span class="r-value">$2.60</span>
-                        <span class="r-context">If all resolve wrong</span>
-                    </div>
-                </div>
-            </div>
-            <div id="evolution" class="tab">
-                <div class="card">
-                    <div class="card-header"><span class="card-title">Intelligence Health</span></div>
-                    <div class="health-metrics">
-                        <div class="health-metric"><div class="metric-name">Calibration</div><div class="metric-score good">78%</div><div class="metric-trend">↑ +5%</div></div>
-                        <div class="health-metric"><div class="metric-name">Learning</div><div class="metric-score good">High</div><div class="metric-trend">3 insights/week</div></div>
-                        <div class="health-metric"><div class="metric-name">Autonomy</div><div class="metric-score warning">45%</div><div class="metric-trend">↑ +3%</div></div>
-                    </div>
-                </div>
-                <div class="two-column">
-                    <div class="card">
-                        <div class="card-header"><span class="card-title">Model Mastery</span></div>
-                        <div class="model-item"><span class="model-name">Kimi (Moonshot)</span><span class="model-score" style="color: var(--success);">92%</span><span class="model-desc">Fast implementation, reliable</span></div>
-                        <div class="model-item"><span class="model-name">DeepSeek R1</span><span class="model-score" style="color: var(--amber-400);">78%</span><span class="model-desc">Good reasoning, sometimes slow</span></div>
-                        <div class="model-item"><span class="model-name">Sonnet 4.6</span><span class="model-score" style="color: var(--text-secondary);">65%</span><span class="model-desc">Excellent for design, use more</span></div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header"><span class="card-title">Calibration</span><span class="card-badge">78% aligned</span></div>
-                        <div class="calibration-chart" style="position: relative;">
-                            <svg viewBox="0 0 300 200" width="100%" height="200" style="cursor: crosshair;">
-                                <line x1="30" y1="170" x2="270" y2="170" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
-                                <line x1="30" y1="170" x2="30" y2="30" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
-                                <line x1="30" y1="170" x2="270" y2="30" stroke="rgba(224,145,42,0.5)" stroke-width="2" stroke-dasharray="5,5"/>
-                                <circle cx="70" cy="145" r="6" fill="#4ADE80" opacity="0.8" class="cal-dot" data-predicted="55" data-actual="52" data-market="NYC Rain"/>
-                                <circle cx="90" cy="128" r="8" fill="#4ADE80" opacity="0.8" class="cal-dot" data-predicted="60" data-actual="58" data-market="Austin Heat"/>
-                                <circle cx="110" cy="105" r="10" fill="#F87171" opacity="0.8" class="cal-dot" data-predicted="70" data-actual="55" data-market="LA Temp"/>
-                                <circle cx="130" cy="88" r="10" fill="#F87171" opacity="0.8" class="cal-dot" data-predicted="75" data-actual="62" data-market="Seattle Rain"/>
-                                <circle cx="170" cy="65" r="8" fill="#4ADE80" opacity="0.8" class="cal-dot" data-predicted="85" data-actual="82" data-market="Chicago Snow"/>
-                                <circle cx="210" cy="42" r="6" fill="#4ADE80" opacity="0.8" class="cal-dot" data-predicted="92" data-actual="90" data-market="Denver Snow"/>
-                            </svg>
-                            <div id="calTooltip" class="calibration-tooltip"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="two-column">
-                    <div class="card">
-                        <div class="card-header"><span class="card-title">Learning Velocity</span><span class="card-badge">Accelerating</span></div>
-                        <div class="velocity-dial">
-                            <svg viewBox="0 0 120 70" width="140">
-                                <path d="M10,60 A50,50 0 0,1 110,60" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="8" stroke-linecap="round"/>
-                                <path d="M10,60 A50,50 0 0,1 85,25" fill="none" stroke="var(--amber-400)" stroke-width="8" stroke-linecap="round"/>
-                            </svg>
-                            <div class="dial-value"><span class="dial-number">3.2</span><span class="dial-unit">insights/wk</span></div>
-                        </div>
-                        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
-                            <div class="breakdown-bar">
-                                <span class="breakdown-label">Skill Acquisition</span>
-                                <div class="breakdown-track"><div class="breakdown-fill" style="width: 85%; background: var(--success);"></div></div>
-                                <span class="breakdown-value">85%</span>
-                            </div>
-                            <div class="breakdown-bar">
-                                <span class="breakdown-label">Error Correction</span>
-                                <div class="breakdown-track"><div class="breakdown-fill" style="width: 72%; background: var(--amber-400);"></div></div>
-                                <span class="breakdown-value">72%</span>
-                            </div>
-                            <div class="breakdown-bar">
-                                <span class="breakdown-label">Pattern Recognition</span>
-                                <div class="breakdown-track"><div class="breakdown-fill" style="width: 68%; background: var(--amber-500);"></div></div>
-                                <span class="breakdown-value">68%</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header"><span class="card-title">Autonomy</span><span class="card-badge">45% → 80%</span></div>
-                        <div class="autonomy-chart">
-                            <div class="auto-bar" style="height: 35%"><span>W1</span></div>
-                            <div class="auto-bar" style="height: 38%"><span>W2</span></div>
-                            <div class="auto-bar" style="height: 40%"><span>W3</span></div>
-                            <div class="auto-bar" style="height: 42%"><span>W4</span></div>
-                            <div class="auto-bar" style="height: 45%; box-shadow: 0 0 12px var(--amber-400);"><span>Now</span></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header"><span class="card-title">Skill Synergy</span><span class="card-badge">Cross-system</span></div>
-                    <div class="skill-network">
-                        <svg viewBox="0 0 400 200" width="100%" height="200">
-                            <line x1="80" y1="60" x2="200" y2="50" stroke="rgba(74,222,128,0.4)" stroke-width="3"/>
-                            <line x1="200" y1="50" x2="320" y2="80" stroke="rgba(74,222,128,0.3)" stroke-width="2"/>
-                            <line x1="80" y1="60" x2="140" y2="130" stroke="rgba(224,145,42,0.4)" stroke-width="2"/>
-                            <line x1="140" y1="130" x2="280" y2="140" stroke="rgba(224,145,42,0.3)" stroke-width="2"/>
-                            <circle cx="80" cy="60" r="20" fill="rgba(74,222,128,0.2)" stroke="#4ADE80" stroke-width="2"/>
-                            <text x="80" y="65" text-anchor="middle" fill="#4ADE80" font-size="10">impeccable</text>
-                            <circle cx="200" cy="50" r="18" fill="rgba(74,222,128,0.2)" stroke="#4ADE80" stroke-width="2"/>
-                            <text x="200" y="55" text-anchor="middle" fill="#4ADE80" font-size="9">structured</text>
-                            <circle cx="140" cy="130" r="16" fill="rgba(224,145,42,0.2)" stroke="#E0912A" stroke-width="2"/>
-                            <text x="140" y="135" text-anchor="middle" fill="#E0912A" font-size="9">qmd-search</text>
-                            <circle cx="280" cy="140" r="16" fill="rgba(224,145,42,0.2)" stroke="#E0912A" stroke-width="2"/>
-                            <text x="280" y="145" text-anchor="middle" fill="#E0912A" font-size="9">proactive</text>
-                            <circle cx="320" cy="80" r="14" fill="rgba(100,100,100,0.2)" stroke="#6B6B6B" stroke-width="1"/>
-                            <text x="320" y="85" text-anchor="middle" fill="#6B6B6B" font-size="8">agency</text>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-            <div id="system" class="tab">
-                <!-- Core Files -->
-                <div class="card">
-                    <div class="card-header"><span class="card-title">Core Files</span><span class="card-badge" id="fileCount">4 files</span></div>
-                    <div id="filesContainer">
-                        <!-- Populated by JavaScript -->
-                    </div>
-                    <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 12px; color: var(--text-tertiary);">
-                        Last scan: <span id="lastScan">--</span>
-                    </div>
-                </div>
-                
-                <!-- Projects with Blockers -->
-                <div class="card">
-                    <div class="card-header"><span class="card-title">Projects</span><span class="card-badge">Active</span></div>
-                    <div style="margin-bottom: 16px;">
-                        <strong>Polymarket Trading</strong> — In Progress
-                        <div style="font-size: 12px; color: var(--text-tertiary); margin-top: 4px;">Dashboard v3.0 deployed, testing interactivity</div>
-                    </div>
-                    
-                    <!-- Blockers -->
-                    <div id="blockersContainer" style="margin-bottom: 20px;">
-                        <div style="font-weight: 600; margin-bottom: 12px; color: var(--danger);">Active Blockers:</div>
-                        <div class="blocker-item">
-                            <div class="blocker-title">Edge discovery rate too low</div>
-                            <div class="blocker-desc">0 genuine edges found vs 12 from Marco. Need to develop independent analysis patterns.</div>
-                        </div>
-                    </div>
-                    
-                    <!-- Milestones -->
-                    <div style="font-weight: 600; margin-bottom: 12px;">Milestones:</div>
-                    <div class="milestone-bar">
-                        <span class="milestone-name">Foundation</span>
-                        <div class="milestone-progress"><div class="milestone-fill" style="width: 100%;"></div></div>
-                        <span class="milestone-percent">100%</span>
-                    </div>
-                    <div class="milestone-bar">
-                        <span class="milestone-name">Weather Pipeline</span>
-                        <div class="milestone-progress"><div class="milestone-fill" style="width: 100%;"></div></div>
-                        <span class="milestone-percent">100%</span>
-                    </div>
-                    <div class="milestone-bar">
-                        <span class="milestone-name">Edge Validation</span>
-                        <div class="milestone-progress"><div class="milestone-fill" style="width: 85%;"></div></div>
-                        <span class="milestone-percent">85%</span>
-                    </div>
-                    <div class="milestone-bar">
-                        <span class="milestone-name">Live Trading</span>
-                        <div class="milestone-progress"><div class="milestone-fill" style="width: 20%;"></div></div>
-                        <span class="milestone-percent">20%</span>
-                    </div>
-                </div>
-                
-                <!-- Meta-Training -->
-                <div class="card">
-                    <div class="card-header"><span class="card-title">Meta-Training</span><span class="card-badge">Week 11</span></div>
-                    <div class="milestone-bar" style="margin-bottom: 16px;">
-                        <span class="milestone-name">Overall Progress</span>
-                        <div class="milestone-progress"><div class="milestone-fill" style="width: 65%;"></div></div>
-                        <span class="milestone-percent">65%</span>
-                    </div>
-                    <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">
-                        <strong>Current Focus:</strong> Autonomous decision making, design quality, proactive skill usage
-                    </div>
-                    <div style="font-size: 13px; color: var(--text-secondary);">
-                        <strong>Next Milestone:</strong> Complete dashboard with full interactivity (Phase 6)
-                    </div>
-                </div>
-                
-                <!-- Honest Assessment -->
-                <div class="card">
-                    <div class="card-header"><span class="card-title">Honest Assessment</span><span class="card-badge">C+ → B-</span></div>
-                    <div class="grade-display">
-                        <div class="grade-letter">C+</div>
-                        <div class="grade-bar"><div class="grade-fill" style="width: 65%;"></div></div>
-                    </div>
-                    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
-                        <div style="font-weight: 600; margin-bottom: 12px;">Gaps to Close:</div>
-                        <div class="gap-item">
-                            <div class="gap-number">1</div>
-                            <div class="gap-content">
-                                <div class="gap-name">Autonomous Decisions</div>
-                                <div class="gap-status">45% — still escalate too much</div>
-                            </div>
-                        </div>
-                        <div class="gap-item">
-                            <div class="gap-number">2</div>
-                            <div class="gap-content">
-                                <div class="gap-name">Edge Discovery</div>
-                                <div class="gap-status">0 found — all edges were Marco's</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div style="margin-top: 16px; padding: 12px; background: rgba(74,222,128,0.1); border-radius: 8px;">
-                        <strong style="color: var(--success);">What's Working:</strong> Proactive skill usage, faster execution, better design quality
-                    </div>
-                </div>
-            </div>
-            <div id="edge" class="tab">
-                <!-- Edge Score -->
-                <div class="card">
-                    <div class="card-header"><span class="card-title">Edge Score</span><span class="card-badge">+12%</span></div>
-                    <div class="edge-score-big">+12%</div>
-                    <p style="text-align: center; color: var(--text-secondary); margin-bottom: 20px;">Markets undervalue weather volatility</p>
-                    <div class="stats-summary">
-                        <div class="stats-item">
-                            <div class="stats-number" id="totalPredictions">20</div>
-                            <div class="stats-label">Total</div>
-                        </div>
-                        <div class="stats-item">
-                            <div class="stats-number" style="color: var(--success);" id="validatedCount">12</div>
-                            <div class="stats-label">Validated</div>
-                        </div>
-                        <div class="stats-item">
-                            <div class="stats-number" style="color: var(--danger);" id="failedCount">5</div>
-                            <div class="stats-label">Failed</div>
-                        </div>
-                        <div class="stats-item">
-                            <div class="stats-number" style="color: var(--amber-400);" id="pendingCount">3</div>
-                            <div class="stats-label">Pending</div>
-                        </div>
-                        <div class="stats-item">
-                            <div class="stats-number" id="avgEdge">+6.2%</div>
-                            <div class="stats-label">Avg Edge</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Prediction History with Filters -->
-                <div class="card">
-                    <div class="card-header">
-                        <span class="card-title">Prediction History</span>
-                        <span class="card-badge" id="showingCount">Showing 20</span>
-                    </div>
-                    
-                    <!-- Filters -->
-                    <div class="filter-bar">
-                        <button class="filter-btn active" onclick="filterPredictions('all')">All</button>
-                        <button class="filter-btn" onclick="filterPredictions('validated')">Validated</button>
-                        <button class="filter-btn" onclick="filterPredictions('failed')">Failed</button>
-                        <button class="filter-btn" onclick="filterPredictions('pending')">Pending</button>
-                        <input type="text" class="search-box" placeholder="Search markets..." oninput="searchPredictions(this.value)">
-                    </div>
-                    
-                    <!-- Predictions Container -->
-                    <div id="predictionsContainer">
-                        <!-- Populated by JavaScript -->
-                    </div>
-                    
-                    <button class="load-more" onclick="loadMorePredictions()">Load More</button>
-                </div>
-            </div>
+        
+        <!-- Main Content -->
+        <main class="main" id="mainContent">
+            <!-- Content injected by JavaScript -->
         </main>
     </div>
-    <script src="data/data.js"></script>
-    <script src="content-intelligence.js"></script>
-    <script src="motion-system.js"></script>
+    
+    <script src="cognition-intelligence.js"></script>
     <script>
-        // Initialize data-driven components
-        async function initDashboard() {
-            await loadActivityFeed();
-            await loadFileStatus();
+        let cognitionData = null;
+        let currentTab = 'now';
+        
+        async function init() {
+            cognitionData = await CognitionIntelligence.loadData();
+            renderTab(currentTab);
         }
         
-        async function loadActivityFeed() {
-            const activities = await DataLayer.getActivity(5);
-            const container = document.querySelector('.activity-feed');
-            if (!container || activities.length === 0) return;
-            
-            container.innerHTML = activities.map(a => `
-                <div class="activity-item" data-type="${a.type}">
-                    <div class="activity-time">${formatTime(a.timestamp)}</div>
-                    <div class="activity-title">${a.title}</div>
-                    <div class="activity-desc">${a.description}</div>
-                </div>
-            `).join('');
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+            renderTab(tab);
         }
         
-        async function loadFileStatus() {
-            const { files } = await DataLayer.getFiles();
-            files.forEach(file => {
-                const el = document.querySelector(`[data-file="${file.name}"]`);
-                if (el) {
-                    el.classList.add(file.status);
-                    el.querySelector('.file-time').textContent = formatTime(file.lastModified);
-                }
-            });
-        }
-        
-        function formatTime(isoString) {
-            const date = new Date(isoString);
-            const now = new Date();
-            const diff = (now - date) / 1000 / 60; // minutes
+        function renderTab(tab) {
+            const container = document.getElementById('mainContent');
+            const insights = CognitionIntelligence[`generate${tab.charAt(0).toUpperCase() + tab.slice(1)}Insights`](cognitionData);
             
-            if (diff < 60) return `${Math.floor(diff)}m ago`;
-            if (diff < 1440) return `${Math.floor(diff / 60)}h ago`;
-            return `${Math.floor(diff / 1440)}d ago`;
-        }
-        
-        // Edge Log functionality
-        let allPredictions = [];
-        let currentFilter = 'all';
-        let displayedCount = 0;
-        const BATCH_SIZE = 5;
-        
-        async function initEdgeLog() {
-            allPredictions = await DataLayer.getPredictions();
-            updateStats();
-            renderPredictions();
-        }
-        
-        function updateStats() {
-            const stats = DataLayer.getStats(allPredictions);
-            document.getElementById('totalPredictions').textContent = stats.total;
-            document.getElementById('validatedCount').textContent = stats.validated;
-            document.getElementById('failedCount').textContent = stats.failed;
-            document.getElementById('pendingCount').textContent = stats.pending;
-            document.getElementById('avgEdge').textContent = (stats.avgEdge > 0 ? '+' : '') + stats.avgEdge + '%';
-        }
-        
-        function filterPredictions(filter) {
-            currentFilter = filter;
-            displayedCount = 0;
-            
-            // Update button states
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            renderPredictions();
-        }
-        
-        function searchPredictions(query) {
-            displayedCount = 0;
-            renderPredictions(query);
-        }
-        
-        function renderPredictions(searchQuery = '') {
-            let filtered = allPredictions;
-            
-            // Apply outcome filter
-            if (currentFilter !== 'all') {
-                filtered = filtered.filter(p => p.outcome === currentFilter);
-            }
-            
-            // Apply search
-            if (searchQuery) {
-                const q = searchQuery.toLowerCase();
-                filtered = filtered.filter(p => 
-                    p.market.toLowerCase().includes(q) ||
-                    p.reasoning.toLowerCase().includes(q)
-                );
-            }
-            
-            // Show batch
-            const toShow = filtered.slice(0, displayedCount + BATCH_SIZE);
-            displayedCount = toShow.length;
-            
-            // Update showing count
-            document.getElementById('showingCount').textContent = `Showing ${toShow.length} of ${filtered.length}`;
-            
-            // Render
-            const container = document.getElementById('predictionsContainer');
-            container.innerHTML = toShow.map(p => `
-                <div class="prediction-item ${p.outcome}">
-                    <div class="prediction-header">
-                        <span><strong>${p.market}</strong></span>
-                        <span class="prediction-badge">${p.outcome}</span>
-                    </div>
-                    <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 8px;">
-                        Claw: ${p.predicted}% → Market: ${p.market_odds}% → Actual: ${p.actual || 'Pending'}
-                        ${p.edge ? `<span style="color: ${p.edge > 0 ? 'var(--success)' : 'var(--danger)'}; margin-left: 8px;">${p.edge > 0 ? '+' : ''}${p.edge}%</span>` : ''}
-                    </div>
-                    <div style="font-size: 12px; color: var(--text-tertiary);">
-                        <strong>${p.outcome === 'failed' ? 'Lesson' : 'Edge'}:</strong> ${p.lesson || p.reasoning}
-                    </div>
-                </div>
-            `).join('');
-            
-            // Show/hide load more button
-            const loadMoreBtn = document.querySelector('.load-more');
-            loadMoreBtn.style.display = displayedCount >= filtered.length ? 'none' : 'block';
-        }
-        
-        function loadMorePredictions() {
-            const searchQuery = document.querySelector('.search-box').value;
-            renderPredictions(searchQuery);
-        }
-        
-        // System tab functionality
-        async function initSystemTab() {
-            const { files, lastScan } = await DataLayer.getFiles();
-            
-            // Render files
-            const container = document.getElementById('filesContainer');
-            if (container) {
-                container.innerHTML = files.map(f => `
-                    <div class="file-item ${f.status}">
-                        <div class="file-status ${f.status}"></div>
-                        <div class="file-name">${f.name}</div>
-                        <div class="file-meta">${f.description}</div>
-                        <div class="file-time">${formatTime(f.lastModified)}</div>
-                    </div>
-                `).join('');
-            }
-            
-            // Update last scan
-            const scanEl = document.getElementById('lastScan');
-            if (scanEl) {
-                scanEl.textContent = formatTime(lastScan);
-            }
-            
-            // Update file count
-            const countEl = document.getElementById('fileCount');
-            if (countEl) {
-                countEl.textContent = `${files.length} files`;
-            }
-        }
-        
-        // Real-time activity feed with polling
-        let activityInterval;
-        
-        async function loadActivityFeed() {
-            const activities = await DataLayer.getActivity(5);
-            const container = document.querySelector('#overview .activity-feed');
-            if (!container) return;
-            
-            container.innerHTML = activities.map(a => `
-                <div class="learning-item activity-item" data-id="${a.id}">
-                    <div class="learning-meta">
-                        <span class="learning-confidence">${a.type}</span>
-                        <span class="learning-time">${formatTime(a.timestamp)}</span>
-                    </div>
-                    <div><strong>${a.title}</strong></div>
-                    <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">${a.description}</div>
-                </div>
-            `).join('');
-        }
-        
-        async function refreshActivityFeed() {
-            const activities = await DataLayer.getActivity(5);
-            const container = document.querySelector('#overview .activity-feed');
-            if (!container || activities.length === 0) return;
-            
-            // Check if new activities
-            const currentIds = Array.from(container.querySelectorAll('.activity-item')).map(el => el.dataset.id);
-            const newActivities = activities.filter(a => !currentIds.includes(String(a.id)));
-            
-            if (newActivities.length > 0) {
-                // Add new items with animation
-                newActivities.forEach(a => {
-                    const item = document.createElement('div');
-                    item.className = 'learning-item activity-item';
-                    item.dataset.id = a.id;
-                    item.style.animation = 'slideIn 0.4s ease';
-                    item.innerHTML = `
-                        <div class="learning-meta">
-                            <span class="learning-confidence">${a.type}</span>
-                            <span class="learning-time">${formatTime(a.timestamp)}</span>
+            // Render based on tab
+            if (tab === 'now') {
+                const intervention = CognitionIntelligence.generateIntervention(cognitionData);
+                container.innerHTML = `
+                    ${intervention.show ? `
+                        <div class="intervention-banner ${intervention.level}">
+                            <div class="intervention-icon">${intervention.level === 'red' ? '⚠' : '◈'}</div>
+                            <div class="intervention-content">
+                                <div class="intervention-title">${intervention.message}</div>
+                                <div class="intervention-action">${intervention.action}</div>
+                            </div>
                         </div>
-                        <div><strong>${a.title}</strong></div>
-                        <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">${a.description}</div>
-                    `;
-                    container.insertBefore(item, container.firstChild);
-                });
-                
-                // Keep only 5 items
-                while (container.children.length > 5) {
-                    container.removeChild(container.lastChild);
-                }
-            }
-        }
-        
-        function startActivityPolling() {
-            loadActivityFeed(); // Initial load
-            activityInterval = setInterval(refreshActivityFeed, 30000); // Poll every 30 seconds
-        }
-        
-        function stopActivityPolling() {
-            if (activityInterval) clearInterval(activityInterval);
-        }
-        
-        // Pause polling when tab not visible
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                stopActivityPolling();
-            } else {
-                startActivityPolling();
-            }
-        });
-        
-        // Performance: Preload critical data
-        window.addEventListener('load', () => {
-            // Preload data for faster tab switching
-            DataLayer.getPredictions();
-            DataLayer.getFiles();
-        });
-        
-        // Content Intelligence Integration
-        let intelligence = null;
-        
-        async function initContentIntelligence() {
-            const predictions = await DataLayer.getPredictions();
-            intelligence = ContentIntelligence.analyzePredictions(predictions);
-            
-            // Update hero with intelligence
-            const hero = ContentIntelligence.generateHeroState(intelligence);
-            const heroState = document.querySelector('.narrative-hero .state-sentence');
-            const heroDelta = document.querySelector('.narrative-hero .delta-strip');
-            
-            if (heroState) {
-                heroState.innerHTML = `<span class="state-indicator" style="background: ${hero.sentiment === 'warning' ? 'var(--danger)' : 'var(--success)'}"></span>${hero.state}`;
-            }
-            
-            // Update stats with count-up animation
-            const statValues = document.querySelectorAll('.stat-value');
-            statValues.forEach(el => {
-                const target = parseInt(el.textContent) || 0;
-                if (target > 0 && typeof MotionSystem !== 'undefined') {
-                    MotionSystem.countUp(el, target, 1000);
-                }
-            });
-            
-            // Render interventions if high priority
-            const interventions = intelligence.interventions.filter(i => i.priority === 'high');
-            if (interventions.length > 0 && heroDelta) {
-                const interventionHtml = interventions.map(i => `
-                    <div class="delta-item" style="background: rgba(248,113,113,0.1); padding: 12px; border-radius: 8px; border-left: 3px solid var(--danger);">
-                        <div class="delta-label" style="color: var(--danger);">⚠ ${i.type}</div>
-                        <div style="font-size: 13px; margin-top: 4px;">${i.message}</div>
-                        <div style="font-size: 12px; color: var(--text-tertiary); margin-top: 4px;">${i.action}</div>
+                    ` : ''}
+                    <div class="state-hero">
+                        <div class="state-headline">${insights.headline}</div>
+                        <div class="state-meta">Cognitive telemetry active • Week ${cognitionData.training.week}</div>
                     </div>
-                `).join('');
-                heroDelta.insertAdjacentHTML('afterbegin', interventionHtml);
+                    <div class="vitals-grid">
+                        ${Object.entries(insights.vitals).map(([key, vital]) => `
+                            <div class="vital-card">
+                                <div class="vital-label">${key.replace('_', ' ')}</div>
+                                <div><span class="vital-value">${vital.value}</span><span class="vital-unit">${vital.unit}</span></div>
+                                <div class="vital-trend ${vital.trend}">${vital.trend === 'up' ? '↑' : vital.trend === 'down' ? '↓' : '→'} ${vital.trend}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="thought-stream">
+                        <div class="thought-header">Active Thought Stream</div>
+                        <div class="thought-item"><div class="thought-label">Current Task</div><div class="thought-value">${insights.thoughtStream.current_task}</div></div>
+                        <div class="thought-item"><div class="thought-label">Models Active</div><div class="thought-value">${insights.thoughtStream.models_active.join(', ')}</div></div>
+                        <div class="thought-item"><div class="thought-label">Skills Invoked</div><div class="thought-value">${insights.thoughtStream.skills_invoked.join(', ')}</div></div>
+                        <div class="thought-item"><div class="thought-label">Context Loaded</div><div class="thought-value">${insights.thoughtStream.context_loaded.join(', ')}</div></div>
+                    </div>
+                `;
             }
+            // Other tabs simplified for brevity - will expand in full implementation
         }
         
-        // Initialize on load
-        document.addEventListener('DOMContentLoaded', () => {
-            initDashboard();
-            initCalibrationChart();
-            initEdgeLog();
-            initSystemTab();
-            startActivityPolling();
-            initContentIntelligence();
-            
-            // Initialize motion system
-            if (typeof MotionSystem !== 'undefined') {
-                MotionSystem.init();
-            }
-        });
-        
-        // Position card toggle
-        function togglePosition(card) {
-            const wasExpanded = card.classList.contains('expanded');
-            document.querySelectorAll('.position-card.expanded').forEach(c => {
-                if (c !== card) c.classList.remove('expanded');
-            });
-            card.classList.toggle('expanded', !wasExpanded);
-        }
-        
-        // Calibration chart tooltips
-        function initCalibrationChart() {
-            const chart = document.querySelector('.calibration-chart');
-            if (!chart) return;
-            
-            const tooltip = document.getElementById('calTooltip');
-            const dots = chart.querySelectorAll('.cal-dot');
-            
-            dots.forEach(dot => {
-                dot.addEventListener('mouseenter', (e) => {
-                    const predicted = e.target.dataset.predicted;
-                    const actual = e.target.dataset.actual;
-                    const market = e.target.dataset.market;
-                    tooltip.innerHTML = `<strong>${market}</strong><br>Predicted: ${predicted}%<br>Actual: ${actual}%`;
-                    tooltip.classList.add('visible');
-                });
-                
-                dot.addEventListener('mousemove', (e) => {
-                    const rect = chart.getBoundingClientRect();
-                    tooltip.style.left = (e.clientX - rect.left + 10) + 'px';
-                    tooltip.style.top = (e.clientY - rect.top - 30) + 'px';
-                });
-                
-                dot.addEventListener('mouseleave', () => {
-                    tooltip.classList.remove('visible');
-                });
-            });
-        }
-        
-        // Skill network detail
-        function showSkillDetail(skill) {
-            const details = {
-                'impeccable': 'Design skill: Used 15× with structured-workflow',
-                'structured': 'Workflow skill: Breaks tasks into 2-5 min chunks',
-                'qmd-search': 'Research skill: Semantic search across markdown',
-                'proactive': 'Autonomy skill: Anticipates needs before asked',
-                'agency': 'Prediction skill: Underutilized (2×) - use more'
-            };
-            alert(details[skill] || 'Skill details');
-        }
-        
-        function showTab(tabName) {
-            // Hide all tabs
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            // Show selected tab with error handling
-            const targetTab = document.getElementById(tabName);
-            if (targetTab) {
-                targetTab.classList.add('active');
-            }
-            // Update nav
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            if (event && event.target) {
-                event.target.classList.add('active');
-            }
-        }
-        
-        // Keyboard navigation (1-5 for tabs)
-        document.addEventListener('keydown', (e) => {
-            if (e.key >= '1' && e.key <= '5') {
-                const tabs = ['overview', 'trading', 'evolution', 'system', 'edge'];
-                const index = parseInt(e.key) - 1;
-                if (tabs[index]) {
-                    const navItems = document.querySelectorAll('.nav-item');
-                    if (navItems[index]) {
-                        navItems[index].click();
-                    }
-                }
-            }
-        });
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>

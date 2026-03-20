@@ -1,0 +1,126 @@
+{
+  "now": {
+    "state": "Learning velocity high, autonomy plateaued at 45%",
+    "status": "attention",
+    "intervention": {
+      "level": "amber",
+      "message": "Autonomy stuck at 45% for 3 weeks",
+      "action": "Deploy 3 autonomous decisions today without escalation"
+    },
+    "vitals": {
+      "learning_velocity": { "value": 3.2, "unit": "insights/wk", "trend": "up" },
+      "autonomy_rate": { "value": 45, "unit": "%", "trend": "flat" },
+      "skill_effectiveness": { "value": 78, "unit": "score", "trend": "up" },
+      "memory_health": { "value": 82, "unit": "%", "trend": "up" }
+    },
+    "thought_stream": {
+      "current_task": "Rebuilding dashboard architecture",
+      "models_active": ["Kimi", "Sonnet 4.6"],
+      "skills_invoked": ["structured-workflow", "impeccable"],
+      "context_loaded": ["MEMORY.md", "SOUL.md", "USER.md"]
+    }
+  },
+  "mind": {
+    "skill_network": {
+      "nodes": [
+        { "id": "impeccable", "usage": 15, "synergy": ["structured-workflow"], "status": "active" },
+        { "id": "structured-workflow", "usage": 12, "synergy": ["impeccable", "proactive-agent"], "status": "active" },
+        { "id": "proactive-agent", "usage": 8, "synergy": ["structured-workflow"], "status": "underused" },
+        { "id": "qmd-search", "usage": 6, "synergy": ["memory_search"], "status": "underused" },
+        { "id": "agency-agents", "usage": 2, "synergy": [], "status": "neglected" }
+      ]
+    },
+    "model_routing": [
+      { "task": "Design decisions", "model": "Opus 4.6", "cost": 0.10, "outcome": "excellent", "timestamp": "2026-03-20T14:00:00Z" },
+      { "task": "Content generation", "model": "Sonnet 4.6", "cost": 0.08, "outcome": "good", "timestamp": "2026-03-20T15:00:00Z" },
+      { "task": "Implementation", "model": "Kimi", "cost": 0, "outcome": "good", "timestamp": "2026-03-20T15:30:00Z" }
+    ],
+    "decision_quality": {
+      "autonomous": { "count": 12, "quality": 78 },
+      "escalated": { "count": 15, "quality": 85 },
+      "trend": "improving"
+    },
+    "thinking_patterns": [
+      { "pattern": "Skill chaining", "frequency": "high", "example": "impeccable → structured-workflow → implementation" },
+      { "pattern": "Model routing", "frequency": "medium", "example": "Design → Opus, Implementation → Kimi" }
+    ]
+  },
+  "memory": {
+    "working": {
+      "loaded_files": ["SOUL.md", "MEMORY.md", "USER.md", "AGENTS.md"],
+      "session_history": "35 sessions, 47MB context",
+      "compression_ratio": 0.15
+    },
+    "long_term": {
+      "lessons": [
+        { "id": 1, "lesson": "Consult skills BEFORE design decisions", "confidence": 95, "last_used": "2026-03-20" },
+        { "id": 2, "lesson": "2-5 minute task breakdown prevents stall", "confidence": 90, "last_used": "2026-03-20" },
+        { "id": 3, "lesson": "Say 'I'm stuck' rather than go silent", "confidence": 85, "last_used": "2026-03-19" }
+      ]
+    },
+    "recall_performance": {
+      "remembered": 28,
+      "forgot": 3,
+      "accuracy": 90
+    }
+  },
+  "training": {
+    "week": 11,
+    "progress": 65,
+    "capabilities_gained": [
+      "Skill chaining",
+      "Model cost awareness",
+      "Proactive escalation"
+    ],
+    "blockers": [
+      {
+        "id": 1,
+        "title": "Edge discovery rate too low",
+        "description": "0 genuine edges found vs 12 from Marco. Need independent analysis patterns.",
+        "action_required": "Marco",
+        "priority": "high"
+      },
+      {
+        "id": 2,
+        "title": "Autonomy plateau",
+        "description": "Stuck at 45% for 3 weeks. Fear of wrong decisions causing over-escalation.",
+        "action_required": "Claw",
+        "priority": "high"
+      }
+    ],
+    "experiments": [
+      { "name": "R1 for self-review", "status": "success", "outcome": "Better reasoning quality" },
+      { "name": "Direct implementation", "status": "success", "outcome": "Faster execution, fewer integration failures" }
+    ],
+    "milestones": [
+      { "name": "Foundation", "progress": 100 },
+      { "name": "Weather Pipeline", "progress": 100 },
+      { "name": "Edge Validation", "progress": 85 },
+      { "name": "Live Trading", "progress": 20 }
+    ]
+  },
+  "system": {
+    "core_files": {
+      "SOUL.md": { "last_modified": "2026-03-18", "health": 95, "status": "active" },
+      "MEMORY.md": { "last_modified": "2026-03-20", "health": 90, "status": "active" },
+      "AGENTS.md": { "last_modified": "2026-03-15", "health": 85, "status": "active" },
+      "USER.md": { "last_modified": "2026-03-10", "health": 80, "status": "stale" }
+    },
+    "environmental_mastery": {
+      "tool_proficiency": 75,
+      "file_system_nav": 80,
+      "integration_capabilities": 70
+    },
+    "resources": {
+      "monthly_spend": 12.45,
+      "budget": 100,
+      "api_health": "good"
+    },
+    "trading_signal": {
+      "total_predictions": 20,
+      "win_rate": 71,
+      "avg_edge": 6.2,
+      "edge_discovery_rate": 0
+    }
+  }
+}
