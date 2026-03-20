@@ -471,44 +471,318 @@
         
         function renderTab(tab) {
             const container = document.getElementById('mainContent');
-            const insights = CognitionIntelligence[`generate${tab.charAt(0).toUpperCase() + tab.slice(1)}Insights`](cognitionData);
             
-            // Render based on tab
-            if (tab === 'now') {
-                const intervention = CognitionIntelligence.generateIntervention(cognitionData);
-                container.innerHTML = `
-                    ${intervention.show ? `
-                        <div class="intervention-banner ${intervention.level}">
-                            <div class="intervention-icon">${intervention.level === 'red' ? '⚠' : '◈'}</div>
-                            <div class="intervention-content">
-                                <div class="intervention-title">${intervention.message}</div>
-                                <div class="intervention-action">${intervention.action}</div>
-                            </div>
+            switch(tab) {
+                case 'now':
+                    container.innerHTML = renderNowTab();
+                    break;
+                case 'mind':
+                    container.innerHTML = renderMindTab();
+                    break;
+                case 'memory':
+                    container.innerHTML = renderMemoryTab();
+                    break;
+                case 'training':
+                    container.innerHTML = renderTrainingTab();
+                    break;
+                case 'system':
+                    container.innerHTML = renderSystemTab();
+                    break;
+            }
+        }
+        
+        function renderNowTab() {
+            const insights = CognitionIntelligence.generateNowInsights(cognitionData);
+            const intervention = CognitionIntelligence.generateIntervention(cognitionData);
+            
+            return `
+                ${intervention.show ? `
+                    <div class="intervention-banner ${intervention.level}">
+                        <div class="intervention-icon">${intervention.level === 'red' ? '⚠' : '◈'}</div>
+                        <div class="intervention-content">
+                            <div class="intervention-title">${intervention.message}</div>
+                            <div class="intervention-action">${intervention.action}</div>
                         </div>
-                    ` : ''}
-                    <div class="state-hero">
-                        <div class="state-headline">${insights.headline}</div>
-                        <div class="state-meta">Cognitive telemetry active • Week ${cognitionData.training.week}</div>
                     </div>
-                    <div class="vitals-grid">
-                        ${Object.entries(insights.vitals).map(([key, vital]) => `
-                            <div class="vital-card">
-                                <div class="vital-label">${key.replace('_', ' ')}</div>
-                                <div><span class="vital-value">${vital.value}</span><span class="vital-unit">${vital.unit}</span></div>
-                                <div class="vital-trend ${vital.trend}">${vital.trend === 'up' ? '↑' : vital.trend === 'down' ? '↓' : '→'} ${vital.trend}</div>
+                ` : ''}
+                <div class="state-hero">
+                    <div class="state-headline">${insights.headline}</div>
+                    <div class="state-meta">Cognitive telemetry active • Week ${cognitionData.training.week}</div>
+                </div>
+                <div class="vitals-grid">
+                    ${Object.entries(insights.vitals).map(([key, vital]) => `
+                        <div class="vital-card">
+                            <div class="vital-label">${key.replace('_', ' ')}</div>
+                            <div><span class="vital-value">${vital.value}</span><span class="vital-unit">${vital.unit}</span></div>
+                            <div class="vital-trend ${vital.trend}">${vital.trend === 'up' ? '↑' : vital.trend === 'down' ? '↓' : '→'} ${vital.trend}</div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="thought-stream">
+                    <div class="thought-header">Active Thought Stream</div>
+                    <div class="thought-item"><div class="thought-label">Current Task</div><div class="thought-value">${insights.thoughtStream.current_task}</div></div>
+                    <div class="thought-item"><div class="thought-label">Models Active</div><div class="thought-value">${insights.thoughtStream.models_active.join(', ')}</div></div>
+                    <div class="thought-item"><div class="thought-label">Skills Invoked</div><div class="thought-value">${insights.thoughtStream.skills_invoked.join(', ')}</div></div>
+                    <div class="thought-item"><div class="thought-label">Context Loaded</div><div class="thought-value">${insights.thoughtStream.context_loaded.join(', ')}</div></div>
+                </div>
+            `;
+        }
+        
+        function renderMindTab() {
+            const insights = CognitionIntelligence.generateMindInsights(cognitionData);
+            
+            return `
+                <div class="state-hero">
+                    <div class="state-headline">Cognitive Stack</div>
+                    <div class="state-meta">How I process information and make decisions</div>
+                </div>
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="section-header">
+                            <span class="section-title">Skill Network</span>
+                        </div>
+                        ${insights.skills.nodes.map(node => `
+                            <div class="skill-node">
+                                <span class="skill-name">${node.id}</span>
+                                <span class="skill-usage">${node.usage}×</span>
+                                <span class="skill-status ${node.status}">${node.status}</span>
                             </div>
                         `).join('')}
                     </div>
-                    <div class="thought-stream">
-                        <div class="thought-header">Active Thought Stream</div>
-                        <div class="thought-item"><div class="thought-label">Current Task</div><div class="thought-value">${insights.thoughtStream.current_task}</div></div>
-                        <div class="thought-item"><div class="thought-label">Models Active</div><div class="thought-value">${insights.thoughtStream.models_active.join(', ')}</div></div>
-                        <div class="thought-item"><div class="thought-label">Skills Invoked</div><div class="thought-value">${insights.thoughtStream.skills_invoked.join(', ')}</div></div>
-                        <div class="thought-item"><div class="thought-label">Context Loaded</div><div class="thought-value">${insights.thoughtStream.context_loaded.join(', ')}</div></div>
+                    <div class="card">
+                        <div class="section-header">
+                            <span class="section-title">Model Routing</span>
+                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">${insights.routingEfficiency.qualityRate}% quality • $${insights.routingEfficiency.cost}</span>
+                        </div>
+                        ${insights.routing.map(r => `
+                            <div class="routing-item">
+                                <span class="routing-task">${r.task}</span>
+                                <span class="routing-model">${r.model}</span>
+                                <span class="routing-cost">$${r.cost}</span>
+                                <span class="routing-outcome ${r.outcome}">${r.outcome}</span>
+                            </div>
+                        `).join('')}
                     </div>
-                `;
-            }
-            // Other tabs simplified for brevity - will expand in full implementation
+                    <div class="card card-full">
+                        <div class="section-header">
+                            <span class="section-title">Decision Quality</span>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4);">
+                            <div>
+                                <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-bottom: var(--space-2);">Autonomous Decisions</div>
+                                <div style="font-family: var(--font-mono); font-size: var(--text-2xl); font-weight: 700;">${insights.decisions.autonomous.count}</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">${insights.decisions.autonomous.quality}% quality</div>
+                            </div>
+                            <div>
+                                <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-bottom: var(--space-2);">Escalated Decisions</div>
+                                <div style="font-family: var(--font-mono); font-size: var(--text-2xl); font-weight: 700;">${insights.decisions.escalated.count}</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">${insights.decisions.escalated.quality}% quality</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function renderMemoryTab() {
+            const insights = CognitionIntelligence.generateMemoryInsights(cognitionData);
+            
+            return `
+                <div class="state-hero">
+                    <div class="state-headline">Memory Systems</div>
+                    <div class="state-meta">What I know and how well I use it</div>
+                </div>
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="section-header">
+                            <span class="section-title">Working Memory</span>
+                        </div>
+                        <div class="thought-item">
+                            <div class="thought-label">Loaded Files</div>
+                            <div class="thought-value">${insights.working.loaded_files.join(', ')}</div>
+                        </div>
+                        <div class="thought-item">
+                            <div class="thought-label">Session History</div>
+                            <div class="thought-value">${insights.working.session_history}</div>
+                        </div>
+                        <div class="thought-item">
+                            <div class="thought-label">Compression</div>
+                            <div class="thought-value">${(insights.working.compression_ratio * 100).toFixed(0)}%</div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="section-header">
+                            <span class="section-title">Recall Performance</span>
+                        </div>
+                        <div style="display: flex; gap: var(--space-6);">
+                            <div>
+                                <div style="font-family: var(--font-mono); font-size: var(--text-3xl); font-weight: 700; color: var(--success);">${insights.recall.remembered}</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">Remembered</div>
+                            </div>
+                            <div>
+                                <div style="font-family: var(--font-mono); font-size: var(--text-3xl); font-weight: 700; color: var(--danger);">${insights.recall.forgot}</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">Forgot</div>
+                            </div>
+                            <div>
+                                <div style="font-family: var(--font-mono); font-size: var(--text-3xl); font-weight: 700;">${insights.recall.accuracy}%</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">Accuracy</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card card-full">
+                        <div class="section-header">
+                            <span class="section-title">Long-term Lessons</span>
+                        </div>
+                        ${insights.lessons.map(l => `
+                            <div class="skill-node">
+                                <span class="skill-name">${l.lesson}</span>
+                                <span class="skill-usage">${l.confidence}% conf</span>
+                                <span class="skill-status ${l.confidence > 90 ? 'active' : 'underused'}">${l.last_used}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+        
+        function renderTrainingTab() {
+            const insights = CognitionIntelligence.generateTrainingInsights(cognitionData);
+            
+            return `
+                <div class="state-hero">
+                    <div class="state-headline">Week ${insights.week} • ${insights.progress}% Complete</div>
+                    <div class="state-meta">Meta-training progress toward autonomous operation</div>
+                </div>
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="section-header">
+                            <span class="section-title">Capabilities Gained</span>
+                        </div>
+                        ${insights.capabilities.map(c => `
+                            <div class="skill-node">
+                                <span class="skill-name">${c}</span>
+                                <span class="skill-status active">✓</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="card">
+                        <div class="section-header">
+                            <span class="section-title">Blockers</span>
+                        </div>
+                        ${insights.marcoBlockers.map(b => `
+                            <div class="blocker-card">
+                                <div class="blocker-header">
+                                    <span class="blocker-title">${b.title}</span>
+                                    <span class="blocker-owner">${b.action_required}</span>
+                                </div>
+                                <div class="blocker-desc">${b.description}</div>
+                            </div>
+                        `).join('')}
+                        ${insights.clawBlockers.map(b => `
+                            <div class="blocker-card" style="border-color: oklch(68% 0.18 75 / 0.3); background: oklch(68% 0.18 75 / 0.05);">
+                                <div class="blocker-header">
+                                    <span class="blocker-title" style="color: var(--amber-400);">${b.title}</span>
+                                    <span class="blocker-owner">${b.action_required}</span>
+                                </div>
+                                <div class="blocker-desc">${b.description}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="card card-full">
+                        <div class="section-header">
+                            <span class="section-title">Milestones</span>
+                        </div>
+                        ${insights.milestones.map(m => `
+                            <div class="milestone-item">
+                                <span class="milestone-name">${m.name}</span>
+                                <div class="milestone-track">
+                                    <div class="milestone-fill" style="width: ${m.progress}%"></div>
+                                </div>
+                                <span class="milestone-percent">${m.progress}%</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+        
+        function renderSystemTab() {
+            const insights = CognitionIntelligence.generateSystemInsights(cognitionData);
+            
+            return `
+                <div class="state-hero">
+                    <div class="state-headline">System Infrastructure</div>
+                    <div class="state-meta">Health of core systems and environment</div>
+                </div>
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="section-header">
+                            <span class="section-title">Core Files</span>
+                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">${insights.overallHealth}% health</span>
+                        </div>
+                        ${Object.entries(insights.files).map(([name, file]) => `
+                            <div class="file-item">
+                                <div class="file-status-dot ${file.status}"></div>
+                                <span class="file-name">${name}</span>
+                                <span class="file-health">${file.health}%</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="card">
+                        <div class="section-header">
+                            <span class="section-title">Environmental Mastery</span>
+                        </div>
+                        <div class="thought-item">
+                            <div class="thought-label">Tool Proficiency</div>
+                            <div class="thought-value">${insights.environment.tool_proficiency}%</div>
+                        </div>
+                        <div class="thought-item">
+                            <div class="thought-label">File System Nav</div>
+                            <div class="thought-value">${insights.environment.file_system_nav}%</div>
+                        </div>
+                        <div class="thought-item">
+                            <div class="thought-label">Integration</div>
+                            <div class="thought-value">${insights.environment.integration_capabilities}%</div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="section-header">
+                            <span class="section-title">Resources</span>
+                        </div>
+                        <div class="thought-item">
+                            <div class="thought-label">Monthly Spend</div>
+                            <div class="thought-value">$${insights.resources.monthly_spend} / $${insights.resources.budget}</div>
+                        </div>
+                        <div class="thought-item">
+                            <div class="thought-label">API Health</div>
+                            <div class="thought-value" style="color: var(--success);">${insights.resources.api_health}</div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="section-header">
+                            <span class="section-title">Trading Signal</span>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4);">
+                            <div>
+                                <div style="font-family: var(--font-mono); font-size: var(--text-xl); font-weight: 700;">${insights.trading.total_predictions}</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">Predictions</div>
+                            </div>
+                            <div>
+                                <div style="font-family: var(--font-mono); font-size: var(--text-xl); font-weight: 700;">${insights.trading.win_rate}%</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">Win Rate</div>
+                            </div>
+                            <div>
+                                <div style="font-family: var(--font-mono); font-size: var(--text-xl); font-weight: 700; color: var(--success);">+${insights.trading.avg_edge}%</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">Avg Edge</div>
+                            </div>
+                            <div>
+                                <div style="font-family: var(--font-mono); font-size: var(--text-xl); font-weight: 700; color: var(--danger);">${insights.trading.edge_discovery_rate}</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">Edges Found</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
         }
         
         document.addEventListener('DOMContentLoaded', init);
