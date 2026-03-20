@@ -323,29 +323,11 @@
                     <!-- Memory Timeline -->
                     <div class="card">
                         <div class="card-header">
-                            <span class="card-title">Memory Timeline</span>
-                            <span class="card-badge">Last 7 days</span>
+                            <span class="card-title">Activity Feed</span>
+                            <span class="card-badge">Live</span>
                         </div>
-                        <div class="learning-item">
-                            <div class="learning-meta">
-                                <span class="learning-confidence">Session</span>
-                                <span class="learning-time">Today</span>
-                            </div>
-                            <div>Dashboard v2 complete. Applied OKLCH colors, radar chart, 4-tab structure.</div>
-                        </div>
-                        <div class="learning-item">
-                            <div class="learning-meta">
-                                <span class="learning-confidence">Learning</span>
-                                <span class="learning-time">Yesterday</span>
-                            </div>
-                            <div>Consult skills BEFORE making design decisions. Not after being reminded.</div>
-                        </div>
-                        <div class="learning-item">
-                            <div class="learning-meta">
-                                <span class="learning-confidence">Achievement</span>
-                                <span class="learning-time">2 days ago</span>
-                            </div>
-                            <div>7 SKILL.md files written. All 22 skills now functional.</div>
+                        <div class="activity-feed">
+                            <!-- Populated by JavaScript -->
                         </div>
                     </div>
                 </div>
@@ -874,12 +856,92 @@
             }
         }
         
+        // Real-time activity feed with polling
+        let activityInterval;
+        
+        async function loadActivityFeed() {
+            const activities = await DataLayer.getActivity(5);
+            const container = document.querySelector('#overview .activity-feed');
+            if (!container) return;
+            
+            container.innerHTML = activities.map(a => `
+                <div class="learning-item activity-item" data-id="${a.id}">
+                    <div class="learning-meta">
+                        <span class="learning-confidence">${a.type}</span>
+                        <span class="learning-time">${formatTime(a.timestamp)}</span>
+                    </div>
+                    <div><strong>${a.title}</strong></div>
+                    <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">${a.description}</div>
+                </div>
+            `).join('');
+        }
+        
+        async function refreshActivityFeed() {
+            const activities = await DataLayer.getActivity(5);
+            const container = document.querySelector('#overview .activity-feed');
+            if (!container || activities.length === 0) return;
+            
+            // Check if new activities
+            const currentIds = Array.from(container.querySelectorAll('.activity-item')).map(el => el.dataset.id);
+            const newActivities = activities.filter(a => !currentIds.includes(String(a.id)));
+            
+            if (newActivities.length > 0) {
+                // Add new items with animation
+                newActivities.forEach(a => {
+                    const item = document.createElement('div');
+                    item.className = 'learning-item activity-item';
+                    item.dataset.id = a.id;
+                    item.style.animation = 'slideIn 0.4s ease';
+                    item.innerHTML = `
+                        <div class="learning-meta">
+                            <span class="learning-confidence">${a.type}</span>
+                            <span class="learning-time">${formatTime(a.timestamp)}</span>
+                        </div>
+                        <div><strong>${a.title}</strong></div>
+                        <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">${a.description}</div>
+                    `;
+                    container.insertBefore(item, container.firstChild);
+                });
+                
+                // Keep only 5 items
+                while (container.children.length > 5) {
+                    container.removeChild(container.lastChild);
+                }
+            }
+        }
+        
+        function startActivityPolling() {
+            loadActivityFeed(); // Initial load
+            activityInterval = setInterval(refreshActivityFeed, 30000); // Poll every 30 seconds
+        }
+        
+        function stopActivityPolling() {
+            if (activityInterval) clearInterval(activityInterval);
+        }
+        
+        // Pause polling when tab not visible
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                stopActivityPolling();
+            } else {
+                startActivityPolling();
+            }
+        });
+        
+        // Performance: Preload critical data
+        window.addEventListener('load', () => {
+            // Preload data for faster tab switching
+            DataLayer.getPredictions();
+            DataLayer.getFiles();
+        });
+        
         // Initialize on load
         document.addEventListener('DOMContentLoaded', () => {
             initDashboard();
             initCalibrationChart();
             initEdgeLog();
             initSystemTab();
+            startActivityPolling();
         });
         
         // Position card toggle
