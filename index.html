@@ -125,7 +125,17 @@
         .autonomy-chart { display: flex; align-items: flex-end; gap: 8px; height: 80px; margin: 20px 0; }
         .auto-bar { flex: 1; background: linear-gradient(to top, var(--amber-500), var(--amber-400)); border-radius: 4px 4px 0 0; position: relative; }
         .auto-bar span { position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); font-size: 10px; color: var(--text-tertiary); }
-        .skill-network { height: 200px; background: rgba(255,255,255,0.02); border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+        .skill-network { height: 200px; background: rgba(255,255,255,0.02); border-radius: 10px; display: flex; align-items: center; justify-content: center; position: relative; }
+        .skill-node { cursor: pointer; transition: all 0.2s; }
+        .skill-node:hover { filter: drop-shadow(0 0 8px currentColor); }
+        .skill-node:hover circle { r: 24; }
+        .calibration-tooltip { position: absolute; background: var(--dark-800); border: 1px solid rgba(224,145,42,0.3); border-radius: 8px; padding: 12px; font-size: 12px; pointer-events: none; opacity: 0; transition: opacity 0.2s; z-index: 10; }
+        .calibration-tooltip.visible { opacity: 1; }
+        .breakdown-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+        .breakdown-label { width: 140px; font-size: 13px; }
+        .breakdown-track { flex: 1; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; }
+        .breakdown-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+        .breakdown-value { width: 40px; font-family: var(--font-mono); font-size: 13px; text-align: right; }
         
         /* System Tab Styles */
         .file-item { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
@@ -457,18 +467,19 @@
                     </div>
                     <div class="card">
                         <div class="card-header"><span class="card-title">Calibration</span><span class="card-badge">78% aligned</span></div>
-                        <div class="calibration-chart">
-                            <svg viewBox="0 0 300 200" width="100%" height="200">
+                        <div class="calibration-chart" style="position: relative;">
+                            <svg viewBox="0 0 300 200" width="100%" height="200" style="cursor: crosshair;">
                                 <line x1="30" y1="170" x2="270" y2="170" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
                                 <line x1="30" y1="170" x2="30" y2="30" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
                                 <line x1="30" y1="170" x2="270" y2="30" stroke="rgba(224,145,42,0.5)" stroke-width="2" stroke-dasharray="5,5"/>
-                                <circle cx="70" cy="145" r="6" fill="#4ADE80" opacity="0.8"/>
-                                <circle cx="90" cy="128" r="8" fill="#4ADE80" opacity="0.8"/>
-                                <circle cx="110" cy="105" r="10" fill="#F87171" opacity="0.8"/>
-                                <circle cx="130" cy="88" r="10" fill="#F87171" opacity="0.8"/>
-                                <circle cx="170" cy="65" r="8" fill="#4ADE80" opacity="0.8"/>
-                                <circle cx="210" cy="42" r="6" fill="#4ADE80" opacity="0.8"/>
+                                <circle cx="70" cy="145" r="6" fill="#4ADE80" opacity="0.8" class="cal-dot" data-predicted="55" data-actual="52" data-market="NYC Rain"/>
+                                <circle cx="90" cy="128" r="8" fill="#4ADE80" opacity="0.8" class="cal-dot" data-predicted="60" data-actual="58" data-market="Austin Heat"/>
+                                <circle cx="110" cy="105" r="10" fill="#F87171" opacity="0.8" class="cal-dot" data-predicted="70" data-actual="55" data-market="LA Temp"/>
+                                <circle cx="130" cy="88" r="10" fill="#F87171" opacity="0.8" class="cal-dot" data-predicted="75" data-actual="62" data-market="Seattle Rain"/>
+                                <circle cx="170" cy="65" r="8" fill="#4ADE80" opacity="0.8" class="cal-dot" data-predicted="85" data-actual="82" data-market="Chicago Snow"/>
+                                <circle cx="210" cy="42" r="6" fill="#4ADE80" opacity="0.8" class="cal-dot" data-predicted="92" data-actual="90" data-market="Denver Snow"/>
                             </svg>
+                            <div id="calTooltip" class="calibration-tooltip"></div>
                         </div>
                     </div>
                 </div>
@@ -481,6 +492,23 @@
                                 <path d="M10,60 A50,50 0 0,1 85,25" fill="none" stroke="var(--amber-400)" stroke-width="8" stroke-linecap="round"/>
                             </svg>
                             <div class="dial-value"><span class="dial-number">3.2</span><span class="dial-unit">insights/wk</span></div>
+                        </div>
+                        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+                            <div class="breakdown-bar">
+                                <span class="breakdown-label">Skill Acquisition</span>
+                                <div class="breakdown-track"><div class="breakdown-fill" style="width: 85%; background: var(--success);"></div></div>
+                                <span class="breakdown-value">85%</span>
+                            </div>
+                            <div class="breakdown-bar">
+                                <span class="breakdown-label">Error Correction</span>
+                                <div class="breakdown-track"><div class="breakdown-fill" style="width: 72%; background: var(--amber-400);"></div></div>
+                                <span class="breakdown-value">72%</span>
+                            </div>
+                            <div class="breakdown-bar">
+                                <span class="breakdown-label">Pattern Recognition</span>
+                                <div class="breakdown-track"><div class="breakdown-fill" style="width: 68%; background: var(--amber-500);"></div></div>
+                                <span class="breakdown-value">68%</span>
+                            </div>
                         </div>
                     </div>
                     <div class="card">
@@ -702,17 +730,59 @@
         }
         
         // Initialize on load
-        document.addEventListener('DOMContentLoaded', initDashboard);
+        document.addEventListener('DOMContentLoaded', () => {
+            initDashboard();
+            initCalibrationChart();
+        });
         
         // Position card toggle
         function togglePosition(card) {
             const wasExpanded = card.classList.contains('expanded');
-            // Close all other positions
             document.querySelectorAll('.position-card.expanded').forEach(c => {
                 if (c !== card) c.classList.remove('expanded');
             });
-            // Toggle current
             card.classList.toggle('expanded', !wasExpanded);
+        }
+        
+        // Calibration chart tooltips
+        function initCalibrationChart() {
+            const chart = document.querySelector('.calibration-chart');
+            if (!chart) return;
+            
+            const tooltip = document.getElementById('calTooltip');
+            const dots = chart.querySelectorAll('.cal-dot');
+            
+            dots.forEach(dot => {
+                dot.addEventListener('mouseenter', (e) => {
+                    const predicted = e.target.dataset.predicted;
+                    const actual = e.target.dataset.actual;
+                    const market = e.target.dataset.market;
+                    tooltip.innerHTML = `<strong>${market}</strong><br>Predicted: ${predicted}%<br>Actual: ${actual}%`;
+                    tooltip.classList.add('visible');
+                });
+                
+                dot.addEventListener('mousemove', (e) => {
+                    const rect = chart.getBoundingClientRect();
+                    tooltip.style.left = (e.clientX - rect.left + 10) + 'px';
+                    tooltip.style.top = (e.clientY - rect.top - 30) + 'px';
+                });
+                
+                dot.addEventListener('mouseleave', () => {
+                    tooltip.classList.remove('visible');
+                });
+            });
+        }
+        
+        // Skill network detail
+        function showSkillDetail(skill) {
+            const details = {
+                'impeccable': 'Design skill: Used 15× with structured-workflow',
+                'structured': 'Workflow skill: Breaks tasks into 2-5 min chunks',
+                'qmd-search': 'Research skill: Semantic search across markdown',
+                'proactive': 'Autonomy skill: Anticipates needs before asked',
+                'agency': 'Prediction skill: Underutilized (2×) - use more'
+            };
+            alert(details[skill] || 'Skill details');
         }
         
         function showTab(tabName) {
