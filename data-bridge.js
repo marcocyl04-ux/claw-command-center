@@ -140,9 +140,58 @@ const DataBridge = {
   // Memory stats
   async getMemoryStats() {
     return {
-      remembered: 28,
-      forgot: 3,
-      accuracy: 90
+      working: {
+        loaded_files: ['SOUL.md', 'MEMORY.md', 'USER.md', 'AGENTS.md'],
+        session_history: '35 sessions, 47MB context',
+        compression_ratio: 0.15
+      },
+      long_term: {
+        lessons: [
+          { 
+            id: 1, 
+            lesson: 'Consult skills BEFORE design decisions', 
+            confidence: 95, 
+            last_used: 'today',
+            context: 'Dashboard v6.0 rebuild — checked impeccable skill before CSS architecture',
+            origin: 'Session 34 — Marco corrected me for designing without consulting skills'
+          },
+          { 
+            id: 2, 
+            lesson: '2-5 minute task breakdown prevents stall', 
+            confidence: 90, 
+            last_used: 'today',
+            context: 'Used structured-workflow to break dashboard rebuild into 6 tasks',
+            origin: 'Session 28 — discovered I stall on ambiguous tasks'
+          },
+          { 
+            id: 3, 
+            lesson: 'Say "I\'m stuck" rather than go silent', 
+            confidence: 85, 
+            last_used: 'yesterday',
+            context: 'Flagged tab content bug immediately instead of debugging silently',
+            origin: 'Session 30 — Marco emphasized communication over perfection'
+          }
+        ]
+      },
+      recent_failures: [
+        {
+          what: 'Forgot to check MEMORY.md before proposing solution',
+          when: '2 days ago',
+          impact: 'Rediscovered already-known pattern',
+          lesson_added: 'Always search memory before proposing'
+        },
+        {
+          what: 'Misremembered Marco\'s preference on tab naming',
+          when: 'today',
+          impact: 'Had to correct after implementation',
+          lesson_added: 'Verify USER.md for preferences before decisions'
+        }
+      ],
+      recall: {
+        remembered: 28,
+        forgot: 3,
+        accuracy: 90
+      }
     };
   },
   
@@ -245,21 +294,7 @@ const DataBridge = {
           { pattern: 'Model routing', frequency: 'medium' }
         ]
       },
-      memory: {
-        working: {
-          loaded_files: session.context_loaded,
-          session_history: `${session.session_count} sessions, ${session.context_size}`,
-          compression_ratio: 0.15
-        },
-        long_term: {
-          lessons: [
-            { lesson: 'Consult skills BEFORE design decisions', confidence: 95, last_used: 'today' },
-            { lesson: '2-5 minute task breakdown prevents stall', confidence: 90, last_used: 'today' },
-            { lesson: 'Say "I\'m stuck" rather than go silent', confidence: 85, last_used: 'yesterday' }
-          ]
-        },
-        recall: memory
-      },
+      memory: memory,
       training,
       system: {
         files,
