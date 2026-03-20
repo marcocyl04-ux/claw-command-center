@@ -70,6 +70,30 @@
         .learning-meta { display: flex; gap: 12px; margin-bottom: 8px; font-size: 12px; }
         .learning-confidence { color: var(--amber-400); font-weight: 600; text-transform: uppercase; }
         .learning-time { color: var(--text-tertiary); }
+        
+        /* Trading Tab Styles */
+        .position-card { background: rgba(255,255,255,0.03); border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 1px solid transparent; transition: all 0.2s; cursor: pointer; }
+        .position-card:hover { background: rgba(255,255,255,0.05); border-color: rgba(224,145,42,0.3); transform: translateY(-2px); }
+        .position-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .position-icon { font-size: 20px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 8px; }
+        .position-icon.rain { background: rgba(96,165,250,0.15); }
+        .position-icon.temp { background: rgba(251,146,60,0.15); }
+        .position-icon.humidity { background: rgba(52,211,153,0.15); }
+        .position-market-name { flex: 1; font-weight: 500; }
+        .position-countdown { font-size: 12px; color: var(--text-tertiary); }
+        .position-card-body { display: flex; align-items: center; gap: 16px; }
+        .position-badge { padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; font-family: var(--font-mono); text-transform: uppercase; }
+        .position-badge.yes { background: rgba(74,222,128,0.15); color: var(--success); }
+        .position-badge.no { background: rgba(248,113,113,0.15); color: var(--danger); }
+        .confidence-ring { position: relative; width: 48px; height: 48px; }
+        .confidence-ring svg { transform: rotate(-90deg); }
+        .ring-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 11px; font-weight: 600; }
+        .position-amount { margin-left: auto; font-family: var(--font-mono); font-size: 16px; font-weight: 600; color: var(--amber-400); }
+        .risk-metric { display: flex; align-items: center; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .risk-metric:last-child { border-bottom: none; }
+        .r-label { width: 120px; font-size: 13px; color: var(--text-secondary); }
+        .r-value { flex: 1; font-family: var(--font-mono); font-size: 16px; font-weight: 600; }
+        .r-context { font-size: 12px; color: var(--text-tertiary); }
     </style>
 </head>
 <body>
@@ -196,18 +220,89 @@
                 </div>
             </div>
             <div id="trading" class="tab">
+                <!-- Positions -->
                 <div class="card">
-                    <div class="card-header"><span class="card-title">Positions</span></div>
-                    <p>3 positions held through volatility</p>
-                    <p>NYC Rain — YES — 82% — $0.50</p>
-                    <p>LA Temp — NO — 75% — $0.35</p>
-                    <p>Miami Humidity — YES — 68% — $0.42</p>
+                    <div class="card-header">
+                        <span class="card-title">Positions</span>
+                        <span class="card-badge">3 active</span>
+                    </div>
+                    <div class="position-card">
+                        <div class="position-card-header">
+                            <div class="position-icon rain">🌧️</div>
+                            <div class="position-market-name">NYC Rain March 20</div>
+                            <div class="position-countdown">18h left</div>
+                        </div>
+                        <div class="position-card-body">
+                            <span class="position-badge yes">YES</span>
+                            <div class="confidence-ring">
+                                <svg viewBox="0 0 48 48" width="48" height="48">
+                                    <circle cx="24" cy="24" r="20" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="4"/>
+                                    <circle cx="24" cy="24" r="20" fill="none" stroke="var(--amber-500)" stroke-width="4" stroke-dasharray="103 126" stroke-linecap="round"/>
+                                </svg>
+                                <div class="ring-text">82%</div>
+                            </div>
+                            <div class="position-amount">$0.50</div>
+                        </div>
+                    </div>
+                    <div class="position-card">
+                        <div class="position-card-header">
+                            <div class="position-icon temp">🌡️</div>
+                            <div class="position-market-name">LA Temp March 21</div>
+                            <div class="position-countdown">42h left</div>
+                        </div>
+                        <div class="position-card-body">
+                            <span class="position-badge no">NO</span>
+                            <div class="confidence-ring">
+                                <svg viewBox="0 0 48 48" width="48" height="48">
+                                    <circle cx="24" cy="24" r="20" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="4"/>
+                                    <circle cx="24" cy="24" r="20" fill="none" stroke="var(--amber-500)" stroke-width="4" stroke-dasharray="94 126" stroke-linecap="round"/>
+                                </svg>
+                                <div class="ring-text">75%</div>
+                            </div>
+                            <div class="position-amount">$0.35</div>
+                        </div>
+                    </div>
+                    <div class="position-card">
+                        <div class="position-card-header">
+                            <div class="position-icon humidity">💧</div>
+                            <div class="position-market-name">Miami Humidity March 22</div>
+                            <div class="position-countdown">Resolves tomorrow</div>
+                        </div>
+                        <div class="position-card-body">
+                            <span class="position-badge yes">YES</span>
+                            <div class="confidence-ring">
+                                <svg viewBox="0 0 48 48" width="48" height="48">
+                                    <circle cx="24" cy="24" r="20" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="4"/>
+                                    <circle cx="24" cy="24" r="20" fill="none" stroke="var(--amber-500)" stroke-width="4" stroke-dasharray="85 126" stroke-linecap="round"/>
+                                </svg>
+                                <div class="ring-text">68%</div>
+                            </div>
+                            <div class="position-amount">$0.42</div>
+                        </div>
+                    </div>
                 </div>
+                
+                <!-- Risk Snapshot -->
                 <div class="card">
-                    <div class="card-header"><span class="card-title">Risk</span></div>
-                    <p>Concentration: Weather 94%</p>
-                    <p>Exposure: $9.10</p>
-                    <p>Max Loss: $2.60</p>
+                    <div class="card-header">
+                        <span class="card-title">Risk Snapshot</span>
+                        <span class="card-badge">Moderate</span>
+                    </div>
+                    <div class="risk-metric">
+                        <span class="r-label">Concentration</span>
+                        <span class="r-value">Weather: 94%</span>
+                        <span class="r-context">Need diversification</span>
+                    </div>
+                    <div class="risk-metric">
+                        <span class="r-label">Exposure</span>
+                        <span class="r-value">$9.10</span>
+                        <span class="r-context">All deployed</span>
+                    </div>
+                    <div class="risk-metric">
+                        <span class="r-label">Max Loss</span>
+                        <span class="r-value">$2.60</span>
+                        <span class="r-context">If all resolve wrong</span>
+                    </div>
                 </div>
             </div>
             <div id="evolution" class="tab">
