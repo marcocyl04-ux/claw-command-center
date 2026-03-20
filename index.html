@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Claw Command Center v4.0</title>
+    <title>Claw Command Center v5.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="design-system.css">
     <style>
         :root {
             --amber-500: #E0912A;
@@ -695,6 +696,8 @@
         </main>
     </div>
     <script src="data/data.js"></script>
+    <script src="content-intelligence.js"></script>
+    <script src="motion-system.js"></script>
     <script>
         // Initialize data-driven components
         async function initDashboard() {
@@ -935,6 +938,45 @@
             DataLayer.getFiles();
         });
         
+        // Content Intelligence Integration
+        let intelligence = null;
+        
+        async function initContentIntelligence() {
+            const predictions = await DataLayer.getPredictions();
+            intelligence = ContentIntelligence.analyzePredictions(predictions);
+            
+            // Update hero with intelligence
+            const hero = ContentIntelligence.generateHeroState(intelligence);
+            const heroState = document.querySelector('.narrative-hero .state-sentence');
+            const heroDelta = document.querySelector('.narrative-hero .delta-strip');
+            
+            if (heroState) {
+                heroState.innerHTML = `<span class="state-indicator" style="background: ${hero.sentiment === 'warning' ? 'var(--danger)' : 'var(--success)'}"></span>${hero.state}`;
+            }
+            
+            // Update stats with count-up animation
+            const statValues = document.querySelectorAll('.stat-value');
+            statValues.forEach(el => {
+                const target = parseInt(el.textContent) || 0;
+                if (target > 0 && typeof MotionSystem !== 'undefined') {
+                    MotionSystem.countUp(el, target, 1000);
+                }
+            });
+            
+            // Render interventions if high priority
+            const interventions = intelligence.interventions.filter(i => i.priority === 'high');
+            if (interventions.length > 0 && heroDelta) {
+                const interventionHtml = interventions.map(i => `
+                    <div class="delta-item" style="background: rgba(248,113,113,0.1); padding: 12px; border-radius: 8px; border-left: 3px solid var(--danger);">
+                        <div class="delta-label" style="color: var(--danger);">⚠ ${i.type}</div>
+                        <div style="font-size: 13px; margin-top: 4px;">${i.message}</div>
+                        <div style="font-size: 12px; color: var(--text-tertiary); margin-top: 4px;">${i.action}</div>
+                    </div>
+                `).join('');
+                heroDelta.insertAdjacentHTML('afterbegin', interventionHtml);
+            }
+        }
+        
         // Initialize on load
         document.addEventListener('DOMContentLoaded', () => {
             initDashboard();
@@ -942,6 +984,12 @@
             initEdgeLog();
             initSystemTab();
             startActivityPolling();
+            initContentIntelligence();
+            
+            // Initialize motion system
+            if (typeof MotionSystem !== 'undefined') {
+                MotionSystem.init();
+            }
         });
         
         // Position card toggle
