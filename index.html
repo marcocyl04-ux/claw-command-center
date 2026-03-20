@@ -94,6 +94,29 @@
         .r-label { width: 120px; font-size: 13px; color: var(--text-secondary); }
         .r-value { flex: 1; font-family: var(--font-mono); font-size: 16px; font-weight: 600; }
         .r-context { font-size: 12px; color: var(--text-tertiary); }
+        
+        /* Evolution Tab Styles */
+        .health-metrics { display: flex; gap: 32px; }
+        .health-metric { display: flex; flex-direction: column; gap: 4px; }
+        .metric-name { font-size: 11px; text-transform: uppercase; color: var(--text-tertiary); letter-spacing: 0.05em; }
+        .metric-score { font-family: var(--font-mono); font-size: 24px; font-weight: 600; }
+        .metric-score.good { color: var(--success); }
+        .metric-score.warning { color: var(--amber-400); }
+        .metric-trend { font-size: 12px; color: var(--text-secondary); }
+        .model-item { display: flex; align-items: center; gap: 16px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .model-item:last-child { border-bottom: none; }
+        .model-name { flex: 1; font-weight: 500; }
+        .model-score { font-family: var(--font-mono); font-size: 18px; font-weight: 600; width: 50px; text-align: right; }
+        .model-desc { flex: 2; font-size: 13px; color: var(--text-secondary); }
+        .calibration-chart { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 20px; }
+        .velocity-dial { position: relative; width: 140px; margin: 0 auto 20px; }
+        .dial-value { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); text-align: center; }
+        .dial-number { font-family: var(--font-mono); font-size: 28px; font-weight: 700; color: var(--amber-400); display: block; }
+        .dial-unit { font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; }
+        .autonomy-chart { display: flex; align-items: flex-end; gap: 8px; height: 80px; margin: 20px 0; }
+        .auto-bar { flex: 1; background: linear-gradient(to top, var(--amber-500), var(--amber-400)); border-radius: 4px 4px 0 0; position: relative; }
+        .auto-bar span { position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); font-size: 10px; color: var(--text-tertiary); }
+        .skill-network { height: 200px; background: rgba(255,255,255,0.02); border-radius: 10px; display: flex; align-items: center; justify-content: center; }
     </style>
 </head>
 <body>
@@ -308,15 +331,78 @@
             <div id="evolution" class="tab">
                 <div class="card">
                     <div class="card-header"><span class="card-title">Intelligence Health</span></div>
-                    <p>Calibration: 78% ↑ +5%</p>
-                    <p>Learning: High — 3 insights/week</p>
-                    <p>Autonomy: 45% ↑ +3%</p>
+                    <div class="health-metrics">
+                        <div class="health-metric"><div class="metric-name">Calibration</div><div class="metric-score good">78%</div><div class="metric-trend">↑ +5%</div></div>
+                        <div class="health-metric"><div class="metric-name">Learning</div><div class="metric-score good">High</div><div class="metric-trend">3 insights/week</div></div>
+                        <div class="health-metric"><div class="metric-name">Autonomy</div><div class="metric-score warning">45%</div><div class="metric-trend">↑ +3%</div></div>
+                    </div>
+                </div>
+                <div class="two-column">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">Model Mastery</span></div>
+                        <div class="model-item"><span class="model-name">Kimi (Moonshot)</span><span class="model-score" style="color: var(--success);">92%</span><span class="model-desc">Fast implementation, reliable</span></div>
+                        <div class="model-item"><span class="model-name">DeepSeek R1</span><span class="model-score" style="color: var(--amber-400);">78%</span><span class="model-desc">Good reasoning, sometimes slow</span></div>
+                        <div class="model-item"><span class="model-name">Sonnet 4.6</span><span class="model-score" style="color: var(--text-secondary);">65%</span><span class="model-desc">Excellent for design, use more</span></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">Calibration</span><span class="card-badge">78% aligned</span></div>
+                        <div class="calibration-chart">
+                            <svg viewBox="0 0 300 200" width="100%" height="200">
+                                <line x1="30" y1="170" x2="270" y2="170" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                                <line x1="30" y1="170" x2="30" y2="30" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                                <line x1="30" y1="170" x2="270" y2="30" stroke="rgba(224,145,42,0.5)" stroke-width="2" stroke-dasharray="5,5"/>
+                                <circle cx="70" cy="145" r="6" fill="#4ADE80" opacity="0.8"/>
+                                <circle cx="90" cy="128" r="8" fill="#4ADE80" opacity="0.8"/>
+                                <circle cx="110" cy="105" r="10" fill="#F87171" opacity="0.8"/>
+                                <circle cx="130" cy="88" r="10" fill="#F87171" opacity="0.8"/>
+                                <circle cx="170" cy="65" r="8" fill="#4ADE80" opacity="0.8"/>
+                                <circle cx="210" cy="42" r="6" fill="#4ADE80" opacity="0.8"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="two-column">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">Learning Velocity</span><span class="card-badge">Accelerating</span></div>
+                        <div class="velocity-dial">
+                            <svg viewBox="0 0 120 70" width="140">
+                                <path d="M10,60 A50,50 0 0,1 110,60" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="8" stroke-linecap="round"/>
+                                <path d="M10,60 A50,50 0 0,1 85,25" fill="none" stroke="var(--amber-400)" stroke-width="8" stroke-linecap="round"/>
+                            </svg>
+                            <div class="dial-value"><span class="dial-number">3.2</span><span class="dial-unit">insights/wk</span></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">Autonomy</span><span class="card-badge">45% → 80%</span></div>
+                        <div class="autonomy-chart">
+                            <div class="auto-bar" style="height: 35%"><span>W1</span></div>
+                            <div class="auto-bar" style="height: 38%"><span>W2</span></div>
+                            <div class="auto-bar" style="height: 40%"><span>W3</span></div>
+                            <div class="auto-bar" style="height: 42%"><span>W4</span></div>
+                            <div class="auto-bar" style="height: 45%; box-shadow: 0 0 12px var(--amber-400);"><span>Now</span></div>
+                        </div>
+                    </div>
                 </div>
                 <div class="card">
-                    <div class="card-header"><span class="card-title">Model Mastery</span></div>
-                    <p>Kimi: 92% — Fast implementation</p>
-                    <p>DeepSeek R1: 78% — Good reasoning</p>
-                    <p>Sonnet 4.6: 65% — Excellent for design</p>
+                    <div class="card-header"><span class="card-title">Skill Synergy</span><span class="card-badge">Cross-system</span></div>
+                    <div class="skill-network">
+                        <svg viewBox="0 0 400 200" width="100%" height="200">
+                            <line x1="80" y1="60" x2="200" y2="50" stroke="rgba(74,222,128,0.4)" stroke-width="3"/>
+                            <line x1="200" y1="50" x2="320" y2="80" stroke="rgba(74,222,128,0.3)" stroke-width="2"/>
+                            <line x1="80" y1="60" x2="140" y2="130" stroke="rgba(224,145,42,0.4)" stroke-width="2"/>
+                            <line x1="140" y1="130" x2="280" y2="140" stroke="rgba(224,145,42,0.3)" stroke-width="2"/>
+                            <circle cx="80" cy="60" r="20" fill="rgba(74,222,128,0.2)" stroke="#4ADE80" stroke-width="2"/>
+                            <text x="80" y="65" text-anchor="middle" fill="#4ADE80" font-size="10">impeccable</text>
+                            <circle cx="200" cy="50" r="18" fill="rgba(74,222,128,0.2)" stroke="#4ADE80" stroke-width="2"/>
+                            <text x="200" y="55" text-anchor="middle" fill="#4ADE80" font-size="9">structured</text>
+                            <circle cx="140" cy="130" r="16" fill="rgba(224,145,42,0.2)" stroke="#E0912A" stroke-width="2"/>
+                            <text x="140" y="135" text-anchor="middle" fill="#E0912A" font-size="9">qmd-search</text>
+                            <circle cx="280" cy="140" r="16" fill="rgba(224,145,42,0.2)" stroke="#E0912A" stroke-width="2"/>
+                            <text x="280" y="145" text-anchor="middle" fill="#E0912A" font-size="9">proactive</text>
+                            <circle cx="320" cy="80" r="14" fill="rgba(100,100,100,0.2)" stroke="#6B6B6B" stroke-width="1"/>
+                            <text x="320" y="85" text-anchor="middle" fill="#6B6B6B" font-size="8">agency</text>
+                        </svg>
+                    </div>
                 </div>
             </div>
             <div id="system" class="tab">
