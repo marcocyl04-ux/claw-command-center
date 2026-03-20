@@ -877,6 +877,8 @@
                             </div>
                         </div>
                     </div>
+                    
+                    ${getBenchmarkHTML()}
                 </div>
             `;
         }
@@ -891,6 +893,77 @@
                 archive.style.display = 'none';
                 arrow.textContent = '▼';
             }
+        }
+        
+        // Comparative Benchmarks
+        function getBenchmarkHTML() {
+            const benchmarks = [
+                {
+                    name: 'Autonomy',
+                    current: 45,
+                    target: 80,
+                    why: 'Marco needs Claw to operate independently for 80% of decisions to scale effectively. Current escalation rate limits throughput.',
+                    status: 'behind'
+                },
+                {
+                    name: 'Skill Mastery',
+                    current: 78,
+                    target: 90,
+                    why: '90% indicates consistent, reliable skill application without prompting. Below this suggests hesitation or forgetting to use available tools.',
+                    status: 'behind'
+                },
+                {
+                    name: 'Cost Efficiency',
+                    current: 85,
+                    target: 85,
+                    why: 'Current routing optimizes quality per dollar spent. Models matched appropriately to task complexity.',
+                    status: 'on-target'
+                },
+                {
+                    name: 'Memory Recall',
+                    current: 90,
+                    target: 85,
+                    why: 'Exceeds target. Strong compression and retrieval of lessons learned. Enables faster decision making.',
+                    status: 'ahead'
+                }
+            ];
+            
+            return `
+                <div class="card card-full">
+                    <div class="section-header">
+                        <span class="section-title">Progress to Targets</span>
+                        <span style="font-size: var(--text-sm); color: var(--text-secondary);">Where I am vs. where I need to be</span>
+                    </div>
+                    
+                    ${benchmarks.map(b => `
+                        <div style="margin-bottom: var(--space-5);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
+                                <span style="font-weight: 600;">${b.name}</span>
+                                <div style="display: flex; align-items: center; gap: var(--space-2);">
+                                    <span style="font-family: var(--font-mono); font-size: var(--text-lg); font-weight: 700; color: ${b.status === 'on-target' ? 'var(--success)' : b.status === 'ahead' ? 'var(--success)' : 'var(--amber-400)'}">${b.current}%</span>
+                                    <span style="font-size: var(--text-sm); color: var(--text-tertiary);">/ ${b.target}% target</span>
+                                    ${b.status === 'on-target' ? '<span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full);">✓ ON TARGET</span>' : ''}
+                                    ${b.status === 'ahead' ? '<span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full);">↑ AHEAD</span>' : ''}
+                                </div>
+                            </div>
+                            <div style="height: 12px; background: var(--bg-1); border-radius: var(--radius-full); overflow: hidden; margin-bottom: var(--space-3);">
+                                <div style="width: ${Math.min(b.current, 100)}%; height: 100%; background: ${b.status === 'on-target' ? 'var(--success)' : b.status === 'ahead' ? 'var(--success)' : 'linear-gradient(to right, var(--amber-500), var(--amber-400))'}; border-radius: var(--radius-full); position: relative;">
+                                    ${b.current < b.target ? `<div style="position: absolute; right: 0; top: 0; bottom: 0; width: 2px; background: var(--text-tertiary);"></div>` : ''}
+                                </div>
+                            </div>
+                            ${b.current < b.target ? `
+                                <div style="display: flex; justify-content: flex-end; margin-bottom: var(--space-2);">
+                                    <span style="font-size: var(--text-xs); color: var(--text-tertiary);">Target: ${b.target}%</span>
+                                </div>
+                            ` : ''}
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); border-left: 3px solid ${b.status === 'on-target' ? 'var(--success)' : b.status === 'ahead' ? 'var(--success)' : 'var(--amber-500)'};">
+                                <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-bottom: var(--space-1); text-transform: uppercase; letter-spacing: 0.05em;">Why this target</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">${b.why}</div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
         }
         
         function renderMemoryTab() {
