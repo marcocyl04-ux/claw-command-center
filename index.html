@@ -883,6 +883,53 @@
             `;
         }
         
+        function showFileDetail(file) {
+            const panel = document.getElementById('fileDetailPanel');
+            const details = {
+                'soul': {
+                    title: 'SOUL.md',
+                    content: 'Identity & principles that guide my behavior',
+                    keyPoints: ['Not an assistant, an intelligence', 'Truth over being right', 'Never go silent', 'If not written down, it didn\'t happen'],
+                    lastUsed: 'Dashboard purpose clarification'
+                },
+                'memory': {
+                    title: 'MEMORY.md',
+                    content: 'Lessons learned and knowledge to retain',
+                    keyPoints: ['Consult skills BEFORE design', '2-5 minute task breakdown', 'Say "I\'m stuck" not silent'],
+                    lastUsed: 'Tab content bug pattern'
+                },
+                'user': {
+                    title: 'USER.md',
+                    content: 'Marco\'s profile, preferences, and pain points',
+                    keyPoints: ['High-agency systems thinker', 'Wants proactive not reactive', 'Short bursts not marathons'],
+                    lastUsed: 'Pain points identification'
+                },
+                'agents': {
+                    title: 'AGENTS.md',
+                    content: 'System protocols and operational guidelines',
+                    keyPoints: ['Session-start protocol', 'Model routing rules', 'Budget discipline'],
+                    lastUsed: '5 days ago — needs review'
+                }
+            };
+            
+            const d = details[file];
+            if (!d) return;
+            
+            panel.style.display = 'block';
+            panel.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
+                    <span style="font-weight: 600; font-size: var(--text-xl);">${d.title}</span>
+                    <button onclick="document.getElementById('fileDetailPanel').style.display='none'" style="background: none; border: none; color: var(--text-tertiary); cursor: pointer; font-size: var(--text-xl);">×</button>
+                </div>
+                <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">${d.content}</div>
+                <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-bottom: var(--space-2);">Key Points:</div>
+                <ul style="margin: 0 0 var(--space-3) var(--space-4); font-size: var(--text-sm); color: var(--text-secondary);">
+                    ${d.keyPoints.map(p => `<li>${p}</li>`).join('')}
+                </ul>
+                <div style="font-size: var(--text-xs); color: var(--amber-400);">Last referenced: ${d.lastUsed}</div>
+            `;
+        }
+        
         function showCapabilityDetail(capability) {
             const panel = document.getElementById('capabilityDetailPanel');
             const details = {
@@ -1053,54 +1100,204 @@
                     <div class="state-headline">Memory Systems</div>
                     <div class="state-meta">What I know and how well I use it</div>
                 </div>
+                
+                <!-- Chunk 1: Memory Health Dashboard -->
+                <div class="card card-full" style="margin-bottom: var(--space-5);">
+                    <div class="section-header">
+                        <span class="section-title">Memory Health</span>
+                        <span style="font-size: var(--text-sm); color: var(--text-secondary);">Real-time status</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-5);">
+                        <!-- Working Memory -->
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
+                                <span style="font-weight: 600;">Working Memory</span>
+                                <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full);">Healthy</span>
+                            </div>
+                            <div style="height: 10px; background: var(--bg-1); border-radius: var(--radius-full); overflow: hidden; margin-bottom: var(--space-2);">
+                                <div style="width: 80%; height: 100%; background: linear-gradient(to right, var(--success), var(--amber-500)); border-radius: var(--radius-full);"></div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-1);">
+                                <span>47MB / 60MB</span>
+                                <span>80%</span>
+                            </div>
+                            <div style="font-size: var(--text-xs); color: var(--text-tertiary);">12 files loaded</div>
+                        </div>
+                        
+                        <!-- Long-term Recall -->
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
+                                <span style="font-weight: 600;">Long-term Recall</span>
+                                <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full);">Excellent</span>
+                            </div>
+                            <div style="height: 10px; background: var(--bg-1); border-radius: var(--radius-full); overflow: hidden; margin-bottom: var(--space-2);">
+                                <div style="width: 90%; height: 100%; background: var(--success); border-radius: var(--radius-full);"></div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-1);">
+                                <span>28 remembered</span>
+                                <span>90%</span>
+                            </div>
+                            <div style="font-size: var(--text-xs); color: var(--success);">↑ Accuracy improving</div>
+                        </div>
+                        
+                        <!-- Compression -->
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
+                                <span style="font-weight: 600;">Compression</span>
+                                <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(224,145,42,0.2); color: var(--amber-400); border-radius: var(--radius-full);">Good</span>
+                            </div>
+                            <div style="height: 10px; background: var(--bg-1); border-radius: var(--radius-full); overflow: hidden; margin-bottom: var(--space-2);">
+                                <div style="width: 70%; height: 100%; background: var(--amber-500); border-radius: var(--radius-full);"></div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-1);">
+                                <span>47MB → 3.2MB</span>
+                                <span>15:1</span>
+                            </div>
+                            <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Efficient distillation</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Chunk 2: Active Memories -->
+                <div class="card card-full" style="margin-bottom: var(--space-5);">
+                    <div class="section-header">
+                        <span class="section-title">Currently Loaded</span>
+                        <span style="font-size: var(--text-sm); color: var(--text-secondary);">What's in my working memory this session</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3);">
+                        <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--success); cursor: pointer;" onclick="showFileDetail('soul')">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
+                                <span style="font-weight: 600;">SOUL.md</span>
+                                <span style="font-size: var(--text-xs); color: var(--success);">Active 2 hrs</span>
+                            </div>
+                            <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">Identity & principles</div>
+                            <div style="display: flex; justify-content: space-between; font-size: var(--text-xs);">
+                                <span style="color: var(--text-tertiary);">Confidence: 95%</span>
+                                <span style="color: var(--amber-400);">Last: Dashboard purpose</span>
+                            </div>
+                        </div>
+                        
+                        <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--success); cursor: pointer;" onclick="showFileDetail('memory')">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
+                                <span style="font-weight: 600;">MEMORY.md</span>
+                                <span style="font-size: var(--text-xs); color: var(--success);">Active 2 hrs</span>
+                            </div>
+                            <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">Lessons & knowledge</div>
+                            <div style="display: flex; justify-content: space-between; font-size: var(--text-xs);">
+                                <span style="color: var(--text-tertiary);">Confidence: 90%</span>
+                                <span style="color: var(--amber-400);">Last: Tab content bug</span>
+                            </div>
+                        </div>
+                        
+                        <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--success); cursor: pointer;" onclick="showFileDetail('user')">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
+                                <span style="font-weight: 600;">USER.md</span>
+                                <span style="font-size: var(--text-xs); color: var(--success);">Active 2 hrs</span>
+                            </div>
+                            <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">Marco's profile</div>
+                            <div style="display: flex; justify-content: space-between; font-size: var(--text-xs);">
+                                <span style="color: var(--text-tertiary);">Confidence: 85%</span>
+                                <span style="color: var(--amber-400);">Last: Pain points</span>
+                            </div>
+                        </div>
+                        
+                        <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--amber-500); cursor: pointer;" onclick="showFileDetail('agents')">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
+                                <span style="font-weight: 600;">AGENTS.md</span>
+                                <span style="font-size: var(--text-xs); color: var(--amber-400);">Stale 5 days</span>
+                            </div>
+                            <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">System protocols</div>
+                            <div style="display: flex; justify-content: space-between; font-size: var(--text-xs);">
+                                <span style="color: var(--text-tertiary);">Confidence: 70%</span>
+                                <span style="color: var(--danger);">⚠ Not referenced</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="fileDetailPanel" style="display: none; margin-top: var(--space-4); background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-5); border-left: 3px solid var(--amber-500);"></div>
+                </div>
+                
+                <!-- Chunk 3: Critical Memories -->
+                <div class="card card-full" style="margin-bottom: var(--space-5);">
+                    <div class="section-header">
+                        <span class="section-title">Critical Memories</span>
+                        <span style="font-size: var(--text-sm); color: var(--text-secondary);">High-confidence lessons (Confidence > 85%)</span>
+                    </div>
+                    ${memory.long_term.lessons.filter(l => l.confidence > 85).map(l => `
+                        <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); margin-bottom: var(--space-3); border-left: 3px solid var(--success);">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-2);">
+                                <span style="font-weight: 600; flex: 1; padding-right: var(--space-3);">${l.lesson}</span>
+                                <div style="text-align: right;">
+                                    <div style="font-family: var(--font-mono); font-size: var(--text-sm); color: var(--success); font-weight: 600;">${l.confidence}%</div>
+                                    <div style="font-size: var(--text-xs); color: var(--text-tertiary);">${l.last_used}</div>
+                                </div>
+                            </div>
+                            <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-bottom: var(--space-2);">Origin: ${l.origin}</div>
+                            <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">Context: ${l.context}</div>
+                            <div style="display: flex; gap: var(--space-2);">
+                                <button style="background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.3); color: var(--success); padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); font-size: var(--text-xs); cursor: pointer;">View applications</button>
+                                <button style="background: rgba(224,145,42,0.1); border: 1px solid rgba(224,145,42,0.3); color: var(--amber-400); padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); font-size: var(--text-xs); cursor: pointer;">Mark validated</button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <!-- Chunk 4: Memory Gaps -->
+                <div class="card card-full" style="margin-bottom: var(--space-5);">
+                    <div class="section-header">
+                        <span class="section-title">Memory Gaps</span>
+                        <span style="font-size: var(--text-sm); color: var(--text-secondary);">Recent failures — honest assessment</span>
+                    </div>
+                    ${memory.recent_failures.map(f => `
+                        <div style="background: rgba(248,113,113,0.05); border: 1px solid rgba(248,113,113,0.2); border-radius: var(--radius-md); padding: var(--space-4); margin-bottom: var(--space-3);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
+                                <span style="font-weight: 600; color: var(--danger);">${f.what}</span>
+                                <span style="font-size: var(--text-xs); color: var(--text-tertiary);">${f.when}</span>
+                            </div>
+                            <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">Impact: ${f.impact}</div>
+                            <div style="background: var(--bg-0); border-radius: var(--radius-md); padding: var(--space-3); font-size: var(--text-sm); color: var(--amber-400);">
+                                <strong>Lesson added:</strong> ${f.lesson_added}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <!-- Chunk 5 & 6: Search and Timeline (simplified) -->
                 <div class="cards-grid">
                     <div class="card">
                         <div class="section-header">
-                            <span class="section-title">Working Memory</span>
+                            <span class="section-title">Memory Search</span>
                         </div>
-                        <div class="thought-item">
-                            <div class="thought-label">Loaded Files</div>
-                            <div class="thought-value">${memory.working.loaded_files.join(', ')}</div>
-                        </div>
-                        <div class="thought-item">
-                            <div class="thought-label">Session History</div>
-                            <div class="thought-value">${memory.working.session_history}</div>
-                        </div>
-                        <div class="thought-item">
-                            <div class="thought-label">Compression</div>
-                            <div class="thought-value">${(memory.working.compression_ratio * 100).toFixed(0)}%</div>
+                        <input type="text" placeholder="Search memories..." style="width: 100%; padding: var(--space-3); background: var(--bg-1); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-md); color: var(--text-primary); margin-bottom: var(--space-3);">
+                        <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-bottom: var(--space-2);">Recent searches:</div>
+                        <div style="display: flex; flex-wrap: wrap; gap: var(--space-2);">
+                            <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: var(--bg-1); border-radius: var(--radius-full); color: var(--text-secondary);">dashboard design</span>
+                            <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: var(--bg-1); border-radius: var(--radius-full); color: var(--text-secondary);">skill chaining</span>
+                            <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: var(--bg-1); border-radius: var(--radius-full); color: var(--text-secondary);">Marco preferences</span>
                         </div>
                     </div>
+                    
                     <div class="card">
                         <div class="section-header">
-                            <span class="section-title">Recall Performance</span>
+                            <span class="section-title">Memory Timeline</span>
                         </div>
-                        <div style="display: flex; gap: var(--space-6);">
-                            <div>
-                                <div style="font-family: var(--font-mono); font-size: var(--text-3xl); font-weight: 700; color: var(--success);">${memory.recall.remembered}</div>
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">Remembered</div>
+                        <div style="position: relative; padding-left: var(--space-4);">
+                            <div style="position: absolute; left: 6px; top: 0; bottom: 0; width: 2px; background: var(--bg-1);"></div>
+                            <div style="position: relative; margin-bottom: var(--space-3);">
+                                <div style="position: absolute; left: -26px; top: 2px; width: 10px; height: 10px; border-radius: 50%; background: var(--success);"></div>
+                                <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Jan 2026</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">SOUL.md, USER.md, AGENTS.md created</div>
                             </div>
-                            <div>
-                                <div style="font-family: var(--font-mono); font-size: var(--text-3xl); font-weight: 700; color: var(--danger);">${memory.recall.forgot}</div>
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">Forgot</div>
+                            <div style="position: relative; margin-bottom: var(--space-3);">
+                                <div style="position: absolute; left: -26px; top: 2px; width: 10px; height: 10px; border-radius: 50%; background: var(--success);"></div>
+                                <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Feb 2026</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">Skill chaining, Model routing learned</div>
                             </div>
-                            <div>
-                                <div style="font-family: var(--font-mono); font-size: var(--text-3xl); font-weight: 700;">${memory.recall.accuracy}%</div>
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">Accuracy</div>
+                            <div style="position: relative;">
+                                <div style="position: absolute; left: -26px; top: 2px; width: 10px; height: 10px; border-radius: 50%; background: var(--amber-500);"></div>
+                                <div style="font-size: var(--text-xs); color: var(--amber-400);">Mar 2026 (Today)</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">Dashboard v6.0, Tab content bug pattern</div>
                             </div>
                         </div>
-                    </div>
-                    <div class="card card-full">
-                        <div class="section-header">
-                            <span class="section-title">Long-term Lessons</span>
-                        </div>
-                        ${memory.long_term.lessons.map(l => `
-                            <div class="skill-node">
-                                <span class="skill-name">${l.lesson}</span>
-                                <span class="skill-usage">${l.confidence}% conf</span>
-                                <span class="skill-status ${l.confidence > 90 ? 'active' : 'underused'}">${l.last_used}</span>
-                            </div>
-                        `).join('')}
                     </div>
                 </div>
             `;
