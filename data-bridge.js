@@ -92,11 +92,11 @@ const DataBridge = {
   async getSkillUsage() {
     // In real implementation, parse session logs
     return [
-      { id: 'impeccable', usage: 15, synergy: ['structured-workflow'], status: 'active' },
-      { id: 'structured-workflow', usage: 12, synergy: ['impeccable', 'proactive-agent'], status: 'active' },
-      { id: 'proactive-agent', usage: 8, synergy: ['structured-workflow'], status: 'underused' },
-      { id: 'qmd-search', usage: 6, synergy: ['memory_search'], status: 'underused' },
-      { id: 'agency-agents', usage: 2, synergy: [], status: 'neglected' }
+      { id: 'impeccable', usage: 15, synergy: ['structured-workflow'], status: 'active', effectiveness: 85, last_used: 'today', example: 'Used for thermal predator design system — resulted in OKLCH color architecture' },
+      { id: 'structured-workflow', usage: 12, synergy: ['impeccable', 'proactive-agent'], status: 'active', effectiveness: 90, last_used: 'today', example: 'Broke dashboard rebuild into 6 digestible tasks — prevented stall' },
+      { id: 'proactive-agent', usage: 8, synergy: ['structured-workflow'], status: 'underused', effectiveness: 70, last_used: '3 days ago', example: 'Generated intervention prompts for dashboard — but not used consistently' },
+      { id: 'qmd-search', usage: 6, synergy: ['memory_search'], status: 'underused', effectiveness: 75, last_used: '1 week ago', example: 'Searched memory for dashboard patterns — found prior design decisions' },
+      { id: 'agency-agents', usage: 2, synergy: [], status: 'neglected', effectiveness: 60, last_used: '2 weeks ago', example: 'Used for critique panel — but not integrated into daily workflow' }
     ];
   },
   
@@ -115,7 +115,25 @@ const DataBridge = {
     return {
       autonomous: { count: 12, quality: 78 },
       escalated: { count: 15, quality: 85 },
-      trend: 'improving'
+      trend: 'improving',
+      examples: [
+        {
+          type: 'autonomous',
+          context: 'Dashboard architecture decision',
+          decision: 'Chose 6-tab structure with TRADING as separate sub-brain',
+          reasoning: 'Marco emphasized trading is important but not primary — separate tab honors both needs',
+          outcome: 'good',
+          timestamp: 'today'
+        },
+        {
+          type: 'escalated',
+          context: 'Visual design direction',
+          decision: 'Asked Marco to confirm understanding of dashboard purpose before proceeding',
+          reasoning: 'Risk of building wrong thing was high — better to validate than assume',
+          outcome: 'excellent',
+          timestamp: 'today'
+        }
+      ]
     };
   },
   
