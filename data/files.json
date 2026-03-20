@@ -1,0 +1,37 @@
+{
+  "files": [
+    {
+      "name": "SOUL.md",
+      "path": "/core/SOUL.md",
+      "lastModified": "2026-03-20T01:30:00Z",
+      "status": "active",
+      "size": 2847,
+      "description": "Identity & operating principles"
+    },
+    {
+      "name": "MEMORY.md",
+      "path": "/core/MEMORY.md",
+      "lastModified": "2026-03-20T01:25:00Z",
+      "status": "active",
+      "size": 4521,
+      "description": "Lessons & accumulated knowledge"
+    },
+    {
+      "name": "AGENTS.md",
+      "path": "/core/AGENTS.md",
+      "lastModified": "2026-03-19T22:00:00Z",
+      "status": "active",
+      "size": 3156,
+      "description": "System protocols & routing"
+    },
+    {
+      "name": "USER.md",
+      "path": "/core/USER.md",
+      "lastModified": "2026-03-18T15:00:00Z",
+      "status": "warning",
+      "size": 1892,
+      "description": "Marco's profile & preferences"
+    }
+  ],
+  "lastScan": "2026-03-20T01:40:00Z"
+}

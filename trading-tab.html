@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claw Command Center - Trading</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --amber-500: #E0912A;
+            --amber-400: #F5A94C;
+            --dark-950: #0A0A0A;
+            --dark-900: #141414;
+            --dark-850: #181818;
+            --dark-800: #1A1A1A;
+            --dark-700: #222222;
+            --dark-600: #2A2A2A;
+            --text-primary: #EDEDED;
+            --text-secondary: #A1A1A1;
+            --text-tertiary: #6B6B6B;
+            --success: #4ADE80;
+            --success-dim: rgba(74, 222, 128, 0.15);
+            --danger: #F87171;
+            --danger-dim: rgba(248, 113, 113, 0.15);
+            --warning: #FBBF24;
+            --info: #60A5FA;
+            --font-mono: 'JetBrains Mono', monospace;
+            --font-sans: 'Inter', system-ui, sans-serif;
+            --space-1: 4px;
+            --space-2: 8px;
+            --space-3: 12px;
+            --space-4: 16px;
+            --space-5: 20px;
+            --space-6: 24px;
+            --text-xs: 11px;
+            --text-sm: 13px;
+            --text-base: 14px;
+            --text-lg: 16px;
+            --text-xl: 20px;
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-sans); background: var(--dark-950); color: var(--text-primary); font-size: 14px; line-height: 1.5; }
+        .app { display: flex; height: 100vh; }
+        .sidebar { width: 260px; background: var(--dark-900); border-right: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; flex-shrink: 0; }
+        .logo { padding: 20px 24px; font-size: 20px; font-weight: 700; color: var(--amber-500); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 24px; cursor: pointer; color: var(--text-secondary); border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-item:hover { color: var(--text-primary); background: rgba(255,255,255,0.02); }
+        .nav-item.active { color: var(--text-primary); border-left-color: var(--amber-500); background: rgba(224,145,42,0.08); }
+        .main { flex: 1; overflow-y: auto; padding: var(--space-6); }
+        .risk-snapshot-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4); margin-bottom: var(--space-6); background: var(--dark-900); border-radius: var(--radius-lg); padding: var(--space-5); border: 1px solid rgba(255,255,255,0.05); }
+        .snapshot-metric { display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-3) var(--space-4); border-right: 1px solid rgba(255,255,255,0.05); }
+        .snapshot-metric:last-child { border-right: none; }
+        .snapshot-label { font-size: var(--text-xs); color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500; }
+        .snapshot-value { font-size: var(--text-xl); font-weight: 700; font-family: var(--font-mono); color: var(--text-primary); }
+        .snapshot-value.positive { color: var(--success); }
+        .snapshot-value.negative { color: var(--danger); }
+        .snapshot-value.warning { color: var(--warning); }
+        .snapshot-sub { font-size: var(--text-xs); color: var(--text-tertiary); }
+        .trading-grid { display: grid; grid-template-columns: 1fr 340px; gap: var(--space-6); }
+        .positions-section { display: flex; flex-direction: column; gap: var(--space-4); }
+        .positions-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2); }
+        .positions-title { font-size: var(--text-lg); font-weight: 600; }
+        .positions-count { font-size: var(--text-xs); color: var(--text-secondary); font-family: var(--font-mono); background: var(--dark-800); padding: var(--space-1) var(--space-3); border-radius: var(--radius-sm); }
+        .positions-table { background: var(--dark-900); border-radius: var(--radius-lg); border: 1px solid rgba(255,255,255,0.05); overflow: hidden; }
+        .table-header { display: grid; grid-template-columns: 2.5fr 80px 100px 100px 100px 90px 80px; gap: var(--space-3); padding: var(--space-3) var(--space-4); background: var(--dark-850); border-bottom: 1px solid rgba(255,255,255,0.05); font-size: var(--text-xs); color: var(--text-secondary); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+        .table-header > div { display: flex; align-items: center; }
+        .table-header .align-right { justify-content: flex-end; }
+        .table-header .align-center { justify-content: center; }
+        .position-row { display: grid; grid-template-columns: 2.5fr 80px 100px 100px 100px 90px 80px; gap: var(--space-3); padding: var(--space-4); border-bottom: 1px solid rgba(255,255,255,0.03); cursor: pointer; transition: all 0.2s ease; align-items: center; }
+        .position-row:last-child { border-bottom: none; }
+        .position-row:hover { background: rgba(224,145,42,0.05); }
+        .position-row:focus { outline: 2px solid var(--amber-500); outline-offset: -2px; }
+        .position-row.expanded { background: rgba(224,145,42,0.08); }
+        .position-market-cell { display: flex; flex-direction: column; gap: var(--space-1); min-width: 0; }
+        .position-market-name { font-size: var(--text-sm); font-weight: 500; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .position-platform { display: flex; align-items: center; gap: var(--space-2); }
+        .platform-badge { font-size: var(--text-xs); padding: 2px 8px; border-radius: var(--radius-sm); font-weight: 500; }
+        .platform-badge.polymarket { background: rgba(139, 92, 246, 0.15); color: #A78BFA; }
+        .platform-badge.kalshi { background: rgba(52, 211, 153, 0.15); color: #34D399; }
+        .position-direction { font-size: var(--text-xs); font-weight: 700; padding: 4px 10px; border-radius: var(--radius-sm); text-transform: uppercase; text-align: center; }
+        .position-direction.yes { background: var(--success-dim); color: var(--success); }
+        .position-direction.no { background: var(--danger-dim); color: var(--danger); }
+        .position-price { display: flex; flex-direction: column; gap: 2px; }
+        .price-current { font-size: var(--text-sm); font-weight: 600; font-family: var(--font-mono); color: var(--text-primary); }
+        .price-entry { font-size: var(--text-xs); color: var(--text-tertiary); font-family: var(--font-mono); }
+        .position-stake { font-size: var(--text-sm); font-weight: 600; font-family: var(--font-mono); color: var(--text-primary); text-align: right; }
+        .position-pnl { display: flex; flex-direction: column; gap: 2px; text-align: right; }
+        .pnl-value { font-size: var(--text-sm); font-weight: 600; font-family: var(--font-mono); }
+        .pnl-value.positive { color: var(--success); }
+        .pnl-value.negative { color: var(--danger); }
+        .pnl-percent { font-size: var(--text-xs); color: var(--text-tertiary); font-family: var(--font-mono); }
+        .position-expires { font-size: var(--text-xs); color: var(--text-secondary); font-family: var(--font-mono); text-align: right; }
+        .position-expires.urgent { color: var(--danger); animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .expand-icon { display: flex; align-items: center; justify-content: center; color: var(--text-tertiary); transition: transform 0.2s; }
+        .position-row.expanded .expand-icon { transform: rotate(180deg); color: var(--amber-500); }
+        .position-reasoning { display: none; grid-column: 1 / -1; padding: var(--space-4); padding-top: 0; margin-top: calc(-1 * var(--space-2)); animation: slideDown 0.2s ease; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .position-row.expanded .position-reasoning { display: block; }
+        .reasoning-content { background: var(--dark-800); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--amber-500); }
+        .reasoning-header { font-size: var(--text-xs); color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: var(--space-3); font-weight: 500; }
+        .reasoning-text { font-size: var(--text-sm); color: var(--text-primary); line-height: 1.6; margin-bottom: var(--space-4); }
+        .reasoning-meta { display: flex; gap: var(--space-6); padding-top: var(--space-3); border-top: 1px solid rgba(255,255,255,0.05); }
+        .reasoning-meta-item { display: flex; flex-direction: column; gap: var(--space-1); }
+        .reasoning-meta-label { font-size: var(--text-xs); color: var(--text-tertiary); }
+        .reasoning-meta-value { font-size: var(--text-sm); font-weight: 600; color: var(--text-primary); font-family: var(--font-mono); }
+        .risk-sidebar { display: flex; flex-direction: column; gap: var(--space-5); }
+        .risk-card { background: var(--dark-900); border-radius: var(--radius-lg); padding: var(--space-5); border: 1px solid rgba(255,255,255,0.05); }
+        .risk-card-header { display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-5); font-size: var(--text-sm); font-weight: 600; color: var(--text-primary); }
+        .risk-card-header::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--amber-500); }
+        .exposure-category { margin-bottom: var(--space-4); }
+        .exposure-category:last-child { margin-bottom: 0; }
+        .exposure-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2); }
+        .exposure-label { font-size: var(--text-xs); color: var(--text-secondary); }
+        .exposure-value { font-size: var(--text-xs); font-weight: 600; color: var(--text-primary); font-family: var(--font-mono); }
+        .exposure-bar-bg { height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; }
+        .exposure-bar-fill { height: 100%; border-radius: 3px; transition: width 0.3s ease; }
+        .exposure-bar-fill.weather { background: linear-gradient(90deg, #60A5FA, #34D399); }
+        .exposure-bar-fill.politics { background: linear-gradient(90deg, #A78BFA, #F472B6); }
+        .exposure-bar-fill.crypto { background: linear-gradient(90deg, #FBBF24, #F97316); }
+        .exposure-bar-fill.sports { background: linear-gradient(90deg, #4ADE80, #22D3EE); }
+        .correlation-matrix { display: grid; grid-template-columns: auto repeat(4, 1fr); gap: 2px; font-size: var(--text-xs); }
+        .matrix-header { font-weight: 500; color: var(--text-secondary); padding: var(--space-2); text-align: center; }
+        .matrix-label { color: var(--text-secondary); padding: var(--space-2); text-align: right; font-weight: 500; }
+        .matrix-cell { padding: var(--space-2); text-align: center; border-radius: var(--radius-sm); font-family: var(--font-mono); font-weight: 500; }
+        .matrix-cell.high { background: rgba(248, 113, 113, 0.2); color: var(--danger); }
+        .matrix-cell.medium { background: rgba(251, 191, 36, 0.15); color: var(--warning); }
+        .matrix-cell.low { background: rgba(74, 222, 128, 0.15); color: var(--success); }
+        .matrix-cell.diag { background: rgba(255,255,255,0.06); color: var(--text-secondary); }
+        .kelly-metric { display: flex; justify-content: space-between; align-items: center; padding: var(--space-3) 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .kelly-metric:last-child { border-bottom: none; }
+        .kelly-label { display: flex; flex-direction: column; gap: 2px; }
+        .kelly-name { font-size: var(--text-xs); color: var(--text-secondary); }
+        .kelly-desc { font-size: var(--text-xs); color: var(--text-tertiary); }
+        .kelly-value { font-size: var(--text-sm); font-weight: 600; font-family: var(--font-mono); color: var(--text-primary); }
+        .kelly-value.optimal { color: var(--success); }
+        .kelly-value.caution { color: var(--warning); }
+        .kelly-value.risky { color: var(--danger); }
+        .kelly-formula { margin-top: var(--space-4); padding: var(--space-3); background: var(--dark-800); border-radius: var(--radius-md); font-family: var(--font-mono); font-size: var(--text-xs); color: var(--text-secondary); text-align: center; }
+        @media (max-width: 1100px) { .trading-grid { grid-template-columns: 1fr; } .risk-sidebar { flex-direction: row; flex-wrap: wrap; } .risk-card { flex: 1; min-width: 280px; } }
+        @media (max-width: 768px) { .risk-snapshot-bar { grid-template-columns: repeat(2, 1fr); } .snapshot-metric:nth-child(2) { border-right: none; } .snapshot-metric:nth-child(1), .snapshot-metric:nth-child(2) { border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: var(--space-4); } .table-header { display: none; } .position-row { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-2); } .position-reasoning { width: 100%; } }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <aside class="sidebar" role="navigation" aria-label="Main navigation">
+            <div class="logo">Claw</div>
+            <nav>
+                <div class="nav-item" onclick="switchTab('overview')">Overview</div>
+                <div class="nav-item active" onclick="switchTab('trading')">Trading</div>
+                <div class="nav-item" onclick="switchTab('evolution')">Evolution</div>
+                <div class="nav-item" onclick="switchTab('edge')">Edge Log</div>
+                <div class="nav-item" onclick="switchTab('system')">System</div>
+            </nav>
+        </aside>
+        <main class="main">
+            <div id="trading" class="tab-content active">
+                <section class="risk-snapshot-bar" aria-label="Risk Snapshot">
+                    <div class="snapshot-metric">
+                        <span class="snapshot-label">Total Exposure</span>
+                        <span class="snapshot-value">$12,450</span>
+                        <span class="snapshot-sub">of $20,000 bankroll</span>
+                    </div>
+                    <div class="snapshot-metric">
+                        <span class="snapshot-label">Largest Bet</span>
+                        <span class="snapshot-value">$3,200</span>
+                        <span class="snapshot-sub">25.7% of exposure</span>
+                    </div>
+                    <div class="snapshot-metric">
+                        <span class="snapshot-label">Corr Risk</span>
+                        <span class="snapshot-value warning">Medium</span>
+                        <span class="snapshot-sub">0.42 avg correlation</span>
+                    </div>
+                    <div class="snapshot-metric">
+                        <span class="snapshot-label">Max Drawdown</span>
+                        <span class="snapshot-value negative">-8.3%</span>
+                        <span class="snapshot-sub">from peak equity</span>
+                    </div>
+                </section>
+                <div class="trading-grid">
+                    <section class="positions-section" aria-labelledby="positions-heading">
+                        <div class="positions-header">
+                            <h2 id="positions-heading" class="positions-title">Active Positions</h2>
+                            <span class="positions-count">6 open</span>
+                        </div>
+                        <div class="positions-table">
+                            <div class="table-header" role="row">
+                                <div>Market</div>
+                                <div class="align-center">Dir</div>
+                                <div class="align-right">Price</div>
+                                <div class="align-right">Stake</div>
+                                <div class="align-right">P&L</div>
+                                <div class="align-right">Expires</div>
+                                <div class="align-center"></div>
+                            </div>
+                            <article class="position-row" tabindex="0" role="button" onclick="toggleRow(this)">
+                                <div class="position-market-cell">
+                                    <div class="position-market-name">Rain in NYC March 20</div>
+                                    <div class="position-platform">
+                                        <span class="platform-badge polymarket">Polymarket</span>
+                                        <span style="font-size: var(--text-xs); color: var(--text-tertiary);">#2847</span>
+                                    </div>
+                                </div>
+                                <div class="position-direction yes">YES</div>
+                                <div class="position-price">
+                                    <span class="price-current">0.73c</span>
+                                    <span class="price-entry">@0.68c</span>
+                                </div>
+                                <div class="position-stake">2,450</div>
+                                <div class="position-pnl">
+                                    <span class="pnl-value positive">+123</span>
+                                    <span class="pnl-percent">+5.0%</span>
+                                </div>
+                                <div class="position-expires urgent">4h 12m</div>
+                                <div class="expand-icon" aria-hidden="true">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M4 6l4 4 4-4"/></svg>
+                                </div>
+                                <div class="position-reasoning">
+                                    <div class="reasoning-content">
+                                        <div class="reasoning-header">Position Reasoning</div>
+                                        <p class="reasoning-text">NWS forecast shows 78% precipitation probability for Manhattan area. European model (ECMWF) aligns with GFS on moisture convergence. Bet placed at slight discount to true probability (estimated 75%). Edge: 7% over market price.</p>
+                                        <div class="reasoning-meta">
+                                            <div class="reasoning-meta-item"><span class="reasoning-meta-label">Confidence</span><span class="reasoning-meta-value" style="color: var(--success);">73%</span></div>
+                                            <div class="reasoning-meta-item"><span class="reasoning-meta-label">Edge</span><span class="reasoning-meta-value" style="color: var(--amber-400);">+7.2%</span></div>
+                                            <div class="reasoning-meta-item"><span class="reasoning-meta-label">Kelly %</span><span class="reasoning-meta-value">12.4%</span></div>
+                                            <div class="reasoning-meta-item"><span class="reasoning-meta-label">Opened</span><span class="reasoning-meta-value">Mar 18</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                            <article class="position-row" tabindex="0" role="button" onclick="toggleRow(this)">
+                                <div class="position-market-cell">
+                                    <div class="position-market-name">Temp over 72F Austin</div>
+                                    <div class="position-platform">
+                                        <span class="platform-badge kalshi">Kalshi</span>
+                                        <span style="font-size: var(--text-xs); color: var(--text-tertiary);">#2851</span>
+                                    </div>
+                                </div>
+                                <div class="position-direction no">NO</div>
+                                <div class="position-price">
+                                    <span class="price-current">0.32c</span>
+                                    <span class="price-entry">@0.35c</span>
+                                </div>
+                                <div class="position-stake">1,800</div>
+                                <div class="position-pnl">
+                                    <span class="pnl-value positive">+54</span>
+                                    <span class="pnl-percent">+3.0%</span>
+                                </div>
+                                <div class="position-expires">42h 18m</div>
+                                <div class="expand-icon" aria-hidden="true">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M4 6l4 4 4-4"/></svg>
+                                </div>
+                                <div class="position-reasoning">
+                                    <div class="reasoning-content">
+                                        <div class="reasoning-header">Position Reasoning</div>
+                                        <p class="reasoning-text">Cold front moving through Texas panhandle. Historical data shows 72F threshold rarely breached in late March following late-season cold snaps. Market overestimating warming trend. Edge: 5% over market.</p>
+                                        <div class="reasoning-meta">
+                                            <div class="reasoning-meta-item"><span class="reasoning-meta-label">Confidence</span><span class="reasoning-meta-value" style="color: var(--success);">68%</span></div>
+                                            <div class="reasoning-meta-item"><span class="reasoning-meta-label">Edge</span><span class="reasoning-meta-value" style="color: var(--amber-400);">+5.1%</span></div>
+                                            <div class="reasoning-meta-item"><span class="reasoning-meta-label">Kelly %</span><span class="reasoning-meta-value">9.0%</span></div>
+                                            <div class="reasoning-meta-item"><span class="reasoning-meta-label">Opened</span><span class="reasoning-meta-value">Mar 17</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                            <article class="position-row" tabindex="0" role="button" onclick="toggleRow(this)">
+                                <div class="position-market-cell">
+                                    <div class="position-market-name">Humidity under 60% Miami</div>
+                                    <div class="position-platform">
+                                        <span class="platform-badge polymarket">Polymarket</span>
+                                        <span style="font-size: var(--text-xs); color: var(--text-tertiary);">#2849</span>
+                                    </div>
+                                </div>
+                                <div class="position-direction yes">YES</div>
+                                <div class="position-price">
+                                    <span class="price-current">0.81c</span>
+                                    <span class="price-entry">@0.76c</span>
+                                </div>
+                                <div class="position-stake">3,200</div>
+                                <div class="position-pnl">
+                                    <span class="pnl-value positive">+160</span>
+                                    <span class="pnl-percent">+5.0%</span>
+                                </div>
+                                <div class="position-expires">18h 42m</div>
+                                <div class="expand-icon" aria-hidden="true">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M4 6l4 4 4-4"/></svg>
+                                </div>
+                                <div class="position-reasoning">
+                                    <div class="reasoning-content">
+                                        <div class="reasoning-header">Position Reasoning</div>
+                                        <p class="reasoning-text">Dry air mass from Gulf displacement. Dew point dropping faster than models predicted. High confidence in sub-60% humidity through resolution period. Largest position due to strong edge.</p>
+                                        <div class="reasoning-meta">
+                                            <div class="reasoning-meta-item"><span class="reasoning-meta-label">Confidence</span><span class="reasoning-meta-value" style="color: var(--success);">81%</span></div>
+                                            <div class="reasoning-meta-item"><span class="reasoning-meta-label">Edge</span><span class="reasoning-meta-value" style="color: var(--amber-400);">+6.6%</span></div>
+                                            <div class="reasoning-meta-item"><span class="reasoning-meta-label">Kelly %</span><span class="reasoning-meta-value">16.0%</span></div>
+                                            <div class="reasoning-meta-item"><span class="reasoning-meta-label">Opened</span><span class="reasoning-meta-value">Mar 16</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                            <article class="position-row" tabindex="0" role="button" onclick="toggleRow(this)">
+                                <div class="position-market-cell">
+                                    <div class="position-market-name">Snow in Boston March 21</div>
+                                    <div class="position-platform">
+                                        <span class="platform-badge kalshi">Kalshi</span>
+                                        <span style="font-size: var(--text-xs); color: var(--text-tertiary);">#2862</span>
+                                    </div>
+                                </div>
+                                <div class="position-direction no">NO</div>
+                                <div class="position-price">
+                                    <span class="price-current">0.28c</span>
+                                    <span class="price-entry">@0.31c</span>
+                                </div>
+                                <div class="position-stake">1,500</div>
+                                <div class="position-pnl">
+                                    <span class="pnl-value positive">+45</span>
+                                    <span class="pnl-percent">+3.0%</span>
+                                </div>
+                                <div class="position-expires">26h 15m</div>
+                                <div class="expand-icon" aria-hidden="true">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M4 6l4 4 4-4"/></svg>
+                                </div>
+                                <div class="position-reasoning">
+                                    <div class="reasoning-content">
+                                        <div class="reasoning-header">Position Reasoning</div>
+                                        <p class="reasoning-text">Temperatures rising above freezing by noon. Ground too warm for accumulation even if precipitation falls. Market overestimating snow probability based on outdated models.</p>
+                                        <div class="reasoning-meta">
+                                            <div class="reasoning-meta-item"><span class="reasoning-meta-label">Confidence</span><span class="reasoning-meta-value" style="color: var(--success);">72%</span></div>
+                                            <div class="reasoning-meta-item"><span class="reasoning-meta-label">Edge</span><span class="reasoning-meta-value" style="color: var(--amber-400);">+4.8%</span></div>
+                                            <div class="reasoning-meta-item"><span class="reasoning-meta-label">Kelly %</span><span class="reasoning-meta-value">7.5%</span></div>
+                                            <div class="reasoning-meta-item"><span class="reasoning-meta-label">Opened</span><span class="reasoning-meta-value">Mar 19</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                            <article class="position-row" tabindex="0" role="button" onclick="toggleRow(this)">
+                                <div class="position-market-cell">
+                                    <div class="position-market-name">Wind over 25mph Chicago</div>
+                                    <div class="position-platform">
+                                        <span class="platform-badge polymarket">Polymarket</span>
+                                        <span style="font-size: var(--text-xs); color: var(--text-tertiary);">#2855</span>
+                                    </div>
+                                </div>
+                                <div class="position-direction yes">YES</div>
+                                <div class="position-price">
+                                    <span class="price-current">0.64c</span>
+                                    <span class="price-entry">@0.58c</span>
+                                </div>
+                                <div class="position-stake">2,100</div>
+                                <div class="position-pnl">
+                                    <span class="pnl-value positive">+126</span>
+                                    <span class="pnl-percent">+6.0%</span>
+                                </div>
+                                <div class="position-expires">8h 33m</div>
+                                <div class="expand-icon" aria-hidden="true">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M4 6l4 4 4-4"/></svg>
+                                </div>
+                                <div class="position-reasoning">
+                                    <div class="reasoning-content">
+                                        <div class="reasoning-header">Position Reasoning</div>
+                                        <p class="reasoning-text">Strong pressure gradient developing ahead of frontal system. Sustained winds already gusting to 30mph at O'Hare. High confidence threshold will be exceeded.</p>
+                                        <div class="reasoning-meta">
+                                            <div class="reasoning-meta-item"><span class="reasoning-meta-label">Confidence</span><span class="reasoning-meta-value" style="color: var(--success);">76%</span></div>
+                                            <div class="reasoning-meta-item"><span class="reasoning-meta-label">Edge</span><span class="reasoning-meta-value" style="color: var(--amber-400);">+8.4%</span></div>
+                                            <div class="reasoning-meta-item"><span class="reasoning-meta-label">Kelly %</span><span class="reasoning-meta-value">10.5%</span></div>
+                                            <div class="reasoning-meta-item"><span class="reasoning-meta-label">Opened</span><span class="reasoning-meta-value">Mar 18</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                            <article class="position-row" tabindex="0" role="button" onclick="toggleRow(this)">
+                                <div class="position-market-cell">
+                                    <div class="position-market-name">Cloud cover under 40% Seattle</div>
+                                    <div class="position-platform">
+                                        <span class="platform-badge kalshi">Kalshi</span>
+                                        <span style="font-size: var(--text-xs); color: var(--text-tertiary);">#2871</span>
+                                    </div>
+                                </div>
+                                <div class="position-direction no">NO</div>
+                                <div class="position-price">
+                                    <span class="price-current">0.71c</span>
+                                    <span class="price-entry">@0.68c</span>
+                                </div>
+                                <div class="position-stake">1,400</div>
+                                <div class="position-pnl">
+                                    <span class="pnl-value negative">-42</span>
+                                    <span class="pnl-percent">-3.0%</span>
+                                </div>
+                                <div class="position-expires">52h 08m</div>
+                                <div class="expand-icon" aria-hidden="true">
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M4 6l4 4 4-4"/></svg>
+                                </div>
+                                <div class="position-reasoning">
+                                    <div class="reasoning-content">
+                                        <div class="reasoning-header">Position Reasoning</div>
+                                        <p class="reasoning-text">Marine layer persisting longer than forecast. Low pressure system off coast maintaining cloud coverage through resolution window. Position underwater but holding for reversal.</p>
+                                        <div class="reasoning-meta">
+                                            <div class="reasoning-meta-item"><span class="reasoning-meta-label">Confidence</span><span class="reasoning-meta-value" style="color: var(--warning);">61%</span></div>
+                                            <div class="reasoning-meta-item"><span class="reasoning-meta-label">Edge</span><span class="reasoning-meta-value" style="color: var(--amber-400);">+3.2%</span></div>
+                                            <div class="reasoning-meta-item"><span class="reasoning-meta-label">Kelly %</span><span class="reasoning-meta-value">7.0%</span></div>
+                                            <div class="reasoning-meta-item"><span class="reasoning-meta-label">Opened</span><span class="reasoning-meta-value">Mar 17</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    </section>
+                    <aside class="risk-sidebar" aria-label="Risk Analysis">
+                        <div class="risk-card">
+                            <h3 class="risk-card-header">Exposure by Category</h3>
+                            <div class="exposure-category">
+                                <div class="exposure-header">
+                                    <span class="exposure-label">Weather</span>
+                                    <span class="exposure-value">$12,450 (100%)</span>
+                                </div>
+                                <div class="exposure-bar-bg"><div class="exposure-bar-fill weather" style="width: 100%"></div></div>
+                            </div>
+                            <div class="exposure-category">
+                                <div class="exposure-header">
+                                    <span class="exposure-label">Politics</span>
+                                    <span class="exposure-value">$0 (0%)</span>
+                                </div>
+                                <div class="exposure-bar-bg"><div class="exposure-bar-fill politics" style="width: 0%"></div></div>
+                            </div>
+                            <div class="exposure-category">
+                                <div class="exposure-header">
+                                    <span class="exposure-label">Crypto</span>
+                                    <span class="exposure-value">$0 (0%)</span>
+                                </div>
+                                <div class="exposure-bar-bg"><div class="exposure-bar-fill crypto" style="width: 0%"></div></div>
+                            </div>
+                            <div class="exposure-category">
+                                <div class="exposure-header">
+                                    <span class="exposure-label">Sports</span>
+                                    <span class="exposure-value">$0 (0%)</span>
+                                </div>
+                                <div class="exposure-bar-bg"><div class="exposure-bar-fill sports" style="width: 0%"></div></div>
+                            </div>
+                        </div>
+                        <div class="risk-card">
+                            <h3 class="risk-card-header">Correlation Matrix</h3>
+                            <div class="correlation-matrix">
+                                <div></div>
+                                <div class="matrix-header">NYC</div>
+                                <div class="matrix-header">AUS</div>
+                                <div class="matrix-header">MIA</div>
+                                <div class="matrix-header">BOS</div>
+                                <div class="matrix-label">NYC</div>
+                                <div class="matrix-cell diag">1.0</div>
+                                <div class="matrix-cell low">0.12</div>
+                                <div class="matrix-cell medium">0.45</div>
+                                <div class="matrix-cell high">0.72</div>
+                                <div class="matrix-label">AUS</div>
+                                <div class="matrix-cell low">0.12</div>
+                                <div class="matrix-cell diag">1.0</div>
+                                <div class="matrix-cell low">0.18</div>
+                                <div class="matrix-cell low">0.23</div>
+                                <div class="matrix-label">MIA</div>
+                                <div class="matrix-cell medium">0.45</div>
+                                <div class="matrix-cell low">0.18</div>
+                                <div class="matrix-cell diag">1.0</div>
+                                <div class="matrix-cell medium">0.38</div>
+                                <div class="matrix-label">BOS</div>
+                                <div class="matrix-cell high">0.72</div>
+                                <div class="matrix-cell low">0.23</div>
+                                <div class="matrix-cell medium">0.38</div>
+                                <div class="matrix-cell diag">1.0</div>
+                            </div>
+                        </div>
+                        <div class="risk-card">
+                            <h3 class="risk-card-header">Kelly Metrics</h3>
+                            <div class="kelly-metric">
+                                <div class="kelly-label">
+                                    <span class="kelly-name">Current Kelly</span>
+                                    <span class="kelly-desc">Fractional Kelly (0.25x)</span>
+                                </div>
+                                <span class="kelly-value optimal">62.3%</span>
+                            </div>
+                            <div class="kelly-metric">
+                                <div class="kelly-label">
+                                    <span class="kelly-name">Full Kelly</span>
+                                    <span class="kelly-desc">Optimal bet size</span>
+                                </div>
+                                <span class="kelly-value">249.2%</span>
+                            </div>
+                            <div class="kelly-metric">
+                                <div class="kelly-label">
+                                    <span class="kelly-name">Edge-Adjusted</span>
+                                    <span class="kelly-desc">Weighted by avg edge</span>
+                                </div>
+                                <span class="kelly-value caution">18.7%</span>
+                            </div>
+                            <div class="kelly-metric">
+                                <div class="kelly-label">
+                                    <span class="kelly-name">Max Position</span>
+                                    <span class="kelly-desc">Single bet limit</span>
+                                </div>
+                                <span class="kelly-value caution">25.0%</span>
+                            </div>
+                            <div class="kelly-formula">f* = (bp - q) / b</div>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+        function toggleRow(row) {
+            row.classList.toggle('expanded');
+        }
+        document.querySelectorAll('.position-row').forEach(row => {
+            row.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggleRow(row);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

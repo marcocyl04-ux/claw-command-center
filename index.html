@@ -623,7 +623,52 @@
             </div>
         </main>
     </div>
+    <script src="data/data.js"></script>
     <script>
+        // Initialize data-driven components
+        async function initDashboard() {
+            await loadActivityFeed();
+            await loadFileStatus();
+        }
+        
+        async function loadActivityFeed() {
+            const activities = await DataLayer.getActivity(5);
+            const container = document.querySelector('.activity-feed');
+            if (!container || activities.length === 0) return;
+            
+            container.innerHTML = activities.map(a => `
+                <div class="activity-item" data-type="${a.type}">
+                    <div class="activity-time">${formatTime(a.timestamp)}</div>
+                    <div class="activity-title">${a.title}</div>
+                    <div class="activity-desc">${a.description}</div>
+                </div>
+            `).join('');
+        }
+        
+        async function loadFileStatus() {
+            const { files } = await DataLayer.getFiles();
+            files.forEach(file => {
+                const el = document.querySelector(`[data-file="${file.name}"]`);
+                if (el) {
+                    el.classList.add(file.status);
+                    el.querySelector('.file-time').textContent = formatTime(file.lastModified);
+                }
+            });
+        }
+        
+        function formatTime(isoString) {
+            const date = new Date(isoString);
+            const now = new Date();
+            const diff = (now - date) / 1000 / 60; // minutes
+            
+            if (diff < 60) return `${Math.floor(diff)}m ago`;
+            if (diff < 1440) return `${Math.floor(diff / 60)}h ago`;
+            return `${Math.floor(diff / 1440)}d ago`;
+        }
+        
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', initDashboard);
+        
         function showTab(tabName) {
             // Hide all tabs
             document.querySelectorAll('.tab').forEach(tab => {
