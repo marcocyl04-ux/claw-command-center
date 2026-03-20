@@ -1093,7 +1093,11 @@
         }
         
         function renderMemoryTab() {
-            const memory = cognitionData.memory;
+            const memory = cognitionData.memory || {};
+            const working = memory.working || { loaded_files: [], session_history: '', compression_ratio: 0 };
+            const long_term = memory.long_term || { lessons: [] };
+            const recent_failures = memory.recent_failures || [];
+            const recall = memory.recall || { remembered: 0, forgot: 0, accuracy: 0 };
             
             return `
                 <div class="state-hero">
@@ -1222,7 +1226,7 @@
                         <span class="section-title">Critical Memories</span>
                         <span style="font-size: var(--text-sm); color: var(--text-secondary);">High-confidence lessons (Confidence > 85%)</span>
                     </div>
-                    ${memory.long_term.lessons.filter(l => l.confidence > 85).map(l => `
+                    ${long_term.lessons.filter(l => l.confidence > 85).map(l => `
                         <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); margin-bottom: var(--space-3); border-left: 3px solid var(--success);">
                             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-2);">
                                 <span style="font-weight: 600; flex: 1; padding-right: var(--space-3);">${l.lesson}</span>
@@ -1247,7 +1251,7 @@
                         <span class="section-title">Memory Gaps</span>
                         <span style="font-size: var(--text-sm); color: var(--text-secondary);">Recent failures — honest assessment</span>
                     </div>
-                    ${memory.recent_failures.map(f => `
+                    ${recent_failures.map(f => `
                         <div style="background: rgba(248,113,113,0.05); border: 1px solid rgba(248,113,113,0.2); border-radius: var(--radius-md); padding: var(--space-4); margin-bottom: var(--space-3);">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
                                 <span style="font-weight: 600; color: var(--danger);">${f.what}</span>
