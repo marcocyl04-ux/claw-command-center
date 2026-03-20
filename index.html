@@ -1031,69 +1031,190 @@
             const training = cognitionData.training;
             
             return `
+                <!-- Chunk 1: Training Status Hero -->
                 <div class="state-hero">
-                    <div class="state-headline">Week ${training.week} • ${training.progress}% Complete</div>
-                    <div class="state-meta">Meta-training progress toward autonomous operation</div>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-4);">
+                        <div>
+                            <div class="state-headline">Week ${training.week} of 16</div>
+                            <div class="state-meta">Training to autonomous operation</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-family: var(--font-mono); font-size: var(--text-3xl); font-weight: 700; color: var(--amber-400);">${training.progress}%</div>
+                            <div style="font-size: var(--text-sm); color: var(--text-secondary);">to autonomous</div>
+                        </div>
+                    </div>
+                    <div style="height: 12px; background: var(--bg-1); border-radius: var(--radius-full); overflow: hidden; margin-bottom: var(--space-4);">
+                        <div style="width: ${training.progress}%; height: 100%; background: linear-gradient(to right, var(--amber-500), var(--amber-400)); border-radius: var(--radius-full);"></div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4);">
+                        <div>
+                            <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-1);">Started</div>
+                            <div style="font-size: var(--text-sm); color: var(--text-secondary);">Jan 2026</div>
+                        </div>
+                        <div>
+                            <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-1);">Elapsed</div>
+                            <div style="font-size: var(--text-sm); color: var(--text-secondary);">11 weeks</div>
+                        </div>
+                        <div>
+                            <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-1);">Est. Completion</div>
+                            <div style="font-size: var(--text-sm); color: var(--amber-400);">May 2026 (5 weeks)</div>
+                        </div>
+                    </div>
                 </div>
+                
                 <div class="cards-grid">
+                    <!-- Chunk 2: Capabilities Matrix -->
                     <div class="card card-full">
                         <div class="section-header">
-                            <span class="section-title">Capabilities Gained</span>
+                            <span class="section-title">Capabilities Matrix</span>
+                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">What I can do now vs. what's next</span>
                         </div>
-                        ${training.capabilities.map(c => `
-                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); margin-bottom: var(--space-4);">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
-                                    <span style="font-weight: 600; font-size: var(--text-lg);">${c.name}</span>
-                                    <span class="skill-status active">✓ Verified</span>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4);">
+                            ${training.capabilities.map(c => `
+                                <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--success);">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
+                                        <span style="font-weight: 600;">${c.name}</span>
+                                        <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full);">✓ Mastered</span>
+                                    </div>
+                                    <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">${c.evidence}</div>
+                                    <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Example: ${c.example}</div>
                                 </div>
-                                <div style="color: var(--text-secondary); font-size: var(--text-sm); margin-bottom: var(--space-3);">
-                                    <strong>Evidence:</strong> ${c.evidence}
+                            `).join('')}
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--amber-500); opacity: 0.8;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
+                                    <span style="font-weight: 600;">Edge Discovery</span>
+                                    <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(224,145,42,0.2); color: var(--amber-400); border-radius: var(--radius-full);">⚠ In Progress</span>
                                 </div>
-                                <div style="background: var(--bg-0); border-radius: var(--radius-md); padding: var(--space-3); font-size: var(--text-sm); color: var(--text-secondary); border-left: 3px solid var(--amber-500);">
-                                    <strong>Example:</strong> ${c.example}
-                                </div>
-                                <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: var(--space-2);">
-                                    Session: ${c.session}
-                                </div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">0 genuine edges found</div>
+                                <div style="font-size: var(--text-xs); color: var(--amber-400);">Next: Need 3 validated edges</div>
                             </div>
-                        `).join('')}
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--amber-500); opacity: 0.8;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
+                                    <span style="font-weight: 600;">Autonomous Decisions</span>
+                                    <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(224,145,42,0.2); color: var(--amber-400); border-radius: var(--radius-full);">⚠ In Progress</span>
+                                </div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">45% autonomous rate</div>
+                                <div style="font-size: var(--text-xs); color: var(--amber-400);">Target: 80%</div>
+                            </div>
+                        </div>
                     </div>
+                    
+                    <!-- Chunk 3: Blockers Kanban -->
                     <div class="card">
                         <div class="section-header">
-                            <span class="section-title">Blockers</span>
+                            <span class="section-title">Marco's Blockers</span>
+                            <span style="font-size: var(--text-xs); color: var(--text-tertiary);">Need your action</span>
                         </div>
                         ${training.blockers.filter(b => b.action_required === 'Marco').map(b => `
-                            <div class="blocker-card">
-                                <div class="blocker-header">
-                                    <span class="blocker-title">${b.title}</span>
-                                    <span class="blocker-owner">${b.action_required}</span>
+                            <div style="background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); border-radius: var(--radius-lg); padding: var(--space-4); margin-bottom: var(--space-3);">
+                                <div style="font-weight: 600; color: var(--danger); margin-bottom: var(--space-2);">${b.title}</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">${b.description}</div>
+                                <div style="background: var(--bg-0); border-radius: var(--radius-md); padding: var(--space-3); font-size: var(--text-sm);">
+                                    <strong style="color: var(--amber-400);">Impact:</strong> Prevents edge validation milestone completion
                                 </div>
-                                <div class="blocker-desc">${b.description}</div>
-                            </div>
-                        `).join('')}
-                        ${training.blockers.filter(b => b.action_required === 'Claw').map(b => `
-                            <div class="blocker-card" style="border-color: oklch(68% 0.18 75 / 0.3); background: oklch(68% 0.18 75 / 0.05);">
-                                <div class="blocker-header">
-                                    <span class="blocker-title" style="color: var(--amber-400);">${b.title}</span>
-                                    <span class="blocker-owner">${b.action_required}</span>
-                                </div>
-                                <div class="blocker-desc">${b.description}</div>
                             </div>
                         `).join('')}
                     </div>
-                    <div class="card card-full">
+                    
+                    <div class="card">
                         <div class="section-header">
-                            <span class="section-title">Milestones</span>
+                            <span class="section-title">Claw's Blockers</span>
+                            <span style="font-size: var(--text-xs); color: var(--text-tertiary);">My responsibility</span>
                         </div>
-                        ${training.milestones.map(m => `
-                            <div class="milestone-item">
-                                <span class="milestone-name">${m.name}</span>
-                                <div class="milestone-track">
-                                    <div class="milestone-fill" style="width: ${m.progress}%"></div>
+                        ${training.blockers.filter(b => b.action_required === 'Claw').map(b => `
+                            <div style="background: rgba(224,145,42,0.1); border: 1px solid rgba(224,145,42,0.3); border-radius: var(--radius-lg); padding: var(--space-4); margin-bottom: var(--space-3);">
+                                <div style="font-weight: 600; color: var(--amber-400); margin-bottom: var(--space-2);">${b.title}</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">${b.description}</div>
+                                <div style="background: var(--bg-0); border-radius: var(--radius-md); padding: var(--space-3); font-size: var(--text-sm);">
+                                    <strong style="color: var(--amber-400);">This week:</strong> Deploy 3 autonomous decisions without escalation
                                 </div>
-                                <span class="milestone-percent">${m.progress}%</span>
                             </div>
                         `).join('')}
+                    </div>
+                    
+                    <!-- Chunk 4: Milestones Timeline -->
+                    <div class="card card-full">
+                        <div class="section-header">
+                            <span class="section-title">Milestones Timeline</span>
+                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">Critical path highlighted</span>
+                        </div>
+                        <div style="position: relative; padding-left: var(--space-6);">
+                            <div style="position: absolute; left: 12px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--success), var(--success), var(--amber-500), var(--text-tertiary));"></div>
+                            ${training.milestones.map((m, i) => `
+                                <div style="position: relative; margin-bottom: var(--space-5);">
+                                    <div style="position: absolute; left: -30px; top: 4px; width: 16px; height: 16px; border-radius: 50%; background: ${m.progress === 100 ? 'var(--success)' : m.progress > 50 ? 'var(--amber-500)' : 'var(--text-tertiary)'}; border: 3px solid var(--bg-0);"></div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
+                                        <span style="font-weight: 600;">${m.name}</span>
+                                        <span style="font-family: var(--font-mono); font-size: var(--text-sm); color: ${m.progress === 100 ? 'var(--success)' : 'var(--amber-400)'}">${m.progress}%</span>
+                                    </div>
+                                    <div style="height: 8px; background: var(--bg-1); border-radius: var(--radius-full); overflow: hidden; margin-bottom: var(--space-2);">
+                                        <div style="width: ${m.progress}%; height: 100%; background: ${m.progress === 100 ? 'var(--success)' : 'var(--amber-500)'}; border-radius: var(--radius-full);"></div>
+                                    </div>
+                                    ${m.name === 'Edge Validation' && m.progress < 100 ? `
+                                        <div style="font-size: var(--text-xs); color: var(--amber-400); margin-top: var(--space-1);">[CRITICAL PATH] Blocked by: Edge discovery rate</div>
+                                    ` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <!-- Chunk 5: Weekly Retrospective -->
+                    <div class="card card-full">
+                        <div class="section-header">
+                            <span class="section-title">Week ${training.week} Retrospective</span>
+                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">Auto-generated</span>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-5);">
+                            <div>
+                                <div style="font-size: var(--text-sm); color: var(--success); margin-bottom: var(--space-3); text-transform: uppercase; letter-spacing: 0.05em;">✓ What Went Well</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary); display: flex; flex-direction: column; gap: var(--space-2);">
+                                    <span>• Completed dashboard v6.0 MIND tab</span>
+                                    <span>• Successfully used skill chaining 12 times</span>
+                                    <span>• Model routing improved to 85% quality</span>
+                                </div>
+                            </div>
+                            <div>
+                                <div style="font-size: var(--text-sm); color: var(--amber-400); margin-bottom: var(--space-3); text-transform: uppercase; letter-spacing: 0.05em;">⚠ What Didn't</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary); display: flex; flex-direction: column; gap: var(--space-2);">
+                                    <span>• Still 0 edge discoveries</span>
+                                    <span>• Autonomy stuck at 45%</span>
+                                </div>
+                            </div>
+                            <div>
+                                <div style="font-size: var(--text-sm); color: var(--amber-400); margin-bottom: var(--space-3); text-transform: uppercase; letter-spacing: 0.05em;">→ Focus Next Week</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary); display: flex; flex-direction: column; gap: var(--space-2);">
+                                    <span>• Deploy 3 autonomous decisions</span>
+                                    <span>• Practice edge detection on 5 markets</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Chunk 6: Learning Velocity -->
+                    <div class="card card-full">
+                        <div class="section-header">
+                            <span class="section-title">Learning Velocity</span>
+                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">Insights gained per week</span>
+                        </div>
+                        <div style="display: flex; align-items: flex-end; justify-content: space-between; height: 200px; gap: var(--space-4); padding: var(--space-4) 0;">
+                            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: var(--space-2);">
+                                <div style="font-family: var(--font-mono); font-size: var(--text-sm); color: var(--text-secondary);">2.1</div>
+                                <div style="width: 50px; height: 80px; background: linear-gradient(to top, var(--amber-500), rgba(224,145,42,0.3)); border-radius: var(--radius-md) var(--radius-md) 0 0;"></div>
+                                <div style="font-size: var(--text-xs); color: var(--text-tertiary);">W1-4</div>
+                            </div>
+                            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: var(--space-2);">
+                                <div style="font-family: var(--font-mono); font-size: var(--text-sm); color: var(--text-secondary);">2.8</div>
+                                <div style="width: 50px; height: 110px; background: linear-gradient(to top, var(--amber-500), rgba(224,145,42,0.3)); border-radius: var(--radius-md) var(--radius-md) 0 0;"></div>
+                                <div style="font-size: var(--text-xs); color: var(--text-tertiary);">W5-8</div>
+                            </div>
+                            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: var(--space-2);">
+                                <div style="font-family: var(--font-mono); font-size: var(--text-lg); font-weight: 700; color: var(--amber-400);">3.2</div>
+                                <div style="width: 50px; height: 140px; background: linear-gradient(to top, var(--amber-500), rgba(224,145,42,0.3)); border-radius: var(--radius-md) var(--radius-md) 0 0; position: relative;">
+                                    <div style="position: absolute; top: -24px; left: 50%; transform: translateX(-50%); font-size: var(--text-xs); color: var(--amber-400); white-space: nowrap;">Current avg</div>
+                                </div>
+                                <div style="font-size: var(--text-xs); color: var(--amber-400); font-weight: 600;">W9-11</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             `;
