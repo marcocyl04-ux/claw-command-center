@@ -2619,12 +2619,19 @@
             panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
         
-        // Skill Network Visualization - Radial + Force Hybrid
+        // Skill Network Visualization - Simplified Clean Layout
+        let skillNetworkSimulation = null;
+        
         function renderSkillNetwork(nodes) {
             const container = document.getElementById('skillNetworkViz');
             if (!container || !window.d3) {
-                container.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: var(--text-tertiary);">Loading D3.js...</div>';
+                container.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: var(--text-tertiary);">Loading...</div>';
                 return;
+            }
+            
+            // Stop previous simulation
+            if (skillNetworkSimulation) {
+                skillNetworkSimulation.stop();
             }
             
             const width = container.clientWidth;
@@ -2635,209 +2642,163 @@
             // Clear container
             container.innerHTML = '';
             
+            // Calculate optimal radius based on screen size
+            const isFullscreen = width > 1400;
+            const baseRadius = isFullscreen ? Math.min(width, height) * 0.35 : 120;
+            
+            // Group by category (only show 4 main categories to reduce clutter)
+            const mainCategories = ['core', 'design', 'ml', 'workflow'];
+            const categoryColors = {
+                'core': '#4ade80',
+                'design': '#fbbf24', 
+                'ml': '#a78bfa',
+                'workflow': '#22d3ee',
+                'other': '#94a3b8'
+            };
+            
+            // Simplify nodes - group lesser skills as "other"
+            const simplifiedNodes = nodes.map(n => ({
+                ...n,
+                displayCategory: mainCategories.includes(n.category) ? n.category : 'other',
+                displayName: n.id.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
+            }));
+            
             // Create SVG
             const svg = d3.select('#skillNetworkViz')
                 .append('svg')
                 .attr('width', width)
                 .attr('height', height)
-                .attr('viewBox', `0 0 ${width} ${height}`)
-                .style('cursor', 'grab');
+                .attr('viewBox', `0 0 ${width} ${height}`);
             
-            // Add zoom behavior
-            const g = svg.append('g');
+            // Static radial layout (no force simulation for cleaner look)
+            const centerNode = { x: centerX, y: centerY, r: 25, label: 'Claw', color: '#e0912a' };
             
-            const zoom = d3.zoom()
-                .scaleExtent([0.5, 3])
-                .on('zoom', (event) => {
-                    g.attr('transform', event.transform);
-                });
-            
-            svg.call(zoom);
-            
-            // Group nodes by category
-            const categories = [...new Set(nodes.map(n => n.category))];
-            const categoryColors = {
-                'core': '#4ade80',
-                'design': '#fbbf24',
-                'ml': '#a78bfa',
-                'agents': '#60a5fa',
-                'research': '#f472b6',
-                'browser': '#fb923c',
-                'cli': '#34d399',
-                'search': '#22d3ee',
-                'audio': '#e879f9',
-                'trading': '#facc15',
-                'workflow': '#a3e635',
-                'cognition': '#38bdf8',
-                'simulation': '#818cf8',
-                'tracking': '#c084fc',
-                'memory': '#2dd4bf',
-                'system': '#f87171',
-                'meta': '#94a3b8'
-            };
-            
-            // Create center node (Claw)
-            const centerNode = { id: 'Claw', x: centerX, y: centerY, r: 30, fx: centerX, fy: centerY, category: 'center' };
-            
-            // Create category nodes (inner ring)
-            const categoryRadius = 80;
-            const categoryNodes = categories.map((cat, i) => {
-                const angle = (i / categories.length) * 2 * Math.PI - Math.PI / 2;
-                return {
-                    id: cat,
-                    x: centerX + categoryRadius * Math.cos(angle),
-                    y: centerY + categoryRadius * Math.sin(angle),
-                    r: 25,
-                    category: cat,
-                    isCategory: true
-                };
-            });
-            
-            // Create skill nodes (outer ring, positioned by category)
-            const skillRadius = 150;
-            const skillNodes = nodes.map((node, i) => {
-                const catIndex = categories.indexOf(node.category);
-                const catAngle = (catIndex / categories.length) * 2 * Math.PI - Math.PI / 2;
-                const offset = (Math.random() - 0.5) * 0.5; // Random offset within category sector
-                const angle = catAngle + offset;
+            // Position skills in a clean circle
+            const skillNodes = simplifiedNodes.map((node, i) => {
+                const angle = (i / simplifiedNodes.length) * 2 * Math.PI - Math.PI / 2;
+                const radius = baseRadius;
                 return {
                     ...node,
-                    x: centerX + skillRadius * Math.cos(angle),
-                    y: centerY + skillRadius * Math.sin(angle),
-                    r: 15 + Math.sqrt(node.usage) * 3,
-                    color: categoryColors[node.category] || '#94a3b8'
+                    x: centerX + radius * Math.cos(angle),
+                    y: centerY + radius * Math.sin(angle),
+                    r: Math.max(12, 18 - simplifiedNodes.length * 0.2),
+                    color: categoryColors[node.displayCategory] || categoryColors.other
                 };
             });
             
-            // Combine all nodes
-            const allNodes = [centerNode, ...categoryNodes, ...skillNodes];
+            // Draw subtle connection lines
+            svg.selectAll('.connection')
+                .data(skillNodes)
+                .enter()
+                .append('line')
+                .attr('class', 'connection')
+                .attr('x1', centerX)
+                .attr('y1', centerY)
+                .attr('x2', d => d.x)
+                .attr('y2', d => d.y)
+                .attr('stroke', 'rgba(148,163,184,0.1)')
+                .attr('stroke-width', 1);
             
-            // Create links
-            const links = [];
-            
-            // Center to categories
-            categoryNodes.forEach(cat => {
-                links.push({ source: 'Claw', target: cat.id, strength: 1 });
-            });
-            
-            // Categories to skills
-            skillNodes.forEach(skill => {
-                links.push({ source: skill.category, target: skill.id, strength: 0.8 });
-            });
-            
-            // Skill synergies
-            skillNodes.forEach(skill => {
-                skill.synergy.forEach(synId => {
-                    const target = skillNodes.find(n => n.id === synId);
-                    if (target) {
-                        links.push({ source: skill.id, target: target.id, strength: 0.3, isSynergy: true });
-                    }
-                });
-            });
-            
-            // Force simulation
-            const simulation = d3.forceSimulation(allNodes)
-                .force('link', d3.forceLink(links).id(d => d.id).strength(d => d.strength * 0.5))
-                .force('charge', d3.forceManyBody().strength(d => d.isCategory ? -100 : -50))
-                .force('collide', d3.forceCollide().radius(d => d.r + 10))
-                .force('center', d3.forceCenter(centerX, centerY).strength(0.1))
-                .force('radial', d3.forceRadial(d => {
-                    if (d.id === 'Claw') return 0;
-                    if (d.isCategory) return categoryRadius;
-                    return skillRadius;
-                }, centerX, centerY).strength(0.3));
-            
-            // Draw links
-            const link = g.selectAll('.link')
-                .data(links)
-                .enter().append('line')
-                .attr('class', 'link')
-                .attr('stroke', d => d.isSynergy ? 'rgba(224,145,42,0.4)' : 'rgba(148,163,184,0.2)')
-                .attr('stroke-width', d => d.isSynergy ? 2 : 1)
-                .attr('stroke-dasharray', d => d.isSynergy ? '5,5' : 'none');
-            
-            // Draw nodes
-            const node = g.selectAll('.node')
-                .data(allNodes)
-                .enter().append('g')
-                .attr('class', 'node')
-                .style('cursor', d => d.id === 'Claw' ? 'default' : 'pointer')
-                .call(d3.drag()
-                    .on('start', dragstarted)
-                    .on('drag', dragged)
-                    .on('end', dragended));
-            
-            // Node circles
-            node.append('circle')
-                .attr('r', d => d.r)
-                .attr('fill', d => {
-                    if (d.id === 'Claw') return '#e0912a';
-                    if (d.isCategory) return categoryColors[d.category] || '#94a3b8';
-                    return d.color;
-                })
+            // Draw center node
+            svg.append('circle')
+                .attr('cx', centerX)
+                .attr('cy', centerY)
+                .attr('r', centerNode.r)
+                .attr('fill', centerNode.color)
                 .attr('stroke', 'var(--bg-0)')
-                .attr('stroke-width', 2)
-                .attr('opacity', d => d.id === 'Claw' ? 1 : 0.85)
-                .on('click', (event, d) => {
-                    if (d.id !== 'Claw') showSkillDetail(d.id);
-                });
+                .attr('stroke-width', 3);
             
-            // Node labels
-            node.append('text')
-                .attr('dy', d => d.id === 'Claw' ? 5 : d.r + 12)
-                .attr('text-anchor', 'middle')
-                .attr('fill', 'var(--text-primary)')
-                .attr('font-size', d => d.id === 'Claw' ? '14px' : '11px')
-                .attr('font-weight', d => d.id === 'Claw' ? '700' : '500')
-                .text(d => d.id === 'Claw' ? 'Claw' : (d.isCategory ? d.id : d.id.split('-')[0]));
-            
-            // Usage count for skills
-            node.filter(d => !d.isCategory && d.id !== 'Claw')
-                .append('text')
-                .attr('dy', 4)
+            svg.append('text')
+                .attr('x', centerX)
+                .attr('y', centerY + 5)
                 .attr('text-anchor', 'middle')
                 .attr('fill', 'var(--bg-0)')
-                .attr('font-size', '10px')
+                .attr('font-size', '12px')
+                .attr('font-weight', '700')
+                .text('Claw');
+            
+            // Draw skill nodes
+            const nodeGroups = svg.selectAll('.skill-node')
+                .data(skillNodes)
+                .enter()
+                .append('g')
+                .attr('class', 'skill-node')
+                .style('cursor', 'pointer')
+                .on('click', (event, d) => showSkillDetail(d.id));
+            
+            // Node circles
+            nodeGroups.append('circle')
+                .attr('cx', d => d.x)
+                .attr('cy', d => d.y)
+                .attr('r', d => d.r)
+                .attr('fill', d => d.color)
+                .attr('stroke', 'var(--bg-0)')
+                .attr('stroke-width', 2)
+                .attr('opacity', 0.9)
+                .on('mouseover', function() {
+                    d3.select(this).attr('opacity', 1).attr('stroke-width', 3);
+                })
+                .on('mouseout', function() {
+                    d3.select(this).attr('opacity', 0.9).attr('stroke-width', 2);
+                });
+            
+            // Usage number inside node
+            nodeGroups.append('text')
+                .attr('x', d => d.x)
+                .attr('y', d => d.y + 3)
+                .attr('text-anchor', 'middle')
+                .attr('fill', 'var(--bg-0)')
+                .attr('font-size', d => d.r > 15 ? '10px' : '8px')
                 .attr('font-weight', '600')
                 .text(d => d.usage);
             
-            // Update positions on tick
-            simulation.on('tick', () => {
-                link
-                    .attr('x1', d => d.source.x)
-                    .attr('y1', d => d.source.y)
-                    .attr('x2', d => d.target.x)
-                    .attr('y2', d => d.target.y);
+            // Labels outside nodes (only for larger screens or high-usage skills)
+            nodeGroups.filter(d => d.usage > 5 || isFullscreen)
+                .append('text')
+                .attr('x', d => d.x)
+                .attr('y', d => d.y + d.r + 12)
+                .attr('text-anchor', 'middle')
+                .attr('fill', 'var(--text-secondary)')
+                .attr('font-size', '10px')
+                .text(d => d.displayName.length > 12 ? d.displayName.substring(0, 12) + '...' : d.displayName);
+            
+            // Legend
+            const legend = svg.append('g')
+                .attr('transform', `translate(${width - 100}, 20)`);
+            
+            Object.entries(categoryColors).forEach(([cat, color], i) => {
+                legend.append('circle')
+                    .attr('cx', 0)
+                    .attr('cy', i * 20)
+                    .attr('r', 6)
+                    .attr('fill', color);
                 
-                node.attr('transform', d => `translate(${d.x},${d.y})`);
+                legend.append('text')
+                    .attr('x', 12)
+                    .attr('y', i * 20 + 4)
+                    .attr('fill', 'var(--text-secondary)')
+                    .attr('font-size', '10px')
+                    .text(cat.charAt(0).toUpperCase() + cat.slice(1));
             });
             
-            // Drag functions
-            function dragstarted(event, d) {
-                if (!event.active) simulation.alphaTarget(0.3).restart();
-                d.fx = d.x;
-                d.fy = d.y;
-                svg.style('cursor', 'grabbing');
-            }
-            
-            function dragged(event, d) {
-                d.fx = event.x;
-                d.fy = event.y;
-            }
-            
-            function dragended(event, d) {
-                if (!event.active) simulation.alphaTarget(0);
-                d.fx = null;
-                d.fy = null;
-                svg.style('cursor', 'grab');
-            }
-            
-            // Store node data
+            // Store data
             window.skillNetworkData = {};
             nodes.forEach(node => {
                 window.skillNetworkData[node.id] = node;
             });
         }
+        
+        // Handle resize
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                const mind = cognitionData?.mind;
+                if (mind?.skill_network?.nodes && currentTab === 'mind') {
+                    renderSkillNetwork(mind.skill_network.nodes);
+                }
+            }, 250);
+        });
         
         function showSkillDetail(skillId) {
             const node = window.skillNetworkData[skillId];
