@@ -1951,11 +1951,11 @@
                         
                         <div id="envSkillDetailPanel" style="display: none; margin-top: var(--space-4); background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-5); border-left: 3px solid var(--amber-500);"></div>
                     </div>
-                    <!-- Chunk 3: Resource Utilization - LIVE DATA -->
+                    <!-- Chunk 3: Resource Utilization - LIVE DATA (Placeholder for OpenRouter API) -->
                     <div class="card card-full">
                         <div class="section-header">
                             <span class="section-title">Resource Utilization</span>
-                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">${insights.resources?.isEstimated ? '⚠ Estimated' : 'Live from OpenRouter'}</span>
+                            <span style="font-size: var(--text-sm); color: var(--amber-400);">⚠ Placeholder — Connect OpenRouter API</span>
                         </div>
                         
                         <div style="margin-bottom: var(--space-5);">
@@ -1993,14 +1993,12 @@
                             `).join('')}
                         </div>
                         
-                        <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4);">
-                            <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-bottom: var(--space-2);">API Health</div>
-                            <div style="display: flex; justify-content: space-between; font-size: var(--text-sm); color: var(--text-secondary);">
-                                <span>Requests: ${(insights.resources?.request_count || 1247).toLocaleString()}</span>
-                                <span>Errors: ${Math.round((insights.resources?.request_count || 1247) * (insights.resources?.error_rate || 0.002))}</span>
-                                <span style="color: var(--success);">Rate: ${(insights.resources?.error_rate || 0.2).toFixed(1)}%</span>
+                        <div style="background: rgba(224,145,42,0.1); border: 1px solid rgba(224,145,42,0.3); border-radius: var(--radius-md); padding: var(--space-4); margin-top: var(--space-4);">
+                            <div style="font-size: var(--text-sm); color: var(--amber-400); margin-bottom: var(--space-2);">⚠ OpenRouter API Key Required</div>
+                            <div style="font-size: var(--text-xs); color: var(--text-secondary);">
+                                To show live spend data, add your OpenRouter API key to DataBridge.fetchOpenRouterCredits(). 
+                                Current values are calculated from recent model routing history.
                             </div>
-                            <div style="font-size: var(--text-xs); color: var(--success); margin-top: var(--space-2);">Avg latency: 45ms [Trend: improving]</div>
                         </div>
                     </div>
                     

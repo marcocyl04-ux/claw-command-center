@@ -591,25 +591,39 @@ const DataBridge = {
   
   // Fetch actual spend data from OpenRouter
   async fetchOpenRouterSpend() {
-    // Note: This requires an API key which should be stored securely
-    // For now, we'll use a mock that simulates the API response structure
-    // In production, this would call: https://openrouter.ai/api/v1/credits
+    // PLACEHOLDER: Requires OpenRouter API key
+    // Endpoint: GET https://openrouter.ai/api/v1/credits
+    // TODO: Implement with actual API key for live data
     
-    // Simulated API call - replace with actual fetch when API key is available
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          total: 12.45,
-          breakdown: {
-            'Opus 4.6': { spend: 12.40, percent: 99, requests: 45 },
-            'Sonnet 4.6': { spend: 0.05, percent: 0.4, requests: 78 },
-            'Kimi': { spend: 0.00, percent: 0, requests: 1124 }
-          },
-          requests: 1247,
-          errorRate: 0.2
-        });
-      }, 100);
+    // For now, calculate from actual model routing history
+    const routing = await this.getModelRouting();
+    const totalSpend = routing.reduce((sum, r) => sum + (r.cost || 0), 0);
+    
+    // Calculate breakdown by model
+    const modelSpend = {};
+    routing.forEach(r => {
+      if (!modelSpend[r.model]) {
+        modelSpend[r.model] = { spend: 0, requests: 0 };
+      }
+      modelSpend[r.model].spend += r.cost || 0;
+      modelSpend[r.model].requests += 1;
     });
+    
+    // Calculate percentages
+    Object.keys(modelSpend).forEach(model => {
+      modelSpend[model].percent = totalSpend > 0 
+        ? Math.round((modelSpend[model].spend / totalSpend) * 100) 
+        : 0;
+    });
+    
+    return {
+      total: totalSpend,
+      breakdown: modelSpend,
+      requests: routing.length,
+      errorRate: 0.2,
+      is_placeholder: true,
+      note: 'Connect OpenRouter API key for live spend data'
+    };
   },
   
   // API Health - LIVE DATA with real latency checks
