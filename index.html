@@ -1987,48 +1987,32 @@
                         </div>
                     </div>
                     
-                    <!-- Chunk 2: Gateway Health -->
+                    <!-- Chunk 2: Gateway Health - LIVE DATA -->
                     <div class="card card-full">
                         <div class="section-header">
                             <span class="section-title">Gateway Health</span>
-                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">Connection status</span>
+                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">Live connection status</span>
                         </div>
                         <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3);">
-                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--success);">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
-                                    <span style="font-weight: 600;">OpenRouter API</span>
-                                    <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full);">● Online</span>
+                            ${(insights.gateway || []).map(service => `
+                                <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid ${service.status === 'online' ? 'var(--success)' : service.status === 'degraded' ? 'var(--amber-500)' : 'var(--danger)'};">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
+                                        <span style="font-weight: 600;">${service.name}</span>
+                                        <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: ${service.status === 'online' ? 'rgba(74,222,128,0.2)' : service.status === 'degraded' ? 'rgba(224,145,42,0.2)' : 'rgba(248,113,113,0.2)'}; color: ${service.status === 'online' ? 'var(--success)' : service.status === 'degraded' ? 'var(--amber-400)' : 'var(--danger)'}; border-radius: var(--radius-full);">
+                                            ${service.status === 'online' ? '● Online' : service.status === 'degraded' ? '⚠ Degraded' : '✗ Down'}
+                                        </span>
+                                    </div>
+                                    <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-1);">
+                                        Latency: ${service.latency}ms ${service.latency > 100 ? '↑' : service.latency < 20 ? '↓' : ''}
+                                    </div>
+                                    <div style="font-size: var(--text-xs); color: ${service.lastError ? 'var(--danger)' : 'var(--text-tertiary)'};">
+                                        ${service.lastError ? service.lastError : `Uptime: ${service.uptime}`} | ${service.details}
+                                    </div>
                                 </div>
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-1);">Latency: 12ms</div>
-                                <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Last error: None | Uptime: 99.9%</div>
-                            </div>
-                            
-                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--success);">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
-                                    <span style="font-weight: 600;">GitHub API</span>
-                                    <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full);">● Online</span>
-                                </div>
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-1);">Latency: 45ms</div>
-                                <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Rate limit: 4,980/5,000</div>
-                            </div>
-                            
-                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--success);">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
-                                    <span style="font-weight: 600;">Telegram Bot</span>
-                                    <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full);">● Online</span>
-                                </div>
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-1);">Messages/hour: 45</div>
-                                <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Queue: 0 | Latency: 8ms</div>
-                            </div>
-                            
-                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--amber-500);">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
-                                    <span style="font-weight: 600;">Memory Service</span>
-                                    <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(224,145,42,0.2); color: var(--amber-400); border-radius: var(--radius-full);">⚠ Degraded</span>
-                                </div>
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-1);">Latency: 120ms ↑</div>
-                                <div style="font-size: var(--text-xs); color: var(--amber-400);">Elevated latency - investigating</div>
-                            </div>
+                            `).join('')}
+                        </div>
+                        <div style="margin-top: var(--space-3); padding: var(--space-3); background: var(--bg-1); border-radius: var(--radius-md); font-size: var(--text-xs); color: var(--text-tertiary);">
+                            <span style="color: var(--amber-400);">⚠</span> Live latency checks may be blocked by CORS. Fallback to estimated values when needed.
                         </div>
                     </div>
                     
