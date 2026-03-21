@@ -1,0 +1,33 @@
+name: Daily Dashboard Data Refresh
+
+on:
+  schedule:
+    # Run at 9:00 AM EST every day
+    - cron: '0 14 * * *'
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  refresh-data:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        
+    - name: Install dependencies
+      run: npm install
+      
+    - name: Generate dashboard data
+      run: node scripts/generate-dashboard-data.js
+      
+    - name: Commit and push if changed
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add data/cognition-data.json
+        git diff --quiet && git diff --staged --quiet || (git commit -m "chore: Daily dashboard data refresh [$(date)]" && git push)
