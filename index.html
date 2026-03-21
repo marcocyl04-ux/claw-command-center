@@ -695,8 +695,13 @@
         
         // Model card HTML generator
         function getModelCardHTML(model, avgCost, quality, overall, tasks) {
-            const costEfficiency = quality / (avgCost * 100 + 1);
+            // Handle both number and string costs
+            const costNum = typeof avgCost === 'number' ? avgCost : parseFloat(avgCost.toString().replace(/[^0-9.]/g, '')) || 0;
+            const costEfficiency = quality / (costNum * 100 + 1);
             const stars = Math.min(Math.round(costEfficiency), 5);
+            
+            // Format cost display
+            const costDisplay = typeof avgCost === 'string' ? avgCost : `$${avgCost.toFixed(2)}`;
             
             return `
                 <div onclick="showModelDetail('${model}')" style="background: var(--bg-1); border-radius: var(--radius-lg); padding: var(--space-5); cursor: pointer; transition: transform 0.2s; border: 1px solid transparent;" onmouseover="this.style.borderColor='var(--amber-500)'" onmouseout="this.style.borderColor='transparent'">
@@ -711,7 +716,7 @@
                     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); margin-bottom: var(--space-3);">
                         <div>
                             <div style="font-size: var(--text-sm); color: var(--text-tertiary);">Avg Cost</div>
-                            <div style="font-family: var(--font-mono); font-weight: 600;">$${avgCost.toFixed(2)}</div>
+                            <div style="font-family: var(--font-mono); font-weight: 600;">${costDisplay}</div>
                         </div>
                         <div>
                             <div style="font-size: var(--text-sm); color: var(--text-tertiary);">Quality</div>
