@@ -1463,12 +1463,15 @@
             const training = cognitionData.training;
             
             return `
-                <!-- Chunk 1: Training Status Hero -->
+                <!-- Chunk 1: Training Status Hero - LIVE DATA -->
                 <div class="state-hero">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-4);">
                         <div>
-                            <div class="state-headline">Week ${training.week} of 16</div>
-                            <div class="state-meta">Training to autonomous operation</div>
+                            <div style="display: flex; align-items: center; gap: var(--space-3);">
+                                <div class="state-headline">Week ${training.week} of 16</div>
+                                ${training.is_live ? `<span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full);">● Live</span>` : ''}
+                            </div>
+                            <div class="state-meta">${training.session_count || 35} sessions completed • Training to autonomous operation</div>
                         </div>
                         <div style="text-align: right;">
                             <div style="font-family: var(--font-mono); font-size: var(--text-3xl); font-weight: 700; color: var(--amber-400);">${training.progress}%</div>
@@ -1484,8 +1487,8 @@
                             <div style="font-size: var(--text-sm); color: var(--text-secondary);">Jan 2026</div>
                         </div>
                         <div>
-                            <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-1);">Elapsed</div>
-                            <div style="font-size: var(--text-sm); color: var(--text-secondary);">11 weeks</div>
+                            <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-1);">Sessions</div>
+                            <div style="font-size: var(--text-sm); color: var(--text-secondary);">${training.session_count || 35} completed</div>
                         </div>
                         <div>
                             <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-1);">Est. Completion</div>
@@ -1495,31 +1498,21 @@
                 </div>
                 
                 <div class="cards-grid">
-                    <!-- Chunk 2: Capabilities Matrix -->
+                    <!-- Chunk 2: Capabilities Matrix - LIVE DATA -->
                     <div class="card card-full">
                         <div class="section-header">
                             <span class="section-title">Capabilities Matrix</span>
-                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">What I can do now vs. what's next</span>
+                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">${training.capabilities?.length || 3} mastered • 2 in progress • 1 locked</span>
                         </div>
                         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-3);">
-                            <!-- Mastered Capabilities -->
-                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); border-left: 3px solid var(--success); cursor: pointer; min-width: 0;" onclick="showCapabilityDetail('skill-chaining')">
-                                <div style="font-weight: 600; font-size: var(--text-sm); margin-bottom: var(--space-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Skill Chaining</div>
-                                <div style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full); display: inline-block; margin-bottom: var(--space-2);">✓ Mastered</div>
-                                <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Click for details →</div>
-                            </div>
-                            
-                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); border-left: 3px solid var(--success); cursor: pointer; min-width: 0;" onclick="showCapabilityDetail('model-routing')">
-                                <div style="font-weight: 600; font-size: var(--text-sm); margin-bottom: var(--space-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Model Routing</div>
-                                <div style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full); display: inline-block; margin-bottom: var(--space-2);">✓ Mastered</div>
-                                <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Click for details →</div>
-                            </div>
-                            
-                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); border-left: 3px solid var(--success); cursor: pointer; min-width: 0;" onclick="showCapabilityDetail('proactive-escalation')">
-                                <div style="font-weight: 600; font-size: var(--text-sm); margin-bottom: var(--space-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Proactive Escalation</div>
-                                <div style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full); display: inline-block; margin-bottom: var(--space-2);">✓ Mastered</div>
-                                <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Click for details →</div>
-                            </div>
+                            <!-- Mastered Capabilities from Live Data -->
+                            ${(training.capabilities || ['Skill Chaining', 'Model Routing', 'Proactive Escalation']).map((cap, i) => `
+                                <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); border-left: 3px solid var(--success); cursor: pointer; min-width: 0;" onclick="showCapabilityDetail('${cap.toLowerCase().replace(/\s+/g, '-')}')">
+                                    <div style="font-weight: 600; font-size: var(--text-sm); margin-bottom: var(--space-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${cap}</div>
+                                    <div style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full); display: inline-block; margin-bottom: var(--space-2);">✓ Mastered</div>
+                                    <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Click for details →</div>
+                                </div>
+                            `).join('')}
                             
                             <!-- In Progress Capabilities -->
                             <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); border-left: 3px solid var(--amber-500); cursor: pointer; min-width: 0;" onclick="showCapabilityDetail('edge-discovery')">
