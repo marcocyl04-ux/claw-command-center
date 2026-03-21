@@ -396,6 +396,26 @@
             color: var(--text-secondary);
         }
         
+        /* NOW Tab Cards Grid */
+        .now-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-4);
+            margin-bottom: var(--space-5);
+        }
+        
+        @media (max-width: 1400px) {
+            .now-cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 900px) {
+            .now-cards-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
         /* Responsive Design */
         
         /* Fluid Typography */
@@ -788,7 +808,7 @@
                     </div>
                 </div>
                 
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); margin-bottom: var(--space-5);">
+                <div class="now-cards-grid">
                     <!-- 🧠 MIND Card -->
                     <div style="background: var(--bg-1); border-radius: var(--radius-lg); padding: var(--space-5); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; border: 1px solid rgba(255,255,255,0.05);" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 24px rgba(0,0,0,0.3)'" onmouseout="this.style.transform=''; this.style.boxShadow=''" onclick="switchTab('mind')">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
