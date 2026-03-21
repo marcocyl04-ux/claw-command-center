@@ -1469,8 +1469,8 @@
                             <div style="font-size: var(--text-sm); color: var(--text-secondary);">${training.session_count || 35} completed</div>
                         </div>
                         <div>
-                            <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-1);">Est. Completion</div>
-                            <div style="font-size: var(--text-sm); color: var(--amber-400);">May 2026 (5 weeks)</div>
+                            <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-1);">Remaining</div>
+                            <div style="font-size: var(--text-sm); color: var(--amber-400);">${16 - training.week} weeks to Week 16</div>
                         </div>
                     </div>
                 </div>
@@ -1502,7 +1502,7 @@
                             <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); border-left: 3px solid var(--amber-500); cursor: pointer; min-width: 0;" onclick="showCapabilityDetail('autonomous-decisions')">
                                 <div style="font-weight: 600; font-size: var(--text-sm); margin-bottom: var(--space-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Autonomous Decisions</div>
                                 <div style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(224,145,42,0.2); color: var(--amber-400); border-radius: var(--radius-full); display: inline-block; margin-bottom: var(--space-2);">⚠ In Progress</div>
-                                <div style="font-size: var(--text-xs); color: var(--amber-400);">Target: 80% →</div>
+                                <div style="font-size: var(--text-xs); color: var(--amber-400);">Currently ${Math.round((training.blockers?.find(b => b.title.includes('Autonomy'))?.days_open || 0) / 7)} weeks</div>
                             </div>
                             
                             <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); border-left: 3px solid var(--text-tertiary); opacity: 0.6; min-width: 0;">
@@ -1608,65 +1608,22 @@
                         </div>
                     </div>
                     
-                    <!-- Chunk 5: Weekly Retrospective -->
+                    <!-- Chunk 5: Active Blockers Summary -->
                     <div class="card card-full">
                         <div class="section-header">
-                            <span class="section-title">Week ${training.week} Retrospective</span>
-                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">Auto-generated</span>
+                            <span class="section-title">Active Blockers</span>
+                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">${training.blockers?.length || 2} items need attention</span>
                         </div>
-                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-5);">
-                            <div>
-                                <div style="font-size: var(--text-sm); color: var(--success); margin-bottom: var(--space-3); text-transform: uppercase; letter-spacing: 0.05em;">✓ What Went Well</div>
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary); display: flex; flex-direction: column; gap: var(--space-2);">
-                                    <span>• Completed dashboard v6.0 MIND tab</span>
-                                    <span>• Successfully used skill chaining 12 times</span>
-                                    <span>• Model routing improved to 85% quality</span>
+                        <div style="display: flex; flex-direction: column; gap: var(--space-3);">
+                            ${training.blockers?.map(b => `
+                                <div style="background: ${b.priority === 'high' ? 'rgba(248,113,113,0.1)' : 'rgba(224,145,42,0.1)'}; border: 1px solid ${b.priority === 'high' ? 'rgba(248,113,113,0.3)' : 'rgba(224,145,42,0.3)'}; border-radius: var(--radius-md); padding: var(--space-4);">
+                                    <div style="font-weight: 600; color: ${b.priority === 'high' ? 'var(--danger)' : 'var(--amber-400)'}; margin-bottom: var(--space-1);">${b.title}</div>
+                                    <div style="font-size: var(--text-sm); color: var(--text-secondary);">${b.description}</div>
+                                    <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: var(--space-2);">Action: ${b.action_required}</div>
                                 </div>
-                            </div>
-                            <div>
-                                <div style="font-size: var(--text-sm); color: var(--amber-400); margin-bottom: var(--space-3); text-transform: uppercase; letter-spacing: 0.05em;">⚠ What Didn't</div>
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary); display: flex; flex-direction: column; gap: var(--space-2);">
-                                    <span>• Still 0 edge discoveries</span>
-                                    <span>• Autonomy stuck at 45%</span>
-                                </div>
-                            </div>
-                            <div>
-                                <div style="font-size: var(--text-sm); color: var(--amber-400); margin-bottom: var(--space-3); text-transform: uppercase; letter-spacing: 0.05em;">→ Focus Next Week</div>
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary); display: flex; flex-direction: column; gap: var(--space-2);">
-                                    <span>• Deploy 3 autonomous decisions</span>
-                                    <span>• Practice edge detection on 5 markets</span>
-                                </div>
-                            </div>
+                            `).join('')}
                         </div>
                     </div>
-                    
-                    <!-- Chunk 6: Learning Velocity -->
-                    <div class="card card-full">
-                        <div class="section-header">
-                            <span class="section-title">Learning Velocity</span>
-                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">Insights gained per week (trending up)</span>
-                        </div>
-                        <div style="padding: var(--space-6) 0 var(--space-4);">
-                            <div style="display: flex; align-items: flex-end; justify-content: center; gap: var(--space-6); height: 200px; margin-bottom: var(--space-4); margin-top: var(--space-4);">
-                                <div style="display: flex; flex-direction: column; align-items: center; gap: var(--space-2); flex: 1; max-width: 120px;">
-                                    <div style="font-family: var(--font-mono); font-size: var(--text-base); color: var(--text-secondary);">2.1</div>
-                                    <div style="width: 60px; height: 80px; background: linear-gradient(to top, var(--amber-500), rgba(224,145,42,0.3)); border-radius: var(--radius-md) var(--radius-md) 0 0;"></div>
-                                    <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-align: center;">Weeks 1-4</div>
-                                    <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-align: center;">Foundation</div>
-                                </div>
-                                <div style="display: flex; flex-direction: column; align-items: center; gap: var(--space-2); flex: 1; max-width: 120px;">
-                                    <div style="font-family: var(--font-mono); font-size: var(--text-base); color: var(--text-secondary);">2.8</div>
-                                    <div style="width: 60px; height: 120px; background: linear-gradient(to top, var(--amber-500), rgba(224,145,42,0.3)); border-radius: var(--radius-md) var(--radius-md) 0 0;"></div>
-                                    <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-align: center;">Weeks 5-8</div>
-                                    <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-align: center;">Building</div>
-                                </div>
-                                <div style="display: flex; flex-direction: column; align-items: center; gap: var(--space-2); flex: 1; max-width: 120px;">
-                                    <div style="font-family: var(--font-mono); font-size: var(--text-lg); font-weight: 700; color: var(--amber-400);">3.2 ↑</div>
-                                    <div style="width: 60px; height: 160px; background: linear-gradient(to top, var(--amber-500), rgba(224,145,42,0.3)); border-radius: var(--radius-md) var(--radius-md) 0 0;"></div>
-                                    <div style="font-size: var(--text-xs); color: var(--amber-400); font-weight: 600; text-align: center;">Weeks 9-11</div>
-                                    <div style="font-size: var(--text-xs); color: var(--amber-400); text-align: center;">Current</div>
-                                </div>
-                            </div>
                         </div>
                         <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4);">
                             <div style="font-size: var(--text-sm); color: var(--text-secondary);">
