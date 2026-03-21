@@ -462,15 +462,31 @@
         let currentTab = 'now';
         
         async function init() {
-            // Use DataBridge for dynamic data
-            cognitionData = await DataBridge.compileDashboardData();
-            renderTab(currentTab);
+            try {
+                // Use DataBridge for dynamic data
+                cognitionData = await DataBridge.compileDashboardData();
+                console.log('Dashboard data loaded:', cognitionData);
+                renderTab(currentTab);
+            } catch (e) {
+                console.error('Failed to load dashboard data:', e);
+                document.getElementById('mainContent').innerHTML = `
+                    <div style="padding: var(--space-8); text-align: center; color: var(--danger);">
+                        <div style="font-size: var(--text-2xl); margin-bottom: var(--space-4);">⚠ Dashboard Error</div>
+                        <div style="color: var(--text-secondary);">Failed to load data: ${e.message}</div>
+                        <div style="margin-top: var(--space-4); font-size: var(--text-sm); color: var(--text-tertiary);">Check browser console for details</div>
+                    </div>
+                `;
+            }
             
             // Refresh data every 30 seconds
             setInterval(async () => {
-                cognitionData = await DataBridge.compileDashboardData();
-                if (currentTab === 'now') {
-                    renderTab('now'); // Auto-refresh NOW tab
+                try {
+                    cognitionData = await DataBridge.compileDashboardData();
+                    if (currentTab === 'now') {
+                        renderTab('now'); // Auto-refresh NOW tab
+                    }
+                } catch (e) {
+                    console.error('Refresh failed:', e);
                 }
             }, 30000);
         }
