@@ -874,14 +874,6 @@ const DataBridge = {
     });
     
     return items;
-  },
-        show: true,
-        level: 'amber',
-        message: highPriority[0].title,
-        action: highPriority[0].description
-      };
-    }
-    return { show: false };
   }
 };
 
