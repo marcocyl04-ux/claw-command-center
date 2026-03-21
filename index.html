@@ -768,7 +768,7 @@
                     <div class="card card-full">
                         <div class="section-header">
                             <span class="section-title">Model Mastery</span>
-                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">6 models configured • Click cards for pricing</span>
+                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">6 models • Quality scores estimated • Costs from OpenRouter</span>
                         </div>
                         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4);">
                             ${getModelCardHTML('Opus 4.6', '~$0.10-0.50', 92, 'excellent', [
@@ -826,60 +826,30 @@
                             </div>
                         </div>
                         
-                        <!-- Decision Trend Graph -->
-                        <div style="margin-bottom: var(--space-5);">
-                            <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-bottom: var(--space-3); text-transform: uppercase; letter-spacing: 0.05em;">4-Week Trend</div>
-                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-5);">
-                                <div style="display: flex; align-items: flex-end; justify-content: space-between; height: 180px; gap: var(--space-4); padding: var(--space-4) 0;">
-                                    <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: var(--space-2);">
-                                        <div style="font-family: var(--font-mono); font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-1);">65%</div>
-                                        <div style="width: 60px; height: 100px; background: linear-gradient(to top, var(--success), rgba(74,222,128,0.3)); border-radius: var(--radius-md) var(--radius-md) 0 0; position: relative;">
-                                            <div style="position: absolute; top: -8px; left: 50%; transform: translateX(-50%); width: 12px; height: 12px; background: var(--success); border-radius: 50%; border: 2px solid var(--bg-1);"></div>
-                                        </div>
-                                        <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Week 1</div>
-                                    </div>
-                                    <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: var(--space-2);">
-                                        <div style="font-family: var(--font-mono); font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-1);">70%</div>
-                                        <div style="width: 60px; height: 120px; background: linear-gradient(to top, var(--success), rgba(74,222,128,0.3)); border-radius: var(--radius-md) var(--radius-md) 0 0; position: relative;">
-                                            <div style="position: absolute; top: -8px; left: 50%; transform: translateX(-50%); width: 12px; height: 12px; background: var(--success); border-radius: 50%; border: 2px solid var(--bg-1);"></div>
-                                        </div>
-                                        <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Week 2</div>
-                                    </div>
-                                    <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: var(--space-2);">
-                                        <div style="font-family: var(--font-mono); font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-1);">75%</div>
-                                        <div style="width: 60px; height: 140px; background: linear-gradient(to top, var(--success), rgba(74,222,128,0.3)); border-radius: var(--radius-md) var(--radius-md) 0 0; position: relative;">
-                                            <div style="position: absolute; top: -8px; left: 50%; transform: translateX(-50%); width: 12px; height: 12px; background: var(--success); border-radius: 50%; border: 2px solid var(--bg-1);"></div>
-                                        </div>
-                                        <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Week 3</div>
-                                    </div>
-                                    <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: var(--space-2);">
-                                        <div style="font-family: var(--font-mono); font-size: var(--text-sm); color: var(--amber-400); font-weight: 600; margin-bottom: var(--space-1);">78%</div>
-                                        <div style="width: 60px; height: 155px; background: linear-gradient(to top, var(--amber-500), rgba(224,145,42,0.3)); border-radius: var(--radius-md) var(--radius-md) 0 0; position: relative;">
-                                            <div style="position: absolute; top: -8px; left: 50%; transform: translateX(-50%); width: 12px; height: 12px; background: var(--amber-500); border-radius: 50%; border: 2px solid var(--bg-1);"></div>
-                                        </div>
-                                        <div style="font-size: var(--text-xs); color: var(--amber-400); font-weight: 500;">Week 4</div>
-                                    </div>
+                        <!-- Decision Stats Summary -->
+                        <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); margin-bottom: var(--space-5);">
+                            <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-bottom: var(--space-3);">Decision History</div>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4);">
+                                <div style="text-align: center;">
+                                    <div style="font-family: var(--font-mono); font-size: var(--text-2xl); font-weight: 700; color: var(--success);">${mind.decisions.examples?.length || 0}</div>
+                                    <div style="font-size: var(--text-xs); color: var(--text-secondary);">Recent decisions tracked</div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="font-family: var(--font-mono); font-size: var(--text-2xl); font-weight: 700; color: var(--amber-400);">${Math.round((mind.decisions.autonomous.count / (mind.decisions.autonomous.count + mind.decisions.escalated.count)) * 100) || 0}%</div>
+                                    <div style="font-size: var(--text-xs); color: var(--text-secondary);">Autonomy rate</div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="font-family: var(--font-mono); font-size: var(--text-2xl); font-weight: 700;">${mind.decisions.trend}</div>
+                                    <div style="font-size: var(--text-xs); color: var(--text-secondary);">Current trend</div>
                                 </div>
                             </div>
                         </div>
                         
-                        <!-- Actionable Insight Card -->
-                        <div style="background: linear-gradient(135deg, rgba(224,145,42,0.1) 0%, rgba(20,20,20,0.5) 100%); border: 1px solid rgba(224,145,42,0.3); border-radius: var(--radius-lg); padding: var(--space-5); margin-bottom: var(--space-5);">
-                            <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-3);">
-                                <div style="width: 40px; height: 40px; background: rgba(224,145,42,0.2); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: var(--text-xl);">◈</div>
-                                <div>
-                                    <div style="font-weight: 600; color: var(--amber-400);">Improvement Opportunity</div>
-                                    <div style="font-size: var(--text-sm); color: var(--text-secondary);">Pattern detected in your decisions</div>
-                                </div>
-                            </div>
-                            <div style="color: var(--text-secondary); margin-bottom: var(--space-3);">
-                                <strong>You escalate design tasks 60% of the time</strong> but implementation only 20%. This suggests high confidence in execution but uncertainty in design direction.
-                            </div>
-                            <div style="background: var(--bg-0); border-radius: var(--radius-md); padding: var(--space-3); border-left: 3px solid var(--amber-500);">
-                                <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-bottom: var(--space-1);">Recommendation</div>
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">
-                                    Use <strong>impeccable skill</strong> BEFORE escalating design questions. You've done this successfully 12 times with 85% positive outcomes.
-                                </div>
+                        <!-- Decision Pattern Note -->
+                        <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); margin-bottom: var(--space-5); border-left: 3px solid var(--amber-500);">
+                            <div style="font-size: var(--text-sm); color: var(--text-secondary);">
+                                <strong>Note:</strong> Decision quality metrics are manually assessed. 
+                                Autonomy rate calculated from recent session history.
                             </div>
                         </div>
                         
