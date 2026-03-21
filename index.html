@@ -732,10 +732,25 @@
         }
         
         function renderMindTab() {
-            const mind = cognitionData.mind;
+            const mind = cognitionData.mind || {};
+            
+            // Safety check
+            if (!mind.skill_network || !mind.decisions) {
+                console.error('MIND tab: Missing data', mind);
+                return `
+                    <div style="padding: var(--space-8); text-align: center; color: var(--danger);">
+                        <div style="font-size: var(--text-2xl); margin-bottom: var(--space-4);">⚠ MIND Tab Error</div>
+                        <div style="color: var(--text-secondary);">Missing cognitive data. Check console.</div>
+                    </div>
+                `;
+            }
             
             // Render skill network after DOM update
-            setTimeout(() => renderSkillNetwork(mind.skill_network.nodes), 0);
+            setTimeout(() => {
+                if (mind.skill_network && mind.skill_network.nodes) {
+                    renderSkillNetwork(mind.skill_network.nodes);
+                }
+            }, 0);
             
             return `
                 <div class="state-hero">
