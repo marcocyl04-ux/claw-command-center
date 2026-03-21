@@ -552,7 +552,7 @@
                             <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full);">Good</span>
                         </div>
                         <div style="font-weight: 600; font-size: var(--text-lg); margin-bottom: var(--space-2);">MIND</div>
-                        <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">Cognitive load: 42%</div>
+                        <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">${mind.skill_network?.nodes?.length || 22} skills • ${mind.decisions?.autonomous?.count || 0} autonomous decisions</div>
                         <div style="font-size: var(--text-xs); color: var(--text-tertiary);">View MIND →</div>
                     </div>
                     
@@ -560,10 +560,10 @@
                     <div style="background: var(--bg-1); border-radius: var(--radius-lg); padding: var(--space-5); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; border: 1px solid rgba(255,255,255,0.05);" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 24px rgba(0,0,0,0.3)'" onmouseout="this.style.transform=''; this.style.boxShadow=''" onclick="switchTab('system')">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
                             <span style="font-size: var(--text-2xl);">📊</span>
-                            <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(224,145,42,0.2); color: var(--amber-400); border-radius: var(--radius-full);">1 Issue</span>
+                            <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: ${system.gateway?.filter(s => s.status === 'degraded').length > 0 ? 'rgba(224,145,42,0.2)' : 'rgba(74,222,128,0.2)'}; color: ${system.gateway?.filter(s => s.status === 'degraded').length > 0 ? 'var(--amber-400)' : 'var(--success)'}; border-radius: var(--radius-full);">${system.gateway?.filter(s => s.status === 'degraded').length > 0 ? system.gateway.filter(s => s.status === 'degraded').length + ' Issue' : 'All Good'}</span>
                         </div>
                         <div style="font-weight: 600; font-size: var(--text-lg); margin-bottom: var(--space-2);">SYSTEM</div>
-                        <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">3/4 services online</div>
+                        <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">${system.gateway?.filter(s => s.status === 'online').length || 0}/${system.gateway?.length || 4} services online</div>
                         <div style="font-size: var(--text-xs); color: var(--text-tertiary);">View SYSTEM →</div>
                     </div>
                     
@@ -571,10 +571,10 @@
                     <div style="background: var(--bg-1); border-radius: var(--radius-lg); padding: var(--space-5); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; border: 1px solid rgba(255,255,255,0.05);" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 24px rgba(0,0,0,0.3)'" onmouseout="this.style.transform=''; this.style.boxShadow=''" onclick="switchTab('trading')">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
                             <span style="font-size: var(--text-2xl);">💰</span>
-                            <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full);">↑ 5%</span>
+                            <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(100,100,100,0.2); color: var(--text-tertiary); border-radius: var(--radius-full);">Basic</span>
                         </div>
                         <div style="font-weight: 600; font-size: var(--text-lg); margin-bottom: var(--space-2);">TRADING</div>
-                        <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">Win rate: 71%</div>
+                        <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">${system.trading?.total_predictions || 0} predictions • ${system.trading?.edge_discovery_rate || 0} edges found</div>
                         <div style="font-size: var(--text-xs); color: var(--text-tertiary);">View TRADING →</div>
                     </div>
                     
@@ -664,29 +664,14 @@
                     </div>
                 </div>
                 
-                <!-- Chunk 5: Live Activity Stream -->
+                <!-- Chunk 5: System Status Footer -->
                 <div style="background: var(--bg-1); border-radius: var(--radius-lg); padding: var(--space-5);">
-                    <div style="font-weight: 600; font-size: var(--text-lg); margin-bottom: var(--space-4);">Recent Activity</div>
-                    <div style="display: flex; flex-direction: column; gap: var(--space-3);">
-                        <div style="display: flex; gap: var(--space-3); align-items: flex-start;">
-                            <span style="font-size: var(--text-xs); color: var(--text-tertiary); min-width: 80px;">2 min ago</span>
-                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">Pushed checkpoint tag</span>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="font-size: var(--text-sm); color: var(--text-secondary);">
+                            <span style="color: var(--success);">●</span> Dashboard v6.0 • Data refreshed on load
                         </div>
-                        <div style="display: flex; gap: var(--space-3); align-items: flex-start;">
-                            <span style="font-size: var(--text-xs); color: var(--text-tertiary); min-width: 80px;">15 min ago</span>
-                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">Fixed memory tab data issue</span>
-                        </div>
-                        <div style="display: flex; gap: var(--space-3); align-items: flex-start;">
-                            <span style="font-size: var(--text-xs); color: var(--text-tertiary); min-width: 80px;">1 hr ago</span>
-                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">Completed SYSTEM tab</span>
-                        </div>
-                        <div style="display: flex; gap: var(--space-3); align-items: flex-start;">
-                            <span style="font-size: var(--text-xs); color: var(--text-tertiary); min-width: 80px;">3 hr ago</span>
-                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">Updated TRAINING blockers</span>
-                        </div>
-                        <div style="display: flex; gap: var(--space-3); align-items: flex-start;">
-                            <span style="font-size: var(--text-xs); color: var(--text-tertiary); min-width: 80px;">Today 09:00</span>
-                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">Daily predictions complete</span>
+                        <div style="font-size: var(--text-xs); color: var(--text-tertiary);">
+                            ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}
                         </div>
                     </div>
                 </div>
