@@ -478,10 +478,14 @@
                 `;
             }
             
+            // Update last refresh timestamp
+            updateLastRefreshTime();
+            
             // Refresh data every 30 seconds
             setInterval(async () => {
                 try {
                     cognitionData = await DataBridge.compileDashboardData();
+                    updateLastRefreshTime();
                     if (currentTab === 'now') {
                         renderTab('now'); // Auto-refresh NOW tab
                     }
@@ -489,6 +493,52 @@
                     console.error('Refresh failed:', e);
                 }
             }, 30000);
+        }
+        
+        // Manual refresh function
+        async function refreshDashboardData() {
+            const btn = document.getElementById('refreshBtn');
+            const spinner = document.getElementById('refreshSpinner');
+            
+            // Show spinner
+            if (spinner) spinner.style.display = 'block';
+            if (btn) {
+                btn.disabled = true;
+                btn.style.opacity = '0.5';
+                btn.textContent = '⟳ Refreshing...';
+            }
+            
+            try {
+                // Re-fetch data
+                cognitionData = await DataBridge.compileDashboardData();
+                
+                // Re-render current tab
+                renderTab(currentTab);
+                
+                // Update timestamp
+                updateLastRefreshTime();
+                
+                console.log('Dashboard refreshed at', new Date().toLocaleTimeString());
+            } catch (e) {
+                console.error('Manual refresh failed:', e);
+                alert('Refresh failed: ' + e.message);
+            } finally {
+                // Hide spinner
+                if (spinner) spinner.style.display = 'none';
+                if (btn) {
+                    btn.disabled = false;
+                    btn.style.opacity = '1';
+                    btn.textContent = '🔄 Refresh Data';
+                }
+            }
+        }
+        
+        // Update last refresh timestamp
+        function updateLastRefreshTime() {
+            const el = document.getElementById('lastRefresh');
+            if (el) {
+                el.textContent = 'Last refreshed: ' + new Date().toLocaleTimeString();
+            }
         }
         
         function switchTab(tab) {
@@ -668,7 +718,7 @@
                 <div style="background: var(--bg-1); border-radius: var(--radius-lg); padding: var(--space-5); margin-bottom: var(--space-5);">
                     <div style="font-weight: 600; font-size: var(--text-lg); margin-bottom: var(--space-4);">Quick Actions</div>
                     <div style="display: flex; flex-wrap: wrap; gap: var(--space-3);">
-                        <button style="background: var(--bg-0); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); color: var(--text-secondary); cursor: pointer; font-size: var(--text-sm); transition: all 0.2s;" onmouseover="this.style.borderColor='var(--amber-500)'; this.style.color='var(--text-primary)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.color='var(--text-secondary)'" onclick="location.reload()">🔄 Refresh Data</button>
+                        <button id="refreshBtn" style="background: var(--bg-0); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); color: var(--text-secondary); cursor: pointer; font-size: var(--text-sm); transition: all 0.2s;" onmouseover="this.style.borderColor='var(--amber-500)'; this.style.color='var(--text-primary)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.color='var(--text-secondary)'" onclick="refreshDashboardData()">🔄 Refresh Data</button>
                         <button style="background: var(--bg-0); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); color: var(--text-secondary); cursor: pointer; font-size: var(--text-sm); transition: all 0.2s;" onmouseover="this.style.borderColor='var(--amber-500)'; this.style.color='var(--text-primary)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.color='var(--text-secondary)'" onclick="switchTab('system')">🔍 Run Diagnostics</button>
                         <button style="background: var(--bg-0); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); color: var(--text-secondary); cursor: pointer; font-size: var(--text-sm); transition: all 0.2s;" onmouseover="this.style.borderColor='var(--amber-500)'; this.style.color='var(--text-primary)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.color='var(--text-secondary)'" onclick="alert('Export feature coming soon')">📊 Export Report</button>
                         <button style="background: var(--bg-0); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); color: var(--text-secondary); cursor: pointer; font-size: var(--text-sm); transition: all 0.2s;" onmouseover="this.style.borderColor='var(--amber-500)'; this.style.color='var(--text-primary)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.color='var(--text-secondary)'" onclick="window.open('https://github.com/marcocyl04-ux/claw-command-center', '_blank')">📁 Open Workspace</button>
@@ -681,10 +731,10 @@
                 <div style="background: var(--bg-1); border-radius: var(--radius-lg); padding: var(--space-5);">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <div style="font-size: var(--text-sm); color: var(--text-secondary);">
-                            <span style="color: var(--success);">●</span> Dashboard v6.0 • Data refreshed on load
+                            <span style="color: var(--success);">●</span> Dashboard v6.0 • <span id="lastRefresh">Loading...</span>
                         </div>
-                        <div style="font-size: var(--text-xs); color: var(--text-tertiary);">
-                            ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}
+                        <div id="refreshSpinner" style="display: none; font-size: var(--text-sm); color: var(--amber-400);">
+                            ⟳ Refreshing...
                         </div>
                     </div>
                 </div>
