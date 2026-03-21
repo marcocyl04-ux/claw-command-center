@@ -416,6 +416,36 @@
             }
         }
         
+        /* Model Cards Grid */
+        .model-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-4);
+        }
+        
+        @media (max-width: 1200px) {
+            .model-cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .model-cards-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Skill Network Container */
+        #skillNetworkViz {
+            max-width: 100%;
+            overflow: auto;
+        }
+        
+        #skillNetworkViz svg {
+            max-width: 100%;
+            height: auto;
+        }
+        
         /* Responsive Design */
         
         /* Fluid Typography */
@@ -441,6 +471,40 @@
             border-radius: var(--radius-md);
             padding: var(--space-3);
             cursor: pointer;
+        }
+        
+        /* Collapsible Sidebar */
+        .sidebar-collapsed {
+            width: 60px !important;
+        }
+        .sidebar-collapsed .logo-text,
+        .sidebar-collapsed .nav-item span:not(:first-child),
+        .sidebar-collapsed .nav-badge {
+            display: none;
+        }
+        .sidebar-collapsed .nav-item {
+            justify-content: center;
+            padding: var(--space-3);
+        }
+        .main-expanded {
+            margin-left: 60px !important;
+        }
+        .sidebar-toggle {
+            position: absolute;
+            bottom: var(--space-4);
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-2);
+            border: 1px solid oklch(100% 0 0 / 0.1);
+            border-radius: var(--radius-md);
+            padding: var(--space-2);
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all var(--duration-fast);
+        }
+        .sidebar-toggle:hover {
+            color: var(--text-primary);
+            background: var(--bg-0);
         }
         
         /* Responsive Grid */
@@ -600,7 +664,7 @@
         <aside class="sidebar" id="sidebar">
             <div class="logo">
                 <div class="logo-pulse"></div>
-                Claw
+                <span class="logo-text">Claw</span>
             </div>
             <nav class="nav">
                 <div class="nav-item active" data-tab="now" onclick="switchTab('now')">
@@ -623,6 +687,11 @@
                     <span>◈</span> SYSTEM
                 </div>
             </nav>
+            <button class="sidebar-toggle" onclick="toggleSidebar()" title="Collapse/Expand sidebar">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </button>
         </aside>
         
         <!-- Main Content -->
@@ -638,6 +707,9 @@
         let currentTab = 'now';
         
         async function init() {
+            // Restore sidebar state
+            restoreSidebarState();
+            
             try {
                 // Use DataBridge for dynamic data
                 cognitionData = await DataBridge.compileDashboardData();
@@ -722,6 +794,29 @@
             const sidebar = document.getElementById('sidebar');
             if (sidebar) {
                 sidebar.classList.toggle('open');
+            }
+        }
+        
+        // Sidebar collapse/expand toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const main = document.getElementById('mainContent');
+            if (sidebar && main) {
+                sidebar.classList.toggle('sidebar-collapsed');
+                main.classList.toggle('main-expanded');
+                // Save preference
+                localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('sidebar-collapsed'));
+            }
+        }
+        
+        // Restore sidebar state on load
+        function restoreSidebarState() {
+            const sidebar = document.getElementById('sidebar');
+            const main = document.getElementById('mainContent');
+            const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+            if (isCollapsed && sidebar && main) {
+                sidebar.classList.add('sidebar-collapsed');
+                main.classList.add('main-expanded');
             }
         }
         
@@ -1034,7 +1129,7 @@
                             <span class="section-title">Model Mastery</span>
                             <span style="font-size: var(--text-sm); color: var(--text-secondary);">6 models • Quality scores estimated • Costs from OpenRouter</span>
                         </div>
-                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4);">
+                        <div class="model-cards-grid">
                             ${getModelCardHTML('Opus 4.6', '~$0.10-0.50', 92, 'excellent', [
                                 { task: 'Design systems', pct: 40 },
                                 { task: 'Complex reasoning', pct: 30 },
@@ -1050,8 +1145,6 @@
                                 { task: 'Refactoring', pct: 25 },
                                 { task: 'Debugging', pct: 15 }
                             ])}
-                        </div>
-                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); margin-top: var(--space-4);">
                             ${getModelCardHTML('Qwen3 235B', '~$0.005-0.02', 82, 'good', [
                                 { task: 'Analysis', pct: 45 },
                                 { task: 'Bulk processing', pct: 35 },
