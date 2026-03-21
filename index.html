@@ -1270,48 +1270,42 @@
                         <div>
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
                                 <span style="font-weight: 600;">Working Memory</span>
-                                <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full);">Healthy</span>
+                                <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full);">Active</span>
                             </div>
-                            <div style="height: 10px; background: var(--bg-1); border-radius: var(--radius-full); overflow: hidden; margin-bottom: var(--space-2);">
-                                <div style="width: 80%; height: 100%; background: linear-gradient(to right, var(--success), var(--amber-500)); border-radius: var(--radius-full);"></div>
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); margin-bottom: var(--space-2);">
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">
+                                    ${working.loaded_files?.length || 4} core files loaded
+                                </div>
                             </div>
-                            <div style="display: flex; justify-content: space-between; font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-1);">
-                                <span>47MB / 60MB</span>
-                                <span>80%</span>
-                            </div>
-                            <div style="font-size: var(--text-xs); color: var(--text-tertiary);">12 files loaded</div>
+                            <div style="font-size: var(--text-xs); color: var(--text-tertiary);">SOUL.md, MEMORY.md, USER.md, AGENTS.md</div>
                         </div>
                         
-                        <!-- Long-term Recall - LIVE -->
+                        <!-- Long-term Recall -->
                         <div>
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
                                 <span style="font-weight: 600;">Long-term Recall</span>
-                                <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full);">Excellent</span>
+                                <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full);">Active</span>
                             </div>
-                            <div style="height: 10px; background: var(--bg-1); border-radius: var(--radius-full); overflow: hidden; margin-bottom: var(--space-2);">
-                                <div style="width: ${recall.accuracy || 90}%; height: 100%; background: var(--success); border-radius: var(--radius-full);"></div>
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); margin-bottom: var(--space-2);">
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">
+                                    ${long_term.lessons?.length || 0} lessons stored
+                                </div>
                             </div>
-                            <div style="display: flex; justify-content: space-between; font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-1);">
-                                <span>${recall.remembered || 28} remembered</span>
-                                <span>${recall.accuracy || 90}%</span>
-                            </div>
-                            <div style="font-size: var(--text-xs); color: var(--success);">↑ Accuracy improving</div>
+                            <div style="font-size: var(--text-xs); color: var(--text-tertiary);">From MEMORY.md critical lessons</div>
                         </div>
                         
-                        <!-- Compression -->
+                        <!-- File Stats -->
                         <div>
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
-                                <span style="font-weight: 600;">Compression</span>
-                                <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(224,145,42,0.2); color: var(--amber-400); border-radius: var(--radius-full);">Good</span>
+                                <span style="font-weight: 600;">MEMORY.md Stats</span>
+                                <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full);">Live</span>
                             </div>
-                            <div style="height: 10px; background: var(--bg-1); border-radius: var(--radius-full); overflow: hidden; margin-bottom: var(--space-2);">
-                                <div style="width: 70%; height: 100%; background: var(--amber-500); border-radius: var(--radius-full);"></div>
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); margin-bottom: var(--space-2);">
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">
+                                    ${recall.totalLines || 0} lines • ${recall.lessonCount || 0} lessons
+                                </div>
                             </div>
-                            <div style="display: flex; justify-content: space-between; font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-1);">
-                                <span>${recall.totalLines || 47} lines → ${Math.round((recall.totalLines || 47) * 0.15)}MB</span>
-                                <span>15:1</span>
-                            </div>
-                            <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Efficient distillation</div>
+                            <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Parsed from actual file</div>
                         </div>
                     </div>
                 </div>
@@ -1319,82 +1313,59 @@
                 <!-- Chunk 2: Active Memories -->
                 <div class="card card-full" style="margin-bottom: var(--space-5);">
                     <div class="section-header">
-                        <span class="section-title">Currently Loaded</span>
-                        <span style="font-size: var(--text-sm); color: var(--text-secondary);">What's in my working memory this session</span>
+                        <span class="section-title">Core Files</span>
+                        <span style="font-size: var(--text-sm); color: var(--text-secondary);">Loaded every session from workspace</span>
                     </div>
                     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3);">
-                        <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--success); cursor: pointer;" onclick="showFileDetail('soul')">
+                        <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--success);">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
                                 <span style="font-weight: 600;">SOUL.md</span>
-                                <span style="font-size: var(--text-xs); color: var(--success);">Active 2 hrs</span>
+                                <span style="font-size: var(--text-xs); color: var(--success);">Loaded</span>
                             </div>
-                            <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">Identity & principles</div>
-                            <div style="display: flex; justify-content: space-between; font-size: var(--text-xs);">
-                                <span style="color: var(--text-tertiary);">Confidence: 95%</span>
-                                <span style="color: var(--amber-400);">Last: Dashboard purpose</span>
-                            </div>
+                            <div style="font-size: var(--text-sm); color: var(--text-secondary);">Identity & principles</div>
                         </div>
                         
-                        <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--success); cursor: pointer;" onclick="showFileDetail('memory')">
+                        <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--success);">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
                                 <span style="font-weight: 600;">MEMORY.md</span>
-                                <span style="font-size: var(--text-xs); color: var(--success);">Active 2 hrs</span>
+                                <span style="font-size: var(--text-xs); color: var(--success);">Loaded</span>
                             </div>
-                            <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">Lessons & knowledge</div>
-                            <div style="display: flex; justify-content: space-between; font-size: var(--text-xs);">
-                                <span style="color: var(--text-tertiary);">Confidence: 90%</span>
-                                <span style="color: var(--amber-400);">Last: Tab content bug</span>
-                            </div>
+                            <div style="font-size: var(--text-sm); color: var(--text-secondary);">Lessons & knowledge</div>
                         </div>
                         
-                        <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--success); cursor: pointer;" onclick="showFileDetail('user')">
+                        <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--success);">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
                                 <span style="font-weight: 600;">USER.md</span>
-                                <span style="font-size: var(--text-xs); color: var(--success);">Active 2 hrs</span>
+                                <span style="font-size: var(--text-xs); color: var(--success);">Loaded</span>
                             </div>
-                            <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">Marco's profile</div>
-                            <div style="display: flex; justify-content: space-between; font-size: var(--text-xs);">
-                                <span style="color: var(--text-tertiary);">Confidence: 85%</span>
-                                <span style="color: var(--amber-400);">Last: Pain points</span>
-                            </div>
+                            <div style="font-size: var(--text-sm); color: var(--text-secondary);">Marco's profile</div>
                         </div>
                         
-                        <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--amber-500); cursor: pointer;" onclick="showFileDetail('agents')">
+                        <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--amber-500);">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
                                 <span style="font-weight: 600;">AGENTS.md</span>
-                                <span style="font-size: var(--text-xs); color: var(--amber-400);">Stale 5 days</span>
+                                <span style="font-size: var(--text-xs); color: var(--amber-400);">Stale</span>
                             </div>
-                            <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">System protocols</div>
-                            <div style="display: flex; justify-content: space-between; font-size: var(--text-xs);">
-                                <span style="color: var(--text-tertiary);">Confidence: 70%</span>
-                                <span style="color: var(--danger);">⚠ Not referenced</span>
-                            </div>
+                            <div style="font-size: var(--text-sm); color: var(--text-secondary);">System protocols</div>
                         </div>
                     </div>
-                    <div id="fileDetailPanel" style="display: none; margin-top: var(--space-4); background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-5); border-left: 3px solid var(--amber-500);"></div>
                 </div>
                 
                 <!-- Chunk 3: Critical Memories - LIVE DATA from MEMORY.md -->
                 <div class="card card-full" style="margin-bottom: var(--space-5);">
                     <div class="section-header">
                         <span class="section-title">Critical Memories</span>
-                        <span style="font-size: var(--text-sm); color: var(--text-secondary);">${long_term.lessons.length} lessons from MEMORY.md • High-confidence (>85%)</span>
+                        <span style="font-size: var(--text-sm); color: var(--text-secondary);">${long_term.lessons.length} lessons from MEMORY.md</span>
                     </div>
-                    ${long_term.lessons.filter(l => l.confidence > 85).map(l => `
+                    ${long_term.lessons.map((l, i) => `
                         <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); margin-bottom: var(--space-3); border-left: 3px solid var(--success);">
                             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-2);">
                                 <span style="font-weight: 600; flex: 1; padding-right: var(--space-3);">${l.lesson}</span>
                                 <div style="text-align: right;">
-                                    <div style="font-family: var(--font-mono); font-size: var(--text-sm); color: var(--success); font-weight: 600;">${l.confidence}%</div>
-                                    <div style="font-size: var(--text-xs); color: var(--text-tertiary);">${l.last_used}</div>
+                                    <div style="font-family: var(--font-mono); font-size: var(--text-sm); color: var(--success); font-weight: 600;">#${i + 1}</div>
                                 </div>
                             </div>
-                            <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-bottom: var(--space-2);">Origin: ${l.origin}</div>
-                            <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">Context: ${l.context}</div>
-                            <div style="display: flex; gap: var(--space-2);">
-                                <button style="background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.3); color: var(--success); padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); font-size: var(--text-xs); cursor: pointer;">View applications</button>
-                                <button style="background: rgba(224,145,42,0.1); border: 1px solid rgba(224,145,42,0.3); color: var(--amber-400); padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); font-size: var(--text-xs); cursor: pointer;">Mark validated</button>
-                            </div>
+                            <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-bottom: var(--space-2);">Source: ${l.origin}</div>
                         </div>
                     `).join('')}
                     ${long_term.lessons.filter(l => l.confidence > 85).length === 0 ? `
