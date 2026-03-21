@@ -1708,99 +1708,31 @@
                             </div>
                         `).join('')}
                     </div>
-                    <!-- Chunk 1: Enhanced Environmental Mastery -->
+                    <!-- Chunk 1: Tool Capabilities -->
                     <div class="card card-full">
                         <div class="section-header">
-                            <span class="section-title">Environmental Mastery</span>
-                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">Click skills for details</span>
+                            <span class="section-title">Tool Capabilities</span>
+                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">Tools available in environment</span>
                         </div>
                         
-                        <!-- Tool Proficiency -->
-                        <div style="margin-bottom: var(--space-5);">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
-                                <span style="font-weight: 600;">Tool Proficiency</span>
-                                <span style="font-family: var(--font-mono); color: var(--amber-400);">75%</span>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3);">
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4);">
+                                <div style="font-weight: 600; margin-bottom: var(--space-2);">Git CLI</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">Version control operations</div>
                             </div>
-                            <div style="height: 8px; background: var(--bg-1); border-radius: var(--radius-full); overflow: hidden; margin-bottom: var(--space-3);">
-                                <div style="width: 75%; height: 100%; background: linear-gradient(to right, var(--amber-500), var(--amber-400)); border-radius: var(--radius-full);"></div>
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4);">
+                                <div style="font-weight: 600; margin-bottom: var(--space-2);">File Operations</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">Read, write, edit files</div>
                             </div>
-                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-2);">
-                                <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); cursor: pointer;" onclick="showSkillDetail('git-cli')">
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-1);">
-                                        <span style="font-size: var(--text-sm);">Git CLI</span>
-                                        <span style="font-size: var(--text-xs); color: var(--success);">90%</span>
-                                    </div>
-                                    <div style="height: 4px; background: var(--bg-0); border-radius: 2px; overflow: hidden;">
-                                        <div style="width: 90%; height: 100%; background: var(--success); border-radius: 2px;"></div>
-                                    </div>
-                                </div>
-                                <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); cursor: pointer;" onclick="showSkillDetail('file-ops')">
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-1);">
-                                        <span style="font-size: var(--text-sm);">File Operations</span>
-                                        <span style="font-size: var(--text-xs); color: var(--success);">80%</span>
-                                    </div>
-                                    <div style="height: 4px; background: var(--bg-0); border-radius: 2px; overflow: hidden;">
-                                        <div style="width: 80%; height: 100%; background: var(--success); border-radius: 2px;"></div>
-                                    </div>
-                                </div>
-                                <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); cursor: pointer;" onclick="showSkillDetail('process-mgmt')">
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-1);">
-                                        <span style="font-size: var(--text-sm);">Process Management</span>
-                                        <span style="font-size: var(--text-xs); color: var(--amber-400);">60%</span>
-                                    </div>
-                                    <div style="height: 4px; background: var(--bg-0); border-radius: 2px; overflow: hidden;">
-                                        <div style="width: 60%; height: 100%; background: var(--amber-500); border-radius: 2px;"></div>
-                                    </div>
-                                </div>
-                                <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); cursor: pointer;" onclick="showSkillDetail('network-diag')">
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-1);">
-                                        <span style="font-size: var(--text-sm);">Network Diagnostics</span>
-                                        <span style="font-size: var(--text-xs); color: var(--danger);">50%</span>
-                                    </div>
-                                    <div style="height: 4px; background: var(--bg-0); border-radius: 2px; overflow: hidden;">
-                                        <div style="width: 50%; height: 100%; background: var(--danger); border-radius: 2px;"></div>
-                                    </div>
-                                </div>
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4);">
+                                <div style="font-weight: 600; margin-bottom: var(--space-2);">Process Management</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">Execute commands, shells</div>
+                            </div>
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4);">
+                                <div style="font-weight: 600; margin-bottom: var(--space-2);">Network Diagnostics</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">HTTP requests, API calls</div>
                             </div>
                         </div>
-                        
-                        <!-- File System Navigation -->
-                        <div style="margin-bottom: var(--space-5);">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
-                                <span style="font-weight: 600;">File System Navigation</span>
-                                <span style="font-family: var(--font-mono); color: var(--success);">80%</span>
-                            </div>
-                            <div style="height: 8px; background: var(--bg-1); border-radius: var(--radius-full); overflow: hidden; margin-bottom: var(--space-3);">
-                                <div style="width: 80%; height: 100%; background: var(--success); border-radius: var(--radius-full);"></div>
-                            </div>
-                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-2);">
-                                <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3);">
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-1);">
-                                        <span style="font-size: var(--text-sm);">Path Resolution</span>
-                                        <span style="font-size: var(--text-xs); color: var(--success);">90%</span>
-                                    </div>
-                                    <div style="height: 4px; background: var(--bg-0); border-radius: 2px; overflow: hidden;">
-                                        <div style="width: 90%; height: 100%; background: var(--success); border-radius: 2px;"></div>
-                                    </div>
-                                </div>
-                                <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3);">
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-1);">
-                                        <span style="font-size: var(--text-sm);">Permission Handling</span>
-                                        <span style="font-size: var(--text-xs); color: var(--success);">80%</span>
-                                    </div>
-                                    <div style="height: 4px; background: var(--bg-0); border-radius: 2px; overflow: hidden;">
-                                        <div style="width: 80%; height: 100%; background: var(--success); border-radius: 2px;"></div>
-                                    </div>
-                                </div>
-                                <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3);">
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-1);">
-                                        <span style="font-size: var(--text-sm);">Directory Traversal</span>
-                                        <span style="font-size: var(--text-xs); color: var(--success);">85%</span>
-                                    </div>
-                                    <div style="height: 4px; background: var(--bg-0); border-radius: 2px; overflow: hidden;">
-                                        <div style="width: 85%; height: 100%; background: var(--success); border-radius: 2px;"></div>
-                                    </div>
-                                </div>
                                 <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3);">
                                     <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-1);">
                                         <span style="font-size: var(--text-sm);">Cross-Platform</span>
@@ -2060,160 +1992,64 @@
                         </div>
                     </div>
                     
-                    <!-- Chunk 6: Incident Log -->
+                    <!-- Chunk 6: System Notes -->
                     <div class="card card-full">
                         <div class="section-header">
-                            <span class="section-title">Recent Incidents</span>
-                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">Issues & resolutions</span>
+                            <span class="section-title">System Notes</span>
+                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">Data accuracy & limitations</span>
                         </div>
                         
-                        <div style="display: flex; flex-direction: column; gap: var(--space-3);">
-                            <div style="background: rgba(74,222,128,0.05); border: 1px solid rgba(74,222,128,0.2); border-radius: var(--radius-md); padding: var(--space-4);">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
-                                    <span style="font-weight: 600; color: var(--success);">● Resolved</span>
-                                    <span style="font-size: var(--text-xs); color: var(--text-tertiary);">Today 14:32</span>
-                                </div>
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">Memory tab empty</div>
-                                <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Cause: Data structure mismatch | Duration: 15 min</div>
-                            </div>
-                            
-                            <div style="background: rgba(74,222,128,0.05); border: 1px solid rgba(74,222,128,0.2); border-radius: var(--radius-md); padding: var(--space-4);">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
-                                    <span style="font-weight: 600; color: var(--success);">● Resolved</span>
-                                    <span style="font-size: var(--text-xs); color: var(--text-tertiary);">Today 12:15</span>
-                                </div>
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">Git push failed</div>
-                                <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Cause: Network timeout | Duration: 2 min</div>
-                            </div>
-                            
-                            <div style="background: rgba(74,222,128,0.05); border: 1px solid rgba(74,222,128,0.2); border-radius: var(--radius-md); padding: var(--space-4);">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
-                                    <span style="font-weight: 600; color: var(--success);">● Resolved</span>
-                                    <span style="font-size: var(--text-xs); color: var(--text-tertiary);">Yesterday 18:45</span>
-                                </div>
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">Model routing error</div>
-                                <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Cause: Invalid API key | Duration: 5 min</div>
+                        <div style="background: rgba(224,145,42,0.1); border: 1px solid rgba(224,145,42,0.3); border-radius: var(--radius-md); padding: var(--space-4);">
+                            <div style="font-size: var(--text-sm); color: var(--amber-400); margin-bottom: var(--space-2);">⚠ Performance Metrics Not Available</div>
+                            <div style="font-size: var(--text-sm); color: var(--text-secondary);">
+                                Response time, throughput, and error rate tracking require instrumentation not currently implemented. 
+                                Gateway health shows live API status with latency measurements where available.
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Chunk 7: Performance Metrics -->
+                    <!-- Chunk 8: Environment -->
                     <div class="card card-full">
                         <div class="section-header">
-                            <span class="section-title">Performance</span>
-                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">Real-time metrics</span>
+                            <span class="section-title">Environment</span>
+                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">Execution context</span>
                         </div>
                         
-                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4); margin-bottom: var(--space-5);">
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3);">
                             <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4);">
-                                <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-bottom: var(--space-1);">Response Time</div>
-                                <div style="font-family: var(--font-mono); font-size: var(--text-2xl); font-weight: 700; color: var(--success);">1.2s</div>
-                                <div style="font-size: var(--text-xs); color: var(--success);">avg [Good]</div>
-                            </div>
-                            
-                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4);">
-                                <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-bottom: var(--space-1);">Throughput</div>
-                                <div style="font-family: var(--font-mono); font-size: var(--text-2xl); font-weight: 700;">45</div>
-                                <div style="font-size: var(--text-xs); color: var(--text-secondary);">ops/min | Peak: 78</div>
+                                <div style="font-weight: 600; margin-bottom: var(--space-2);">File System</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">Workspace directory access</div>
                             </div>
                             
                             <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4);">
-                                <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-bottom: var(--space-1);">Error Rate</div>
-                                <div style="font-family: var(--font-mono); font-size: var(--text-2xl); font-weight: 700; color: var(--success);">0.2%</div>
-                                <div style="font-size: var(--text-xs); color: var(--success);">[Excellent]</div>
+                                <div style="font-weight: 600; margin-bottom: var(--space-2);">Network</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">API and Git access</div>
                             </div>
                             
                             <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4);">
-                                <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-bottom: var(--space-1);">Uptime</div>
-                                <div style="font-family: var(--font-mono); font-size: var(--text-2xl); font-weight: 700;">99.7%</div>
-                                <div style="font-size: var(--text-xs); color: var(--text-secondary);">7 days</div>
-                            </div>
-                        </div>
-                        
-                        <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4);">
-                            <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-bottom: var(--space-3);">Last 10 Requests</div>
-                            <div style="display: flex; align-items: flex-end; gap: 4px; height: 40px;">
-                                <div style="flex: 1; background: var(--success); border-radius: 2px; height: 20%;"></div>
-                                <div style="flex: 1; background: var(--success); border-radius: 2px; height: 30%;"></div>
-                                <div style="flex: 1; background: var(--success); border-radius: 2px; height: 50%;"></div>
-                                <div style="flex: 1; background: var(--success); border-radius: 2px; height: 70%;"></div>
-                                <div style="flex: 1; background: var(--success); border-radius: 2px; height: 85%;"></div>
-                                <div style="flex: 1; background: var(--success); border-radius: 2px; height: 100%;"></div>
-                                <div style="flex: 1; background: var(--success); border-radius: 2px; height: 85%;"></div>
-                                <div style="flex: 1; background: var(--success); border-radius: 2px; height: 70%;"></div>
-                                <div style="flex: 1; background: var(--success); border-radius: 2px; height: 50%;"></div>
-                                <div style="flex: 1; background: var(--success); border-radius: 2px; height: 30%;"></div>
-                            </div>
-                            <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: var(--space-2);">Trend: Improving ↑</div>
-                        </div>
-                    </div>
-                    
-                    <!-- Chunk 8: Security & Permissions -->
-                    <div class="card card-full">
-                        <div class="section-header">
-                            <span class="section-title">Security Status</span>
-                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">Access & permissions</span>
-                        </div>
-                        
-                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); margin-bottom: var(--space-4);">
-                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--success);">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
-                                    <span style="font-weight: 600;">File System Access</span>
-                                    <span style="font-size: var(--text-xs); color: var(--success);">● Full</span>
-                                </div>
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">Read: All directories</div>
-                                <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Write: Workspace only</div>
+                                <div style="font-weight: 600; margin-bottom: var(--space-2);">Execution</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">Sandboxed with approval</div>
                             </div>
                             
-                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--success);">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
-                                    <span style="font-weight: 600;">Network Access</span>
-                                    <span style="font-size: var(--text-xs); color: var(--success);">● Restricted</span>
-                                </div>
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">Allowed: APIs, Git</div>
-                                <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Blocked: None</div>
-                            </div>
-                            
-                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--success);">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
-                                    <span style="font-weight: 600;">API Keys</span>
-                                    <span style="font-size: var(--text-xs); color: var(--success);">● Valid</span>
-                                </div>
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">OpenRouter: Valid</div>
-                                <div style="font-size: var(--text-xs); color: var(--text-tertiary);">GitHub: Valid | Expires: 30 days</div>
-                            </div>
-                            
-                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--success);">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
-                                    <span style="font-weight: 600;">Sandboxed Execution</span>
-                                    <span style="font-size: var(--text-xs); color: var(--success);">● Enabled</span>
-                                </div>
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">Elevated commands</div>
-                                <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Require approval</div>
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4);">
+                                <div style="font-weight: 600; margin-bottom: var(--space-2);">Git Repository</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">Connected to GitHub</div>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Chunk 9: Backup & Recovery -->
+                    <!-- Chunk 9: Git Status -->
                     <div class="card card-full">
                         <div class="section-header">
-                            <span class="section-title">Backup Status</span>
-                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">Data safety</span>
+                            <span class="section-title">Git Status</span>
+                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">Repository state</span>
                         </div>
                         
-                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); margin-bottom: var(--space-4);">
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3);">
                             <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4);">
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
                                     <span style="font-weight: 600;">MEMORY.md</span>
-                                    <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full);">● Backed up</span>
-                                </div>
-                                <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Last: Today 02:00 [Auto]</div>
-                            </div>
-                            
-                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4);">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
-                                    <span style="font-weight: 600;">SOUL.md</span>
-                                    <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full);">● Backed up</span>
+                                    <span style="font-size: var(--text-xs); color: var(--success);">Tracked</span>
                                 </div>
                                 <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Last: Today 02:00 [Auto]</div>
                             </div>
