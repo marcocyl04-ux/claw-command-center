@@ -1755,13 +1755,16 @@
                     <div class="card">
                         <div class="section-header">
                             <span class="section-title">Core Files</span>
-                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">${insights.overall_health}% health</span>
+                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">${insights.overall_health || 85}% health</span>
                         </div>
-                        ${Object.entries(insights.files).map(([name, file]) => `
-                            <div class="file-item">
-                                <div class="file-status-dot ${file.status}"></div>
-                                <span class="file-name">${name}</span>
-                                <span class="file-health">${file.health}%</span>
+                        ${Object.entries(insights.files || {}).map(([name, file]) => `
+                            <div class="file-item" style="cursor: pointer;" onclick="showFileDetail('${name.toLowerCase().replace('.md', '')}')">
+                                <div class="file-status-dot ${file.status || 'active'}"></div>
+                                <div style="flex: 1;">
+                                    <div class="file-name">${name}</div>
+                                    <div style="font-size: var(--text-xs); color: var(--text-tertiary);">${file.lines || 0} lines • ${file.last_modified || 'unknown'}</div>
+                                </div>
+                                <span class="file-health">${file.health || 80}%</span>
                             </div>
                         `).join('')}
                     </div>
