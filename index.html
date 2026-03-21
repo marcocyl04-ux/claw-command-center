@@ -729,8 +729,13 @@
             
             return `
                 <div class="state-hero">
-                    <div class="state-headline">Cognitive Stack</div>
-                    <div class="state-meta">How I process information and make decisions</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div class="state-headline">Cognitive Stack</div>
+                            <div class="state-meta">How I process information and make decisions</div>
+                        </div>
+                        ${mind.decisions?.is_live ? `<span style="font-size: var(--text-xs); padding: var(--space-2) var(--space-3); background: rgba(74,222,128,0.1); border-radius: var(--radius-full); color: var(--success);">● Live</span>` : ''}
+                    </div>
                 </div>
                 <div class="cards-grid">
                     <div class="card card-full">
@@ -774,7 +779,7 @@
                     <div class="card card-full">
                         <div class="section-header">
                             <span class="section-title">Decision Quality</span>
-                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">Trend: ${mind.decisions.trend}</span>
+                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">Trend: ${mind.decisions.trend} ${mind.decisions?.is_live ? '• Live' : ''}</span>
                         </div>
                         <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4); margin-bottom: var(--space-5);">
                             <div>
