@@ -347,16 +347,22 @@ const DataBridge = {
         },
         recent_failures: [
           {
-            what: 'Forgot to check MEMORY.md before proposing solution',
-            when: '2 days ago',
-            impact: 'Rediscovered already-known pattern',
-            lesson_added: 'Always search memory before proposing'
+            what: 'Dashboard showed fake data (47 lessons, cognitive load 42%, etc.)',
+            when: 'today',
+            impact: 'Would train wrong, leading to system failure',
+            lesson_added: 'Full data audit required - no unverified numbers'
           },
           {
-            what: 'Misremembered Marco\'s preference on tab naming',
+            what: 'Claimed "live data" when most was hardcoded',
             when: 'today',
-            impact: 'Had to correct after implementation',
-            lesson_added: 'Verify USER.md for preferences before decisions'
+            impact: 'Destroyed trust in dashboard accuracy',
+            lesson_added: 'Label estimates clearly, remove what cannot be verified'
+          },
+          {
+            what: 'NOW tab rendered empty due to unsafe variable access',
+            when: 'today',
+            impact: 'Complete dashboard failure on load',
+            lesson_added: 'Always add safety checks and fallback values'
           }
         ],
         recall: stats
