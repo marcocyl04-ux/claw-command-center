@@ -292,7 +292,7 @@
         
         /* Glassmorphism Cards */
         .card, .state-hero, .vital-card, .thought-stream {
-            background: rgba(30, 30, 30, 0.6) !important;
+            background: rgba(30, 30, 30, 0.8);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -301,6 +301,13 @@
                 0 2px 4px -1px rgba(0, 0, 0, 0.06),
                 inset 0 1px 0 rgba(255, 255, 255, 0.05);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        /* Fallback for browsers without backdrop-filter */
+        @supports not (backdrop-filter: blur(12px)) {
+            .card, .state-hero, .vital-card, .thought-stream {
+                background: var(--bg-1);
+            }
         }
         
         .card:hover, .vital-card:hover {
