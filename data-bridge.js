@@ -734,7 +734,8 @@ const DataBridge = {
       resources,
       environment,
       trading,
-      gateway
+      gateway,
+      attention
     ] = await Promise.all([
       this.getSessionTelemetry(),
       this.getCoreFileHealth(),
@@ -746,7 +747,8 @@ const DataBridge = {
       this.getResourceUsage(),
       this.getEnvironmentalMastery(),
       this.getTradingData(),
-      this.getGatewayHealth()
+      this.getGatewayHealth(),
+      this.getAttentionItems()
     ]);
     
     return {
@@ -754,6 +756,7 @@ const DataBridge = {
         state: this.generateStateSentence(training, decisions),
         status: this.determineStatus(training),
         intervention: this.generateIntervention(training),
+        attention: attention,
         vitals: {
           learning_velocity: { value: 3.2, unit: 'insights/wk', trend: 'up' },
           autonomy_rate: { value: 45, unit: '%', trend: 'flat' },
@@ -807,6 +810,71 @@ const DataBridge = {
     const highPriority = training.blockers.filter(b => b.priority === 'high');
     if (highPriority.length > 0) {
       return {
+        show: true,
+        level: 'red',
+        message: highPriority[0].title,
+        action: highPriority[0].action_required === 'Marco' ? 'Needs your input' : 'Working on it'
+      };
+    }
+    return { show: false };
+  },
+  
+  // Aggregate real attention items for NOW tab
+  async getAttentionItems() {
+    const [
+      files,
+      gateway,
+      blockers
+    ] = await Promise.all([
+      this.getCoreFileHealth(),
+      this.getGatewayHealth(),
+      this.getLiveBlockers()
+    ]);
+    
+    const items = [];
+    
+    // Stale files (not modified in 5+ days)
+    Object.entries(files).forEach(([name, file]) => {
+      if (file.status === 'stale') {
+        items.push({
+          type: 'file',
+          severity: 'medium',
+          title: `${name} stale ${file.last_modified}`,
+          description: `Last modified: ${file.last_modified}`,
+          action: 'Review and update',
+          source: 'SYSTEM'
+        });
+      }
+    });
+    
+    // Degraded services
+    gateway.forEach(service => {
+      if (service.status === 'degraded') {
+        items.push({
+          type: 'service',
+          severity: 'high',
+          title: `${service.name} latency elevated`,
+          description: `${service.latency}ms — ${service.details}`,
+          action: 'Investigating',
+          source: 'SYSTEM'
+        });
+      }
+    });
+    
+    // Active blockers
+    blockers.forEach(blocker => {
+      items.push({
+        type: 'blocker',
+        severity: blocker.priority,
+        title: blocker.title,
+        description: blocker.description,
+        action: `Needs: ${blocker.action_required}`,
+        source: 'TRAINING'
+      });
+    });
+    
+    return items;
+  },
         show: true,
         level: 'amber',
         message: highPriority[0].title,
