@@ -396,6 +396,153 @@
             color: var(--text-secondary);
         }
         
+        /* Responsive Design */
+        
+        /* Fluid Typography */
+        :root {
+            --text-fluid-xs: clamp(0.625rem, 0.8vw, 0.75rem);
+            --text-fluid-sm: clamp(0.75rem, 1vw, 0.875rem);
+            --text-fluid-base: clamp(0.875rem, 1.2vw, 1rem);
+            --text-fluid-lg: clamp(1rem, 1.5vw, 1.125rem);
+            --text-fluid-xl: clamp(1.25rem, 2vw, 1.5rem);
+            --text-fluid-2xl: clamp(1.5rem, 3vw, 2rem);
+            --text-fluid-3xl: clamp(2rem, 4vw, 3rem);
+        }
+        
+        /* Mobile Navigation */
+        .mobile-nav-toggle {
+            display: none;
+            position: fixed;
+            top: var(--space-4);
+            right: var(--space-4);
+            z-index: 200;
+            background: var(--bg-1);
+            border: 1px solid oklch(100% 0 0 / 0.1);
+            border-radius: var(--radius-md);
+            padding: var(--space-3);
+            cursor: pointer;
+        }
+        
+        /* Responsive Grid */
+        .responsive-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--space-4);
+        }
+        
+        /* Tablet (768px - 1024px) */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 240px;
+            }
+            .main {
+                margin-left: 240px;
+                padding: var(--space-5);
+            }
+            .vitals-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            .state-headline {
+                font-size: var(--text-fluid-xl);
+            }
+        }
+        
+        /* Mobile (< 768px) */
+        @media (max-width: 768px) {
+            .mobile-nav-toggle {
+                display: flex;
+            }
+            .sidebar {
+                width: 100%;
+                transform: translateX(-100%);
+                transition: transform var(--duration-normal) var(--ease-out-quart);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main {
+                margin-left: 0;
+                padding: var(--space-4);
+                padding-top: calc(var(--space-4) + 60px);
+            }
+            .vitals-grid {
+                grid-template-columns: 1fr;
+            }
+            .state-hero {
+                padding: var(--space-6);
+            }
+            .state-headline {
+                font-size: var(--text-fluid-lg);
+            }
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--space-2);
+            }
+            .routing-item,
+            .decision-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--space-2);
+            }
+            .milestone-track {
+                width: 100%;
+            }
+        }
+        
+        /* Small Mobile (< 480px) */
+        @media (max-width: 480px) {
+            .main {
+                padding: var(--space-3);
+                padding-top: calc(var(--space-3) + 60px);
+            }
+            .state-hero {
+                padding: var(--space-5);
+            }
+            .card {
+                padding: var(--space-4);
+            }
+            .thought-item {
+                flex-direction: column;
+                gap: var(--space-1);
+            }
+            .thought-label {
+                width: auto;
+            }
+        }
+        
+        /* Touch Device Optimizations */
+        @media (hover: none) {
+            .nav-item:hover {
+                background: transparent;
+            }
+            .nav-item:active {
+                background: oklch(100% 0 0 / 0.03);
+            }
+        }
+        
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        
+        /* Print Styles */
+        @media print {
+            .sidebar, .mobile-nav-toggle {
+                display: none;
+            }
+            .main {
+                margin-left: 0;
+            }
+        }
+        
         /* Responsive */
         @media (max-width: 1200px) {
             .vitals-grid { grid-template-columns: repeat(2, 1fr); }
@@ -420,8 +567,17 @@
 </head>
 <body>
     <div class="app">
+        <!-- Mobile Nav Toggle -->
+        <button class="mobile-nav-toggle" onclick="toggleMobileNav()" aria-label="Toggle navigation">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+        
         <!-- Sidebar -->
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <div class="logo">
                 <div class="logo-pulse"></div>
                 Claw
@@ -540,6 +696,31 @@
                 el.textContent = 'Last refreshed: ' + new Date().toLocaleTimeString();
             }
         }
+        
+        // Mobile navigation toggle
+        function toggleMobileNav() {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) {
+                sidebar.classList.toggle('open');
+            }
+        }
+        
+        // Close mobile nav when clicking outside
+        document.addEventListener('click', (e) => {
+            const sidebar = document.getElementById('sidebar');
+            const toggle = document.querySelector('.mobile-nav-toggle');
+            if (sidebar && toggle && !sidebar.contains(e.target) && !toggle.contains(e.target)) {
+                sidebar.classList.remove('open');
+            }
+        });
+        
+        // Close mobile nav on window resize to desktop
+        window.addEventListener('resize', () => {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar && window.innerWidth > 768) {
+                sidebar.classList.remove('open');
+            }
+        });
         
         function switchTab(tab) {
             currentTab = tab;
