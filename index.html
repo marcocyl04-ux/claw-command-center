@@ -524,10 +524,23 @@
         }
         
         function renderNowTab() {
-            const now = cognitionData.now;
-            const training = cognitionData.training;
-            const memory = cognitionData.memory || {};
-            const system = cognitionData.system;
+            // Safety checks for all data
+            const now = cognitionData?.now || {};
+            const training = cognitionData?.training || {};
+            const memory = cognitionData?.memory || {};
+            const system = cognitionData?.system || {};
+            const mind = cognitionData?.mind || {};
+            
+            // Safe accessors
+            const mindSkillCount = mind?.skill_network?.nodes?.length || 22;
+            const mindDecisionCount = mind?.decisions?.autonomous?.count || 0;
+            const systemOnline = system?.gateway?.filter(s => s.status === 'online').length || 0;
+            const systemTotal = system?.gateway?.length || 4;
+            const systemIssues = system?.gateway?.filter(s => s.status === 'degraded').length || 0;
+            const trainingWeek = training?.week || 11;
+            const trainingProgress = training?.progress || 65;
+            const memoryLessons = memory?.long_term?.lessons?.length || 4;
+            const attentionCount = now?.attention?.length || 0;
             
             return `
                 <!-- Chunk 1: Six-Card Summary Grid -->
@@ -552,7 +565,7 @@
                             <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full);">Good</span>
                         </div>
                         <div style="font-weight: 600; font-size: var(--text-lg); margin-bottom: var(--space-2);">MIND</div>
-                        <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">${mind.skill_network?.nodes?.length || 22} skills • ${mind.decisions?.autonomous?.count || 0} autonomous decisions</div>
+                        <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">${mindSkillCount} skills • ${mindDecisionCount} autonomous decisions</div>
                         <div style="font-size: var(--text-xs); color: var(--text-tertiary);">View MIND →</div>
                     </div>
                     
@@ -560,10 +573,10 @@
                     <div style="background: var(--bg-1); border-radius: var(--radius-lg); padding: var(--space-5); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; border: 1px solid rgba(255,255,255,0.05);" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 24px rgba(0,0,0,0.3)'" onmouseout="this.style.transform=''; this.style.boxShadow=''" onclick="switchTab('system')">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
                             <span style="font-size: var(--text-2xl);">📊</span>
-                            <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: ${system.gateway?.filter(s => s.status === 'degraded').length > 0 ? 'rgba(224,145,42,0.2)' : 'rgba(74,222,128,0.2)'}; color: ${system.gateway?.filter(s => s.status === 'degraded').length > 0 ? 'var(--amber-400)' : 'var(--success)'}; border-radius: var(--radius-full);">${system.gateway?.filter(s => s.status === 'degraded').length > 0 ? system.gateway.filter(s => s.status === 'degraded').length + ' Issue' : 'All Good'}</span>
+                            <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: ${systemIssues > 0 ? 'rgba(224,145,42,0.2)' : 'rgba(74,222,128,0.2)'}; color: ${systemIssues > 0 ? 'var(--amber-400)' : 'var(--success)'}; border-radius: var(--radius-full);">${systemIssues > 0 ? systemIssues + ' Issue' : 'All Good'}</span>
                         </div>
                         <div style="font-weight: 600; font-size: var(--text-lg); margin-bottom: var(--space-2);">SYSTEM</div>
-                        <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">${system.gateway?.filter(s => s.status === 'online').length || 0}/${system.gateway?.length || 4} services online</div>
+                        <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">${systemOnline}/${systemTotal} services online</div>
                         <div style="font-size: var(--text-xs); color: var(--text-tertiary);">View SYSTEM →</div>
                     </div>
                     
@@ -585,7 +598,7 @@
                             <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full);">On Track</span>
                         </div>
                         <div style="font-weight: 600; font-size: var(--text-lg); margin-bottom: var(--space-2);">TRAINING</div>
-                        <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">Week ${training.week}/16 • 65% to auto</div>
+                        <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">Week ${trainingWeek}/16 • ${trainingProgress}% to auto</div>
                         <div style="font-size: var(--text-xs); color: var(--text-tertiary);">View TRAINING →</div>
                     </div>
                     
@@ -596,7 +609,7 @@
                             <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full);">Healthy</span>
                         </div>
                         <div style="font-weight: 600; font-size: var(--text-lg); margin-bottom: var(--space-2);">MEMORY</div>
-                        <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">4 critical lessons • 90% recall</div>
+                        <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">${memoryLessons} critical lessons stored</div>
                         <div style="font-size: var(--text-xs); color: var(--text-tertiary);">View MEMORY →</div>
                     </div>
                     
@@ -604,7 +617,7 @@
                     <div style="background: var(--bg-1); border-radius: var(--radius-lg); padding: var(--space-5); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; border: 1px solid rgba(255,255,255,0.05);" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 24px rgba(0,0,0,0.3)'" onmouseout="this.style.transform=''; this.style.boxShadow=''" onclick="document.getElementById('attentionSection').scrollIntoView({behavior: 'smooth'})">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
                             <span style="font-size: var(--text-2xl);">⚡</span>
-                            <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(248,113,113,0.2); color: var(--danger); border-radius: var(--radius-full);">${now.attention?.length || 3} Need Action</span>
+                            <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(248,113,113,0.2); color: var(--danger); border-radius: var(--radius-full);">${attentionCount} Need Action</span>
                         </div>
                         <div style="font-weight: 600; font-size: var(--text-lg); margin-bottom: var(--space-2);">ACTIONS</div>
                         <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">Items requiring attention</div>
@@ -620,7 +633,7 @@
                         <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.1); color: var(--success); border-radius: var(--radius-full);">● Live</span>
                     </div>
                     <div style="display: flex; flex-direction: column; gap: var(--space-3);">
-                        ${(now.attention || []).map(item => `
+                        ${(now?.attention || []).map(item => `
                             <div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-0); border-radius: var(--radius-md); padding: var(--space-3);">
                                 <div>
                                     <div style="font-weight: 600; color: ${item.severity === 'high' ? 'var(--danger)' : item.severity === 'medium' ? 'var(--amber-400)' : 'var(--text-secondary)'};">${item.title}</div>
