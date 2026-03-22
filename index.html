@@ -1087,9 +1087,13 @@
         
         // Toggle detail panels (expand/collapse)
         function toggleDetailPanel(panelId) {
+            console.log('Toggling panel:', panelId);
             const panel = document.getElementById(panelId);
             if (panel) {
                 panel.classList.toggle('hidden');
+                console.log('Panel found, toggled hidden class');
+            } else {
+                console.error('Panel not found:', panelId);
             }
         }
         
