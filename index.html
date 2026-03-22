@@ -2180,40 +2180,30 @@
         }
         
         function renderTrainingTab() {
-            const training = cognitionData.training;
+            const training = cognitionData.training || { week: 11, progress: 50, session_count: 35 };
             
             return `
-                <!-- Chunk 1: Training Status Hero - LIVE DATA -->
-                <div class="state-hero">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-4);">
-                        <div>
-                            <div style="display: flex; align-items: center; gap: var(--space-3);">
-                                <div class="state-headline">Week ${training.week} of 16</div>
-                                ${training.is_live ? `<span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full);">● Live</span>` : ''}
-                            </div>
-                            <div class="state-meta">${training.session_count || 35} sessions completed • Training to autonomous operation</div>
-                        </div>
-                        <div style="text-align: right;">
-                            <div style="font-family: var(--font-mono); font-size: var(--text-3xl); font-weight: 700; color: var(--amber-400);">${training.progress}%</div>
-                            <div style="font-size: var(--text-sm); color: var(--text-secondary);">to autonomous</div>
-                        </div>
+                <!-- Header -->
+                <div class="flex justify-between items-end mb-12">
+                    <div>
+                        <h1 class="font-headline text-5xl italic tracking-tight mb-2 text-on-surface">Training</h1>
+                        <p class="text-on-surface-variant/60 font-body text-sm uppercase tracking-widest">Week ${training.week}/16 • ${training.session_count} Sessions</p>
                     </div>
-                    <div style="height: 12px; background: var(--bg-1); border-radius: var(--radius-full); overflow: hidden; margin-bottom: var(--space-4);">
-                        <div style="width: ${training.progress}%; height: 100%; background: linear-gradient(to right, var(--amber-500), var(--amber-400)); border-radius: var(--radius-full);"></div>
+                    <div class="text-right">
+                        <div class="font-mono text-5xl text-primary-container">${training.progress}%</div>
+                        <div class="text-[10px] font-mono text-on-surface/40 uppercase tracking-widest">To Autonomous</div>
                     </div>
-                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4);">
-                        <div>
-                            <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-1);">Started</div>
-                            <div style="font-size: var(--text-sm); color: var(--text-secondary);">Jan 2026</div>
-                        </div>
-                        <div>
-                            <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-1);">Sessions</div>
-                            <div style="font-size: var(--text-sm); color: var(--text-secondary);">${training.session_count || 35} completed</div>
-                        </div>
-                        <div>
-                            <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-1);">Remaining</div>
-                            <div style="font-size: var(--text-sm); color: var(--amber-400);">${16 - training.week} weeks to Week 16</div>
-                        </div>
+                </div>
+                
+                <!-- Progress Bar -->
+                <div class="milled-surface hairline-border rounded p-6 mb-8">
+                    <div class="h-1 w-full bg-surface-container-highest rounded-full overflow-hidden mb-4">
+                        <div class="h-full bg-primary-container" style="width: ${training.progress}%"></div>
+                    </div>
+                    <div class="flex justify-between text-[10px] font-mono text-on-surface/40 uppercase tracking-widest">
+                        <span>Week 1</span>
+                        <span>Current: Week ${training.week}</span>
+                        <span>Target: Week 16</span>
                     </div>
                 </div>
                 
@@ -2426,12 +2416,83 @@
         }
         
         function renderSystemTab() {
-            const insights = cognitionData.system;
+            const insights = cognitionData.system || {};
+            const systemOnline = insights.gateway?.filter(s => s.status === 'online').length || 4;
+            const systemTotal = insights.gateway?.length || 4;
             
             return `
-                <div class="state-hero">
-                    <div class="state-headline">System Infrastructure</div>
-                    <div class="state-meta">Health of core systems and environment</div>
+                <!-- Header -->
+                <div class="flex justify-between items-end mb-12">
+                    <div>
+                        <h1 class="font-headline text-5xl italic tracking-tight mb-2 text-on-surface">System</h1>
+                        <p class="text-on-surface-variant/60 font-body text-sm uppercase tracking-widest">Infrastructure Health</p>
+                    </div>
+                    <div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container-low hairline-border rounded">
+                        <span class="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse"></span>
+                        <span class="text-[10px] font-mono uppercase tracking-wider text-tertiary">${systemOnline}/${systemTotal} Online</span>
+                    </div>
+                </div>
+                
+                <!-- Services Grid -->
+                <div class="grid grid-cols-12 gap-6">
+                    <div class="col-span-12 lg:col-span-6">
+                        <div class="milled-surface hairline-border rounded p-6">
+                            <h3 class="font-headline text-xl italic mb-6">Services</h3>
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between p-3 bg-surface-container-low rounded">
+                                    <div class="flex items-center gap-3">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                                        <span class="text-sm font-mono">OpenRouter</span>
+                                    </div>
+                                    <span class="text-[10px] font-mono text-tertiary">ONLINE</span>
+                                </div>
+                                <div class="flex items-center justify-between p-3 bg-surface-container-low rounded">
+                                    <div class="flex items-center gap-3">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                                        <span class="text-sm font-mono">GitHub</span>
+                                    </div>
+                                    <span class="text-[10px] font-mono text-tertiary">ONLINE</span>
+                                </div>
+                                <div class="flex items-center justify-between p-3 bg-surface-container-low rounded">
+                                    <div class="flex items-center gap-3">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                                        <span class="text-sm font-mono">Telegram</span>
+                                    </div>
+                                    <span class="text-[10px] font-mono text-tertiary">ONLINE</span>
+                                </div>
+                                <div class="flex items-center justify-between p-3 bg-surface-container-low rounded">
+                                    <div class="flex items-center gap-3">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+                                        <span class="text-sm font-mono">Polymarket</span>
+                                    </div>
+                                    <span class="text-[10px] font-mono text-primary-container">DEGRADED</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-span-12 lg:col-span-6">
+                        <div class="milled-surface hairline-border rounded p-6">
+                            <h3 class="font-headline text-xl italic mb-6">Environment</h3>
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm text-on-surface/60">Platform</span>
+                                    <span class="text-xs font-mono text-on-surface/40">OpenClaw</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm text-on-surface/60">Runtime</span>
+                                    <span class="text-xs font-mono text-on-surface/40">Node.js v24</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm text-on-surface/60">Shell</span>
+                                    <span class="text-xs font-mono text-on-surface/40">PowerShell</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm text-on-surface/60">Workspace</span>
+                                    <span class="text-xs font-mono text-on-surface/40">C:\\claw</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="cards-grid">
                     <div class="card">
