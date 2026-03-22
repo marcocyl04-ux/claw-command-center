@@ -3116,6 +3116,21 @@
             // DOM already loaded
             init();
         }
+        
+        // Force render after a short delay as fallback
+        setTimeout(() => {
+            if (!cognitionData) {
+                console.log('Fallback: Loading default data');
+                cognitionData = {
+                    now: { attention: [] },
+                    mind: { skill_network: { nodes: [] }, decisions: { autonomous: { count: 0 }, escalated: { count: 0 } } },
+                    memory: { long_term: { lessons: [] }, working: { loaded_files: [] } },
+                    training: { week: 11, progress: 65, blockers: [], milestones: [] },
+                    system: { gateway: [], files: {}, trading: {} }
+                };
+            }
+            renderTab(currentTab);
+        }, 1000);
     </script>
 </body>
 </html>
