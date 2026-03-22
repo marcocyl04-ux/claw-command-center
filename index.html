@@ -1483,29 +1483,47 @@
                                 <span class="text-[10px] font-mono text-on-surface/40 uppercase tracking-widest">${capabilities.length} Mastered</span>
                             </div>
                             <div class="grid grid-cols-3 gap-4">
-                                <div class="p-4 bg-surface-container-low rounded border-l-2 border-tertiary">
-                                    <div class="text-sm font-medium mb-2">Skill Chaining</div>
-                                    <span class="text-[10px] font-mono text-tertiary">MASTERED</span>
+                                <div class="p-5 bg-surface-container-low rounded hairline-border hover:bg-surface-container transition-colors group cursor-pointer">
+                                    <div class="flex items-center gap-2 mb-3">
+                                        <div class="w-2 h-2 rounded-full bg-tertiary shadow-[0_0_8px_rgba(96,213,245,0.4)]"></div>
+                                        <span class="text-[10px] font-mono uppercase tracking-wider text-tertiary">Mastered</span>
+                                    </div>
+                                    <h4 class="font-headline text-lg italic text-on-surface group-hover:text-tertiary transition-colors">Skill Chaining</h4>
                                 </div>
-                                <div class="p-4 bg-surface-container-low rounded border-l-2 border-tertiary">
-                                    <div class="text-sm font-medium mb-2">Model Routing</div>
-                                    <span class="text-[10px] font-mono text-tertiary">MASTERED</span>
+                                <div class="p-5 bg-surface-container-low rounded hairline-border hover:bg-surface-container transition-colors group cursor-pointer">
+                                    <div class="flex items-center gap-2 mb-3">
+                                        <div class="w-2 h-2 rounded-full bg-tertiary shadow-[0_0_8px_rgba(96,213,245,0.4)]"></div>
+                                        <span class="text-[10px] font-mono uppercase tracking-wider text-tertiary">Mastered</span>
+                                    </div>
+                                    <h4 class="font-headline text-lg italic text-on-surface group-hover:text-tertiary transition-colors">Model Routing</h4>
                                 </div>
-                                <div class="p-4 bg-surface-container-low rounded border-l-2 border-tertiary">
-                                    <div class="text-sm font-medium mb-2">Proactive Escalation</div>
-                                    <span class="text-[10px] font-mono text-tertiary">MASTERED</span>
+                                <div class="p-5 bg-surface-container-low rounded hairline-border hover:bg-surface-container transition-colors group cursor-pointer">
+                                    <div class="flex items-center gap-2 mb-3">
+                                        <div class="w-2 h-2 rounded-full bg-tertiary shadow-[0_0_8px_rgba(96,213,245,0.4)]"></div>
+                                        <span class="text-[10px] font-mono uppercase tracking-wider text-tertiary">Mastered</span>
+                                    </div>
+                                    <h4 class="font-headline text-lg italic text-on-surface group-hover:text-tertiary transition-colors">Proactive Escalation</h4>
                                 </div>
-                                <div class="p-4 bg-surface-container-low rounded border-l-2 border-primary-container/60">
-                                    <div class="text-sm font-medium mb-2">Edge Discovery</div>
-                                    <span class="text-[10px] font-mono text-primary-container/60">IN PROGRESS</span>
+                                <div class="p-5 bg-surface-container-low rounded hairline-border hover:bg-surface-container transition-colors group cursor-pointer">
+                                    <div class="flex items-center gap-2 mb-3">
+                                        <div class="w-2 h-2 rounded-full bg-primary-container/60"></div>
+                                        <span class="text-[10px] font-mono uppercase tracking-wider text-primary-container/60">In Progress</span>
+                                    </div>
+                                    <h4 class="font-headline text-lg italic text-on-surface group-hover:text-primary-container/80 transition-colors">Edge Discovery</h4>
                                 </div>
-                                <div class="p-4 bg-surface-container-low rounded border-l-2 border-primary-container/60">
-                                    <div class="text-sm font-medium mb-2">Autonomous Decisions</div>
-                                    <span class="text-[10px] font-mono text-primary-container/60">IN PROGRESS</span>
+                                <div class="p-5 bg-surface-container-low rounded hairline-border hover:bg-surface-container transition-colors group cursor-pointer">
+                                    <div class="flex items-center gap-2 mb-3">
+                                        <div class="w-2 h-2 rounded-full bg-primary-container/60"></div>
+                                        <span class="text-[10px] font-mono uppercase tracking-wider text-primary-container/60">In Progress</span>
+                                    </div>
+                                    <h4 class="font-headline text-lg italic text-on-surface group-hover:text-primary-container/80 transition-colors">Autonomous Decisions</h4>
                                 </div>
-                                <div class="p-4 bg-surface-container-low rounded border-l-2 border-on-surface/20 opacity-60">
-                                    <div class="text-sm font-medium mb-2 text-on-surface/40">Live Trading</div>
-                                    <span class="text-[10px] font-mono text-on-surface/20">LOCKED</span>
+                                <div class="p-5 bg-surface-container-low rounded hairline-border opacity-60">
+                                    <div class="flex items-center gap-2 mb-3">
+                                        <div class="w-2 h-2 rounded-full bg-on-surface/20"></div>
+                                        <span class="text-[10px] font-mono uppercase tracking-wider text-on-surface/40">Locked</span>
+                                    </div>
+                                    <h4 class="font-headline text-lg italic text-on-surface/40">Live Trading</h4>
                                 </div>
                             </div>
                         </div>
@@ -1513,14 +1531,19 @@
 
                     <!-- Blockers (4 cols) -->
                     <div class="lg:col-span-4 flex flex-col gap-6">
-                        <div class="milled-surface hairline-border rounded p-6">
-                            <h3 class="font-headline text-xl italic mb-6">Blockers</h3>
-                            <div class="space-y-4">
+                        <div class="milled-surface hairline-border rounded overflow-hidden">
+                            <div class="p-6 border-b border-outline-variant/10">
+                                <h3 class="font-headline text-xl italic">Blockers</h3>
+                            </div>
+                            <div class="divide-y divide-outline-variant/5">
                                 ${blockers.map((b, i) => `
-                                    <div class="p-4 bg-surface-container-low rounded border-l-2 border-primary-container cursor-pointer hover:bg-surface-container transition-colors" onclick="showBlockerDetail(${i})">
-                                        <div class="text-sm text-primary-container mb-1">${b.title}</div>
-                                        <div class="text-xs text-on-surface/60">${b.description}</div>
-                                        <div class="text-[10px] font-mono text-on-surface/40 mt-2">${Math.round(b.days_open / 7)} weeks open</div>
+                                    <div class="p-5 cursor-pointer hover:bg-surface-container-low/30 transition-colors group" onclick="showBlockerDetail(${i})">
+                                        <div class="flex items-center gap-2 mb-3">
+                                            <div class="w-2 h-2 rounded-full bg-primary-container"></div>
+                                            <span class="text-[10px] font-mono uppercase tracking-wider text-primary-container">${Math.round(b.days_open / 7)} weeks</span>
+                                        </div>
+                                        <h4 class="font-headline text-lg italic text-on-surface group-hover:text-primary-container transition-colors mb-2">${b.title}</h4>
+                                        <p class="text-sm text-on-surface/60 leading-relaxed">${b.description}</p>
                                     </div>
                                 `).join('')}
                             </div>
