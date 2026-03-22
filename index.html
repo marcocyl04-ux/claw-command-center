@@ -1156,71 +1156,47 @@
                     </div>
                 </div>
                 
-                <div class="now-cards-grid stagger-children">
+                <div class="now-cards-grid">
                     <!-- 🧠 MIND Card -->
-                    <div class="card card-elevated" style="cursor: pointer;" onclick="switchTab('mind')">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
-                            <span style="font-size: var(--text-2xl);">🧠</span>
-                            <span class="badge badge-success">Good</span>
-                        </div>
-                        <div style="font-weight: 600; font-size: var(--text-lg); margin-bottom: var(--space-2);">MIND</div>
-                        <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">${mindSkillCount} skills • ${mindDecisionCount} autonomous decisions</div>
-                        <div style="font-size: var(--text-xs); color: var(--text-tertiary);">View MIND →</div>
+                    <div class="card" style="cursor: pointer; padding: 48px;" onclick="switchTab('mind')">
+                        <div class="text-micro" style="color: var(--text-tertiary); margin-bottom: 24px;">COGNITIVE</div>
+                        <div class="text-display" style="color: var(--text-primary); margin-bottom: 8px;">${mindSkillCount}</div>
+                        <div class="text-label" style="color: var(--text-secondary);">SKILLS ACTIVE</div>
                     </div>
                     
                     <!-- 📊 SYSTEM Card -->
-                    <div class="card card-elevated" style="cursor: pointer;" onclick="switchTab('system')">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
-                            <span style="font-size: var(--text-2xl);">📊</span>
-                            <span class="badge ${systemIssues > 0 ? 'badge-amber' : 'badge-success'}">${systemIssues > 0 ? systemIssues + ' Issue' : 'All Good'}</span>
-                        </div>
-                        <div style="font-weight: 600; font-size: var(--text-lg); margin-bottom: var(--space-2);">SYSTEM</div>
-                        <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">${systemOnline}/${systemTotal} services online</div>
-                        <div style="font-size: var(--text-xs); color: var(--text-tertiary);">View SYSTEM →</div>
+                    <div class="card" style="cursor: pointer; padding: 48px;" onclick="switchTab('system')">
+                        <div class="text-micro" style="color: var(--text-tertiary); margin-bottom: 24px;">INFRASTRUCTURE</div>
+                        <div class="text-display" style="color: var(--text-primary); margin-bottom: 8px;">${systemOnline}</div>
+                        <div class="text-label" style="color: var(--text-secondary);">SERVICES ONLINE</div>
                     </div>
                     
                     <!-- 💰 TRADING Card -->
-                    <div class="card card-elevated" style="cursor: pointer;" onclick="switchTab('trading')">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
-                            <span style="font-size: var(--text-2xl);">💰</span>
-                            <span class="badge" style="background: rgba(100,100,100,0.2); color: var(--text-tertiary);">Basic</span>
-                        </div>
-                        <div style="font-weight: 600; font-size: var(--text-lg); margin-bottom: var(--space-2);">TRADING</div>
-                        <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">${system.trading?.total_predictions || 0} predictions • ${system.trading?.edge_discovery_rate || 0} edges found</div>
-                        <div style="font-size: var(--text-xs); color: var(--text-tertiary);">View TRADING →</div>
+                    <div class="card" style="cursor: pointer; padding: 48px;" onclick="switchTab('trading')">
+                        <div class="text-micro" style="color: var(--text-tertiary); margin-bottom: 24px;">PERFORMANCE</div>
+                        <div class="text-display" style="color: var(--text-primary); margin-bottom: 8px;">${system.trading?.total_predictions || 0}</div>
+                        <div class="text-label" style="color: var(--text-secondary);">PREDICTIONS</div>
                     </div>
                     
                     <!-- 🎯 TRAINING Card -->
-                    <div class="card card-elevated" style="cursor: pointer;" onclick="switchTab('training')">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
-                            <span style="font-size: var(--text-2xl);">🎯</span>
-                            <span class="badge badge-success">On Track</span>
-                        </div>
-                        <div style="font-weight: 600; font-size: var(--text-lg); margin-bottom: var(--space-2);">TRAINING</div>
-                        <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">Week ${trainingWeek}/16 • ${trainingProgress}% to auto</div>
-                        <div style="font-size: var(--text-xs); color: var(--text-tertiary);">View TRAINING →</div>
+                    <div class="card" style="cursor: pointer; padding: 48px;" onclick="switchTab('training')">
+                        <div class="text-micro" style="color: var(--text-tertiary); margin-bottom: 24px;">PROGRESS</div>
+                        <div class="text-display" style="color: var(--text-primary); margin-bottom: 8px;">${trainingWeek}</div>
+                        <div class="text-label" style="color: var(--text-secondary);">WEEK ${trainingWeek}/16</div>
                     </div>
                     
                     <!-- 📝 MEMORY Card -->
-                    <div class="card card-elevated" style="cursor: pointer;" onclick="switchTab('memory')">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
-                            <span style="font-size: var(--text-2xl);">📝</span>
-                            <span class="badge badge-success">Healthy</span>
-                        </div>
-                        <div style="font-weight: 600; font-size: var(--text-lg); margin-bottom: var(--space-2);">MEMORY</div>
-                        <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">${memoryLessons} critical lessons stored</div>
-                        <div style="font-size: var(--text-xs); color: var(--text-tertiary);">View MEMORY →</div>
+                    <div class="card" style="cursor: pointer; padding: 48px;" onclick="switchTab('memory')">
+                        <div class="text-micro" style="color: var(--text-tertiary); margin-bottom: 24px;">KNOWLEDGE</div>
+                        <div class="text-display" style="color: var(--text-primary); margin-bottom: 8px;">${memoryLessons}</div>
+                        <div class="text-label" style="color: var(--text-secondary);">CRITICAL LESSONS</div>
                     </div>
                     
                     <!-- ⚡ ACTIONS Card -->
-                    <div class="card card-elevated" style="cursor: pointer;" onclick="document.getElementById('attentionSection').scrollIntoView({behavior: 'smooth'})">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
-                            <span style="font-size: var(--text-2xl);">⚡</span>
-                            <span class="badge badge-danger">${attentionCount} Need Action</span>
-                        </div>
-                        <div style="font-weight: 600; font-size: var(--text-lg); margin-bottom: var(--space-2);">ACTIONS</div>
-                        <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">Items requiring attention</div>
-                        <div style="font-size: var(--text-xs); color: var(--text-tertiary);">See all →</div>
+                    <div class="card" style="cursor: pointer; padding: 48px;" onclick="document.getElementById('attentionSection').scrollIntoView({behavior: 'smooth'})">
+                        <div class="text-micro" style="color: var(--text-tertiary); margin-bottom: 24px;">ATTENTION</div>
+                        <div class="text-display" style="color: var(--danger); margin-bottom: 8px;">${attentionCount}</div>
+                        <div class="text-label" style="color: var(--text-secondary);">ITEMS NEED ACTION</div>
                     </div>
                 </div>
                 
