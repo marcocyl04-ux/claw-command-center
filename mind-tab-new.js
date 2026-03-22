@@ -1,4 +1,3 @@
-// New MIND tab function - Sovereign Terminal aesthetic
 function renderMindTab() {
     const mind = cognitionData.mind || {};
     
@@ -43,12 +42,8 @@ function renderMindTab() {
                         <h3 class="font-headline text-xl italic">Skill Network</h3>
                         <span class="text-[10px] font-mono text-on-surface/40 uppercase tracking-widest">${mind.skill_network?.nodes?.length || 22} Skills</span>
                     </div>
-                    <div id="skillNetworkViz" class="h-[380px] bg-surface-container-low rounded relative overflow-hidden">
-                        <!-- SVG skill network rendered here -->
-                    </div>
-                    <div id="skillDetailPanel" class="hidden mt-4 p-5 bg-surface-container-low rounded border-l-2 border-primary-container">
-                        <!-- Skill detail content -->
-                    </div>
+                    <div id="skillNetworkViz" class="h-[380px] bg-surface-container-low rounded relative overflow-hidden"></div>
+                    <div id="skillDetailPanel" class="hidden mt-4 p-5 bg-surface-container-low rounded border-l-2 border-primary-container"></div>
                 </div>
             </div>
             
@@ -95,121 +90,14 @@ function renderMindTab() {
                         <span class="text-[10px] font-mono text-on-surface/40 uppercase tracking-widest">6 Models • OpenRouter</span>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                        ${getModelCardHTML('Opus 4.6', '~$0.10-0.50', 92, [
-                            { task: 'Design', pct: 40 },
-                            { task: 'Reasoning', pct: 30 },
-                            { task: 'Architecture', pct: 20 }
-                        ])}
-                        ${getModelCardHTML('Sonnet 4.6', '~$0.02-0.08', 85, [
-                            { task: 'Content', pct: 50 },
-                            { task: 'Analysis', pct: 30 },
-                            { task: 'Review', pct: 20 }
-                        ])}
-                        ${getModelCardHTML('Kimi K2.5', '~$0.001-0.005', 88, [
-                            { task: 'Impl', pct: 60 },
-                            { task: 'Refactor', pct: 25 },
-                            { task: 'Debug', pct: 15 }
-                        ])}
-                        ${getModelCardHTML('Qwen3 235B', '~$0.005-0.02', 82, [
-                            { task: 'Analysis', pct: 45 },
-                            { task: 'Bulk', pct: 35 },
-                            { task: 'Market', pct: 20 }
-                        ])}
-                        ${getModelCardHTML('DeepSeek R1', '~$0.001-0.005', 90, [
-                            { task: 'Reasoning', pct: 50 },
-                            { task: 'Review', pct: 30 },
-                            { task: 'Meta', pct: 20 }
-                        ])}
-                        ${getModelCardHTML('Gemini 2.5', '~$0.01-0.05', 84, [
-                            { task: 'Multi', pct: 40 },
-                            { task: 'Context', pct: 35 },
-                            { task: 'Research', pct: 25 }
-                        ])}
+                        ${getModelCardHTML('Opus 4.6', '~$0.10-0.50', 92, [{ task: 'Design', pct: 40 }, { task: 'Reasoning', pct: 30 }, { task: 'Architecture', pct: 20 }])}
+                        ${getModelCardHTML('Sonnet 4.6', '~$0.02-0.08', 85, [{ task: 'Content', pct: 50 }, { task: 'Analysis', pct: 30 }, { task: 'Review', pct: 20 }])}
+                        ${getModelCardHTML('Kimi K2.5', '~$0.001-0.005', 88, [{ task: 'Impl', pct: 60 }, { task: 'Refactor', pct: 25 }, { task: 'Debug', pct: 15 }])}
+                        ${getModelCardHTML('Qwen3 235B', '~$0.005-0.02', 82, [{ task: 'Analysis', pct: 45 }, { task: 'Bulk', pct: 35 }, { task: 'Market', pct: 20 }])}
+                        ${getModelCardHTML('DeepSeek R1', '~$0.001-0.005', 90, [{ task: 'Reasoning', pct: 50 }, { task: 'Review', pct: 30 }, { task: 'Meta', pct: 20 }])}
+                        ${getModelCardHTML('Gemini 2.5', '~$0.01-0.05', 84, [{ task: 'Multi', pct: 40 }, { task: 'Context', pct: 35 }, { task: 'Research', pct: 25 }])}
                     </div>
-                    <div id="modelDetailPanel" class="hidden mt-6 p-5 bg-surface-container-low rounded">
-                        <!-- Model detail content -->
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Decision Examples -->
-            <div class="lg:col-span-6">
-                <div class="milled-surface hairline-border rounded p-6">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="font-headline text-xl italic">Recent Decisions</h3>
-                        <span class="text-[10px] font-mono text-on-surface/40 uppercase tracking-widest">${mind.decisions.examples?.length || 0} Tracked</span>
-                    </div>
-                    <div class="space-y-4">
-                        ${(mind.decisions.examples || []).slice(0, 3).map(ex => `
-                            <div class="p-4 bg-surface-container-low rounded border-l-2 ${ex.type === 'autonomous' ? 'border-tertiary' : 'border-primary-container'}">
-                                <div class="flex justify-between items-start mb-2">
-                                    <span class="text-sm font-medium">${ex.context}</span>
-                                    <span class="text-[10px] font-mono ${ex.type === 'autonomous' ? 'text-tertiary' : 'text-primary-container'}">${ex.type.toUpperCase()}</span>
-                                </div>
-                                <div class="text-xs text-on-surface/60 mb-1">${ex.decision}</div>
-                                <div class="text-[10px] text-on-surface/40">Outcome: ${ex.outcome}</div>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Cognitive Load -->
-            <div class="lg:col-span-6">
-                <div class="milled-surface hairline-border rounded p-6">
-                    <h3 class="font-headline text-xl italic mb-6">Cognitive Load</h3>
-                    <div class="space-y-6">
-                        <div>
-                            <div class="flex justify-between items-end mb-2">
-                                <span class="text-[10px] font-mono uppercase tracking-widest text-on-surface/40">Context Window</span>
-                                <span class="text-sm font-mono">47MB / 100MB</span>
-                            </div>
-                            <div class="h-1 w-full bg-surface-container-highest rounded-full overflow-hidden">
-                                <div class="h-full bg-tertiary" style="width: 47%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between items-end mb-2">
-                                <span class="text-[10px] font-mono uppercase tracking-widest text-on-surface/40">Attention Focus</span>
-                                <span class="text-sm font-mono">87%</span>
-                            </div>
-                            <div class="h-1 w-full bg-surface-container-highest rounded-full overflow-hidden">
-                                <div class="h-full bg-primary-container" style="width: 87%"></div>
-                            </div>
-                        </div>
-                        <div class="flex gap-2 flex-wrap">
-                            <span class="px-2 py-1 bg-surface-container-low rounded text-[10px] font-mono text-tertiary">Dashboard rebuild</span>
-                            <span class="px-2 py-1 bg-surface-container-low rounded text-[10px] font-mono text-tertiary">Skill network</span>
-                            <span class="px-2 py-1 bg-surface-container-low rounded text-[10px] font-mono text-tertiary">Model cards</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Patterns -->
-            <div class="lg:col-span-12">
-                <div class="milled-surface hairline-border rounded p-6">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="font-headline text-xl italic">Patterns Detected</h3>
-                        <span class="text-[10px] font-mono text-on-surface/40 uppercase tracking-widest">3 Active</span>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div class="p-4 bg-surface-container-low rounded border-l-2 border-tertiary">
-                            <div class="text-sm font-medium mb-1">90-minute sprint pattern</div>
-                            <div class="text-xs text-on-surface/60 mb-2">High output in focused blocks</div>
-                            <div class="text-[10px] font-mono text-tertiary">2 days ago</div>
-                        </div>
-                        <div class="p-4 bg-surface-container-low rounded border-l-2 border-primary-container/60">
-                            <div class="text-sm font-medium mb-1">Skill drops after 6pm</div>
-                            <div class="text-xs text-on-surface/60 mb-2">40% less evening usage</div>
-                            <div class="text-[10px] font-mono text-primary-container/60">1 week ago</div>
-                        </div>
-                        <div class="p-4 bg-surface-container-low rounded border-l-2 border-primary-container/60">
-                            <div class="text-sm font-medium mb-1">AGENTS.md improves routing</div>
-                            <div class="text-xs text-on-surface/60 mb-2">85% quality with protocol</div>
-                            <div class="text-[10px] font-mono text-primary-container/60">Today</div>
-                        </div>
-                    </div>
+                    <div id="modelDetailPanel" class="hidden mt-6 p-5 bg-surface-container-low rounded"></div>
                 </div>
             </div>
         </div>
