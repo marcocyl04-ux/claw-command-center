@@ -2831,9 +2831,8 @@
             // Clear container
             container.innerHTML = '';
             
-            // Calculate optimal radius based on screen size
-            const isFullscreen = width > 1400;
-            const baseRadius = isFullscreen ? Math.min(width, height) * 0.35 : 120;
+            // Larger network for visual impact
+            const baseRadius = Math.min(width, height) * 0.4;
             
             // Group by category (only show 4 main categories to reduce clutter)
             const mainCategories = ['core', 'design', 'ml', 'workflow'];
