@@ -858,45 +858,75 @@
         }
     </style>
 </head>
-<body>
+<body class="bg-surface text-on-surface font-body overflow-hidden">
+    <!-- Background Ambient Glow -->
+    <div class="fixed inset-0 z-[-1] pointer-events-none overflow-hidden">
+        <div class="absolute top-[-10%] right-[-10%] w-[60%] h-[60%] rounded-full bg-primary-container/5 blur-[120px]"></div>
+        <div class="absolute bottom-[-5%] left-[-5%] w-[40%] h-[40%] rounded-full bg-tertiary/5 blur-[100px]"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="fixed top-0 w-full z-50 glass-panel border-b border-outline-variant/10 shadow-[0px_24px_48px_rgba(0,0,0,0.5)] flex justify-between items-center px-8 py-4">
+        <div class="flex items-center gap-8">
+            <span class="font-headline italic text-2xl tracking-tighter text-on-surface">Claw</span>
+            <nav class="hidden md:flex items-center gap-6">
+                <span class="text-primary-container font-medium text-sm">Command Center</span>
+                <span class="text-on-surface/60 text-sm">v7.0</span>
+            </nav>
+        </div>
+        <div class="flex items-center gap-4">
+            <div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container-low hairline-border rounded">
+                <span class="w-1.5 h-1.5 rounded-full bg-primary-container animate-pulse"></span>
+                <span class="text-[10px] font-mono uppercase tracking-wider text-primary-container">Live</span>
+            </div>
+            <span class="text-[10px] font-mono text-on-surface/40" id="headerTime">--:--:--</span>
+        </div>
+    </header>
+
     <div class="app">
-        <!-- Mobile Nav Toggle -->
-        <button class="mobile-nav-toggle" onclick="toggleMobileNav()" aria-label="Toggle navigation">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="3" y1="6" x2="21" y2="6"></line>
-                <line x1="3" y1="12" x2="21" y2="12"></line>
-                <line x1="3" y1="18" x2="21" y2="18"></line>
-            </svg>
-        </button>
-        
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
-            <div class="logo">
-                <div class="logo-pulse"></div>
-                <span class="logo-text">Claw</span>
+            <div class="px-6 mb-8 mt-20">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-primary-container/10 flex items-center justify-center rounded border border-primary-container/20">
+                        <span class="material-symbols-outlined text-primary-container">psychology</span>
+                    </div>
+                    <div>
+                        <h2 class="font-headline text-xl text-on-surface">Claw</h2>
+                        <p class="text-[10px] uppercase tracking-widest text-on-surface/40">Neural Interface</p>
+                    </div>
+                </div>
             </div>
-            <nav class="nav">
+            <nav class="nav flex-1">
                 <div class="nav-item active" data-tab="now" onclick="switchTab('now')">
-                    <span>◈</span> NOW
+                    <span class="material-symbols-outlined">target</span>
+                    <span>Now</span>
                 </div>
                 <div class="nav-item" data-tab="mind" onclick="switchTab('mind')">
-                    <span>◈</span> MIND
+                    <span class="material-symbols-outlined">neurology</span>
+                    <span>Mind</span>
                 </div>
                 <div class="nav-item" data-tab="memory" onclick="switchTab('memory')">
-                    <span>◈</span> MEMORY
+                    <span class="material-symbols-outlined">database</span>
+                    <span>Memory</span>
                 </div>
                 <div class="nav-item" data-tab="training" onclick="switchTab('training')">
-                    <span>◈</span> TRAINING
-                    <span class="nav-badge">2</span>
+                    <span class="material-symbols-outlined">school</span>
+                    <span>Training</span>
                 </div>
                 <div class="nav-item" data-tab="trading" onclick="switchTab('trading')">
-                    <span>◈</span> TRADING
+                    <span class="material-symbols-outlined">trending_up</span>
+                    <span>Trading</span>
                 </div>
                 <div class="nav-item" data-tab="system" onclick="switchTab('system')">
-                    <span>◈</span> SYSTEM
+                    <span class="material-symbols-outlined">settings</span>
+                    <span>System</span>
                 </div>
             </nav>
-            <button class="sidebar-toggle" onclick="toggleSidebar()" title="Collapse/Expand sidebar">
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main ml-64 pt-24 pb-12 px-8 min-h-screen overflow-y-auto custom-scrollbar" id="mainContent">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polyline points="15 18 9 12 15 6"></polyline>
                 </svg>
