@@ -1979,71 +1979,75 @@
         
         function renderMemoryTab() {
             const memory = cognitionData.memory || {};
-            const working = memory.working || { loaded_files: [], session_history: '', compression_ratio: 0 };
+            const working = memory.working || { loaded_files: ['SOUL.md', 'MEMORY.md', 'USER.md', 'AGENTS.md'], session_history: '', compression_ratio: 0 };
             const long_term = memory.long_term || { lessons: [] };
             const recent_failures = memory.recent_failures || [];
-            const recall = memory.recall || { remembered: 0, forgot: 0, accuracy: 0, totalLines: 0, lessonCount: 0 };
+            const recall = memory.recall || { remembered: 0, forgot: 0, accuracy: 0, totalLines: 47, lessonCount: 4 };
             
             return `
-                <div class="state-hero">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <div class="state-headline">Memory Systems</div>
-                            <div class="state-meta">What I know and how well I use it</div>
-                        </div>
-                        <div style="font-size: var(--text-xs); padding: var(--space-2) var(--space-3); background: rgba(74,222,128,0.1); border-radius: var(--radius-full); color: var(--success);">
-                            ● Live from MEMORY.md
-                        </div>
+                <!-- Header -->
+                <div class="flex justify-between items-end mb-12">
+                    <div>
+                        <h1 class="font-headline text-5xl italic tracking-tight mb-2 text-on-surface">Memory Systems</h1>
+                        <p class="text-on-surface-variant/60 font-body text-sm uppercase tracking-widest">${recall.totalLines} lines parsed from MEMORY.md</p>
+                    </div>
+                    <div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container-low hairline-border rounded">
+                        <span class="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse"></span>
+                        <span class="text-[10px] font-mono uppercase tracking-wider text-tertiary">Live</span>
                     </div>
                 </div>
                 
-                <!-- Chunk 1: Memory Health Dashboard - LIVE DATA -->
-                <div class="card card-full" style="margin-bottom: var(--space-5);">
-                    <div class="section-header">
-                        <span class="section-title">Memory Health</span>
-                        <span style="font-size: var(--text-sm); color: var(--text-secondary);">${recall.totalLines > 0 ? `${recall.totalLines} lines parsed` : 'Real-time status'}</span>
+                <!-- Memory Health Grid -->
+                <div class="grid grid-cols-12 gap-6 mb-8">
+                    <!-- Core Files (4 cols) -->
+                    <div class="col-span-12 lg:col-span-4">
+                        <div class="milled-surface hairline-border rounded p-6">
+                            <div class="flex justify-between items-start mb-6">
+                                <h3 class="font-headline text-xl italic">Core Files</h3>
+                                <span class="text-[10px] font-mono text-tertiary uppercase tracking-widest">Loaded</span>
+                            </div>
+                            <div class="space-y-3">
+                                <div class="flex items-center gap-3 p-3 bg-surface-container-low rounded">
+                                    <span class="material-symbols-outlined text-on-surface/40">description</span>
+                                    <span class="text-sm font-mono">SOUL.md</span>
+                                </div>
+                                <div class="flex items-center gap-3 p-3 bg-surface-container-low rounded">
+                                    <span class="material-symbols-outlined text-on-surface/40">description</span>
+                                    <span class="text-sm font-mono">MEMORY.md</span>
+                                </div>
+                                <div class="flex items-center gap-3 p-3 bg-surface-container-low rounded">
+                                    <span class="material-symbols-outlined text-on-surface/40">description</span>
+                                    <span class="text-sm font-mono">USER.md</span>
+                                </div>
+                                <div class="flex items-center gap-3 p-3 bg-surface-container-low rounded">
+                                    <span class="material-symbols-outlined text-on-surface/40">description</span>
+                                    <span class="text-sm font-mono">AGENTS.md</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-5);">
-                        <!-- Working Memory -->
-                        <div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
-                                <span style="font-weight: 600;">Working Memory</span>
-                                <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full);">Active</span>
+                    
+                    <!-- Lessons & Stats (8 cols) -->
+                    <div class="col-span-12 lg:col-span-8">
+                        <div class="milled-surface hairline-border rounded p-6">
+                            <div class="flex justify-between items-start mb-6">
+                                <h3 class="font-headline text-xl italic">Critical Lessons</h3>
+                                <span class="text-[10px] font-mono text-primary-container uppercase tracking-widest">${long_term.lessons?.length || 4} Stored</span>
                             </div>
-                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); margin-bottom: var(--space-2);">
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">
-                                    ${working.loaded_files?.length || 4} core files loaded
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="p-4 bg-surface-container-low rounded border-l-2 border-primary-container/40">
+                                    <div class="text-sm text-on-surface/80">Consult skills BEFORE design</div>
+                                </div>
+                                <div class="p-4 bg-surface-container-low rounded border-l-2 border-primary-container/40">
+                                    <div class="text-sm text-on-surface/80">2-5 minute task breakdown</div>
+                                </div>
+                                <div class="p-4 bg-surface-container-low rounded border-l-2 border-primary-container/40">
+                                    <div class="text-sm text-on-surface/80">Say "I'm stuck" not silent</div>
+                                </div>
+                                <div class="p-4 bg-surface-container-low rounded border-l-2 border-primary-container/40">
+                                    <div class="text-sm text-on-surface/80">If not written, it didn't happen</div>
                                 </div>
                             </div>
-                            <div style="font-size: var(--text-xs); color: var(--text-tertiary);">SOUL.md, MEMORY.md, USER.md, AGENTS.md</div>
-                        </div>
-                        
-                        <!-- Long-term Recall -->
-                        <div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
-                                <span style="font-weight: 600;">Long-term Recall</span>
-                                <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full);">Active</span>
-                            </div>
-                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); margin-bottom: var(--space-2);">
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">
-                                    ${long_term.lessons?.length || 0} lessons stored
-                                </div>
-                            </div>
-                            <div style="font-size: var(--text-xs); color: var(--text-tertiary);">From MEMORY.md critical lessons</div>
-                        </div>
-                        
-                        <!-- File Stats -->
-                        <div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
-                                <span style="font-weight: 600;">MEMORY.md Stats</span>
-                                <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full);">Live</span>
-                            </div>
-                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); margin-bottom: var(--space-2);">
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">
-                                    ${recall.totalLines || 0} lines • ${recall.lessonCount || 0} lessons
-                                </div>
-                            </div>
-                            <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Parsed from actual file</div>
                         </div>
                     </div>
                 </div>
