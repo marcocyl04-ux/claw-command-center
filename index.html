@@ -474,6 +474,39 @@
             }
         }
         
+        /* Card Elevated (for hover lift effect) */
+        .card-elevated {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .card-elevated:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--elevation-5);
+        }
+        
+        /* Stagger animation for children */
+        .stagger-children > * {
+            animation: fadeSlideUp 0.4s ease-out backwards;
+        }
+        
+        .stagger-children > *:nth-child(1) { animation-delay: 0.05s; }
+        .stagger-children > *:nth-child(2) { animation-delay: 0.1s; }
+        .stagger-children > *:nth-child(3) { animation-delay: 0.15s; }
+        .stagger-children > *:nth-child(4) { animation-delay: 0.2s; }
+        .stagger-children > *:nth-child(5) { animation-delay: 0.25s; }
+        .stagger-children > *:nth-child(6) { animation-delay: 0.3s; }
+        
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
         /* Model Cards Grid */
         .model-cards-grid {
             display: grid;
@@ -962,12 +995,12 @@
                     </div>
                 </div>
                 
-                <div class="now-cards-grid">
+                <div class="now-cards-grid stagger-children">
                     <!-- 🧠 MIND Card -->
-                    <div style="background: var(--bg-1); border-radius: var(--radius-lg); padding: var(--space-5); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; border: 1px solid rgba(255,255,255,0.05);" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 24px rgba(0,0,0,0.3)'" onmouseout="this.style.transform=''; this.style.boxShadow=''" onclick="switchTab('mind')">
+                    <div class="card card-elevated" style="cursor: pointer;" onclick="switchTab('mind')">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
                             <span style="font-size: var(--text-2xl);">🧠</span>
-                            <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full);">Good</span>
+                            <span class="badge badge-success">Good</span>
                         </div>
                         <div style="font-weight: 600; font-size: var(--text-lg); margin-bottom: var(--space-2);">MIND</div>
                         <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">${mindSkillCount} skills • ${mindDecisionCount} autonomous decisions</div>
@@ -975,10 +1008,10 @@
                     </div>
                     
                     <!-- 📊 SYSTEM Card -->
-                    <div style="background: var(--bg-1); border-radius: var(--radius-lg); padding: var(--space-5); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; border: 1px solid rgba(255,255,255,0.05);" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 24px rgba(0,0,0,0.3)'" onmouseout="this.style.transform=''; this.style.boxShadow=''" onclick="switchTab('system')">
+                    <div class="card card-elevated" style="cursor: pointer;" onclick="switchTab('system')">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
                             <span style="font-size: var(--text-2xl);">📊</span>
-                            <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: ${systemIssues > 0 ? 'rgba(224,145,42,0.2)' : 'rgba(74,222,128,0.2)'}; color: ${systemIssues > 0 ? 'var(--amber-400)' : 'var(--success)'}; border-radius: var(--radius-full);">${systemIssues > 0 ? systemIssues + ' Issue' : 'All Good'}</span>
+                            <span class="badge ${systemIssues > 0 ? 'badge-amber' : 'badge-success'}">${systemIssues > 0 ? systemIssues + ' Issue' : 'All Good'}</span>
                         </div>
                         <div style="font-weight: 600; font-size: var(--text-lg); margin-bottom: var(--space-2);">SYSTEM</div>
                         <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">${systemOnline}/${systemTotal} services online</div>
@@ -986,10 +1019,10 @@
                     </div>
                     
                     <!-- 💰 TRADING Card -->
-                    <div style="background: var(--bg-1); border-radius: var(--radius-lg); padding: var(--space-5); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; border: 1px solid rgba(255,255,255,0.05);" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 24px rgba(0,0,0,0.3)'" onmouseout="this.style.transform=''; this.style.boxShadow=''" onclick="switchTab('trading')">
+                    <div class="card card-elevated" style="cursor: pointer;" onclick="switchTab('trading')">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
                             <span style="font-size: var(--text-2xl);">💰</span>
-                            <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(100,100,100,0.2); color: var(--text-tertiary); border-radius: var(--radius-full);">Basic</span>
+                            <span class="badge" style="background: rgba(100,100,100,0.2); color: var(--text-tertiary);">Basic</span>
                         </div>
                         <div style="font-weight: 600; font-size: var(--text-lg); margin-bottom: var(--space-2);">TRADING</div>
                         <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">${system.trading?.total_predictions || 0} predictions • ${system.trading?.edge_discovery_rate || 0} edges found</div>
@@ -997,10 +1030,10 @@
                     </div>
                     
                     <!-- 🎯 TRAINING Card -->
-                    <div style="background: var(--bg-1); border-radius: var(--radius-lg); padding: var(--space-5); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; border: 1px solid rgba(255,255,255,0.05);" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 24px rgba(0,0,0,0.3)'" onmouseout="this.style.transform=''; this.style.boxShadow=''" onclick="switchTab('training')">
+                    <div class="card card-elevated" style="cursor: pointer;" onclick="switchTab('training')">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
                             <span style="font-size: var(--text-2xl);">🎯</span>
-                            <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full);">On Track</span>
+                            <span class="badge badge-success">On Track</span>
                         </div>
                         <div style="font-weight: 600; font-size: var(--text-lg); margin-bottom: var(--space-2);">TRAINING</div>
                         <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">Week ${trainingWeek}/16 • ${trainingProgress}% to auto</div>
@@ -1008,10 +1041,10 @@
                     </div>
                     
                     <!-- 📝 MEMORY Card -->
-                    <div style="background: var(--bg-1); border-radius: var(--radius-lg); padding: var(--space-5); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; border: 1px solid rgba(255,255,255,0.05);" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 24px rgba(0,0,0,0.3)'" onmouseout="this.style.transform=''; this.style.boxShadow=''" onclick="switchTab('memory')">
+                    <div class="card card-elevated" style="cursor: pointer;" onclick="switchTab('memory')">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
                             <span style="font-size: var(--text-2xl);">📝</span>
-                            <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full);">Healthy</span>
+                            <span class="badge badge-success">Healthy</span>
                         </div>
                         <div style="font-weight: 600; font-size: var(--text-lg); margin-bottom: var(--space-2);">MEMORY</div>
                         <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">${memoryLessons} critical lessons stored</div>
@@ -1019,10 +1052,10 @@
                     </div>
                     
                     <!-- ⚡ ACTIONS Card -->
-                    <div style="background: var(--bg-1); border-radius: var(--radius-lg); padding: var(--space-5); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; border: 1px solid rgba(255,255,255,0.05);" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 24px rgba(0,0,0,0.3)'" onmouseout="this.style.transform=''; this.style.boxShadow=''" onclick="document.getElementById('attentionSection').scrollIntoView({behavior: 'smooth'})">
+                    <div class="card card-elevated" style="cursor: pointer;" onclick="document.getElementById('attentionSection').scrollIntoView({behavior: 'smooth'})">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
                             <span style="font-size: var(--text-2xl);">⚡</span>
-                            <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(248,113,113,0.2); color: var(--danger); border-radius: var(--radius-full);">${attentionCount} Need Action</span>
+                            <span class="badge badge-danger">${attentionCount} Need Action</span>
                         </div>
                         <div style="font-weight: 600; font-size: var(--text-lg); margin-bottom: var(--space-2);">ACTIONS</div>
                         <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">Items requiring attention</div>
