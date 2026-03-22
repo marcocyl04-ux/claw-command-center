@@ -290,17 +290,27 @@
         }
         .card-full { grid-column: 1 / -1; }
         
-        /* Glassmorphism Cards */
-        .card, .state-hero, .vital-card, .thought-stream {
-            background: rgba(30, 30, 30, 0.8);
+        /* Glassmorphism Cards - ensure visibility */
+        .card, .vital-card, .thought-stream {
+            background: rgba(40, 40, 40, 0.95) !important;
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 
-                0 4px 6px -1px rgba(0, 0, 0, 0.1),
-                0 2px 4px -1px rgba(0, 0, 0, 0.06),
+                0 4px 6px -1px rgba(0, 0, 0, 0.2),
+                0 2px 4px -1px rgba(0, 0, 0, 0.1),
                 inset 0 1px 0 rgba(255, 255, 255, 0.05);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        /* State hero with solid background */
+        .state-hero {
+            background: linear-gradient(135deg, rgba(224, 145, 42, 0.15) 0%, rgba(40, 40, 40, 0.95) 100%) !important;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
         }
         
         /* Fallback for browsers without backdrop-filter */
