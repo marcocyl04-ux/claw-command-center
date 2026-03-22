@@ -5,95 +5,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Claw Consciousness Dashboard v6.0</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-    <!-- Precision + Breath Typography System -->
-    <style>
-        :root {
-            /* Typography Scale - Extreme Contrast */
-            --text-hero: clamp(80px, 12vw, 120px);      /* Massive numbers */
-            --text-display: clamp(48px, 6vw, 72px);     /* Section headers */
-            --text-title: clamp(24px, 3vw, 32px);       /* Card titles */
-            --text-label: 10px;                          /* Hairline labels */
-            --text-micro: 9px;                           /* Micro information */
-
-            /* Tracking */
-            --tracking-label: 0.2em;
-            --tracking-micro: 0.15em;
-
-            /* Weights */
-            --weight-light: 300;
-            --weight-regular: 400;
-            --weight-medium: 500;
-        }
-
-        /* Typography Classes */
-        .text-hero {
-            font-size: var(--text-hero);
-            font-weight: var(--weight-light);
-            line-height: 0.9;
-            letter-spacing: -0.02em;
-        }
-
-        .text-display {
-            font-size: var(--text-display);
-            font-weight: var(--weight-light);
-            line-height: 1;
-            letter-spacing: -0.01em;
-        }
-
-        .text-title {
-            font-size: var(--text-title);
-            font-weight: var(--weight-medium);
-            line-height: 1.2;
-        }
-
-        .text-label {
-            font-size: var(--text-label);
-            font-weight: var(--weight-regular);
-            text-transform: uppercase;
-            letter-spacing: var(--tracking-label);
-            line-height: 1.4;
-        }
-
-        .text-micro {
-            font-size: var(--text-micro);
-            font-weight: var(--weight-regular);
-            text-transform: uppercase;
-            letter-spacing: var(--tracking-micro);
-            line-height: 1.4;
-        }
-
-        /* Kill middle sizes */
-        p, span:not(.text-label):not(.text-micro), div:not(.text-hero):not(.text-display):not(.text-title) {
-            font-size: inherit;
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="design-system.css">
     <style>
-        /* App Shell - Flat, No Texture */
-        .app {
-            display: flex;
-            min-height: 100vh;
-            background: #0a0a0a;
+        /* App Shell with Animated Gradient Mesh */
+        .app { 
+            display: flex; 
+            min-height: 100vh; 
+            background: var(--bg-0);
+            position: relative;
         }
-
-        /* Sidebar - Precision + Breath */
-        .sidebar {
-            width: 200px;
-            background: rgba(10, 10, 10, 0.95);
-            border-right: 1px solid rgba(255, 255, 255, 0.06);
-            display: flex;
+        
+        .app::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(224, 145, 42, 0.12) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(224, 145, 42, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(251, 191, 36, 0.05) 0%, transparent 70%);
+            animation: meshMove 25s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        @keyframes meshMove {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(2%, 2%) scale(1.05); }
+            50% { transform: translate(-1%, 3%) scale(1); }
+            75% { transform: translate(3%, -2%) scale(1.03); }
+        }
+        
+        .sidebar, .main {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Sidebar - Glassmorphism */
+        .sidebar { 
+            width: 280px; 
+            background: rgba(16, 16, 16, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex; 
             flex-direction: column;
             position: fixed;
             height: 100vh;
             z-index: 100;
-            padding: 80px 0;
+            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3);
         }
-        .logo {
-            padding: var(--space-6);
+        .logo { 
+            padding: var(--space-6); 
             font-size: var(--text-xl);
-            font-weight: 700;
+            font-weight: 700; 
             color: var(--amber-500);
             border-bottom: 1px solid oklch(100% 0 0 / 0.05);
             display: flex;
@@ -109,31 +77,49 @@
             animation: pulse 2s ease-in-out infinite;
         }
         .nav { padding: var(--space-4); }
-        .nav-item {
-            padding: 16px 32px;
-            cursor: pointer;
-            color: var(--text-secondary);
-            margin-bottom: 0;
+        .nav-item { 
+            padding: var(--space-4) var(--space-5); 
+            cursor: pointer; 
+            color: var(--text-secondary); 
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-2);
             display: flex;
             align-items: center;
-            gap: 16px;
-            transition: all 0.15s ease;
-            border: none;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
+            gap: var(--space-3);
+            transition: all var(--duration-fast) var(--ease-out-quart);
+            border: 1px solid transparent;
+            font-size: var(--text-sm);
             position: relative;
+            overflow: hidden;
         }
-
-        .nav-item:hover {
-            color: var(--text-primary);
-            background: rgba(255, 255, 255, 0.02);
+        
+        /* Shimmer effect on hover */
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(224, 145, 42, 0.1), transparent);
+            transition: left 0.5s ease;
         }
-
-        .nav-item.active {
+        
+        .nav-item:hover::before {
+            left: 100%;
+        }
+        
+        .nav-item:hover { 
+            color: var(--text-primary); 
+            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-item.active { 
             color: var(--amber-400);
-            background: transparent;
-            border-left: 1px solid var(--amber-400);
+            background: rgba(224, 145, 42, 0.1);
+            border-color: rgba(224, 145, 42, 0.3);
+            box-shadow: 0 0 20px rgba(224, 145, 42, 0.15);
         }
         .nav-badge {
             margin-left: auto;
@@ -144,19 +130,19 @@
             border-radius: var(--radius-full);
             font-weight: 600;
         }
-
+        
         /* Main Content */
-        .main {
-            flex: 1;
-            margin-left: 200px;
-            padding: 0;
+        .main { 
+            flex: 1; 
+            margin-left: 280px;
+            padding: var(--space-6);
             min-height: 100vh;
         }
-
+        
         /* Tab System */
         .tab-content { display: none; }
         .tab-content.active { display: block; animation: fadeIn var(--duration-slow) var(--ease-out-expo); }
-
+        
         /* Intervention Banner */
         .intervention-banner {
             background: oklch(60% 0.18 25 / 0.1);
@@ -199,7 +185,7 @@
             font-size: var(--text-sm);
             color: var(--text-secondary);
         }
-
+        
         /* State Hero */
         .state-hero {
             background: linear-gradient(135deg, oklch(68% 0.18 75 / 0.08) 0%, var(--bg-2) 50%);
@@ -228,7 +214,7 @@
             font-size: var(--text-lg);
             color: var(--text-secondary);
         }
-
+        
         /* Vitals Grid */
         .vitals-grid {
             display: grid;
@@ -267,7 +253,7 @@
         .vital-trend.up { color: var(--success); }
         .vital-trend.down { color: var(--danger); }
         .vital-trend.flat { color: var(--text-tertiary); }
-
+        
         /* Thought Stream */
         .thought-stream {
             background: var(--bg-2);
@@ -296,7 +282,7 @@
         .thought-value {
             color: var(--text-primary);
         }
-
+        
         /* Cards Grid */
         .cards-grid {
             display: grid;
@@ -304,7 +290,7 @@
             gap: var(--space-5);
         }
         .card-full { grid-column: 1 / -1; }
-
+        
         /* Section Header */
         .section-header {
             display: flex;
@@ -316,7 +302,7 @@
             font-size: var(--text-lg);
             font-weight: 600;
         }
-
+        
         /* Skill Network */
         .skill-node {
             display: flex;
@@ -351,7 +337,7 @@
             background: oklch(100% 0 0 / 0.1);
             color: var(--text-tertiary);
         }
-
+        
         /* Model Routing */
         .routing-item {
             display: flex;
@@ -385,7 +371,7 @@
             background: oklch(68% 0.18 75 / 0.15);
             color: var(--amber-400);
         }
-
+        
         /* Blocker Card */
         .blocker-card {
             background: oklch(60% 0.18 25 / 0.08);
@@ -415,7 +401,7 @@
             font-size: var(--text-sm);
             margin-bottom: var(--space-3);
         }
-
+        
         /* Milestone */
         .milestone-item {
             display: flex;
@@ -443,7 +429,7 @@
             width: 50px;
             text-align: right;
         }
-
+        
         /* File Status */
         .file-item {
             display: flex;
@@ -467,7 +453,7 @@
             font-size: var(--text-sm);
             color: var(--text-secondary);
         }
-
+        
         /* NOW Tab Cards Grid */
         .now-cards-grid {
             display: grid;
@@ -475,49 +461,56 @@
             gap: var(--space-4);
             margin-bottom: var(--space-5);
         }
-
+        
         @media (max-width: 1400px) {
             .now-cards-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
-
+        
         @media (max-width: 900px) {
             .now-cards-grid {
                 grid-template-columns: 1fr;
             }
         }
-
+        
         /* Card Elevated (for hover lift effect) */
         .card-elevated {
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-
+        
         .card-elevated:hover {
             transform: translateY(-4px);
             box-shadow: var(--elevation-5);
         }
-
-        /* Global card override - absolute sharpness */
+        
+        /* Global card style override - makes all cards consistent */
         .main [style*="background: var(--bg-1)"][style*="border-radius: var(--radius-lg)"] {
-            background: #111111 !important;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 0 !important;
+            background: rgba(40, 40, 40, 0.6) !important;
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-
+        
+        .main [style*="background: var(--bg-1)"][style*="border-radius: var(--radius-lg)"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+        
         /* Stagger animation for children - only animate once */
         .stagger-children > * {
             animation: fadeSlideUp 0.4s ease-out forwards;
             opacity: 0;
         }
-
+        
         .stagger-children > *:nth-child(1) { animation-delay: 0.05s; }
         .stagger-children > *:nth-child(2) { animation-delay: 0.1s; }
         .stagger-children > *:nth-child(3) { animation-delay: 0.15s; }
         .stagger-children > *:nth-child(4) { animation-delay: 0.2s; }
         .stagger-children > *:nth-child(5) { animation-delay: 0.25s; }
         .stagger-children > *:nth-child(6) { animation-delay: 0.3s; }
-
+        
         @keyframes fadeSlideUp {
             from {
                 opacity: 0;
@@ -528,90 +521,90 @@
                 transform: translateY(0);
             }
         }
-
+        
         /* Model Cards Grid */
         .model-cards-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: var(--space-4);
         }
-
+        
         @media (max-width: 1200px) {
             .model-cards-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
-
+        
         @media (max-width: 768px) {
             .model-cards-grid {
                 grid-template-columns: 1fr;
             }
         }
-
+        
         /* Skill Network Container */
         #skillNetworkViz {
             max-width: 100%;
             overflow: auto;
         }
-
+        
         #skillNetworkViz svg {
             max-width: 100%;
             height: auto;
         }
-
+        
         /* Micro-interactions */
-
+        
         /* Button press effect */
         button, .btn, .nav-item, .card {
             transition: transform 0.15s ease, box-shadow 0.15s ease;
         }
-
+        
         button:active, .btn:active {
             transform: scale(0.98);
         }
-
+        
         /* Tab content fade */
         .tab-content {
             animation: fadeIn 0.3s ease-out;
         }
-
+        
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
+        
         /* Loading skeleton */
         .skeleton {
             background: linear-gradient(90deg, var(--bg-1) 25%, var(--bg-2) 50%, var(--bg-1) 75%);
             background-size: 200% 100%;
             animation: skeleton-loading 1.5s infinite;
         }
-
+        
         @keyframes skeleton-loading {
             0% { background-position: 200% 0; }
             100% { background-position: -200% 0; }
         }
-
+        
         /* Number count-up animation */
         .count-up {
             animation: countUp 0.6s ease-out;
         }
-
+        
         @keyframes countUp {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
+        
         /* Pulse animation for live indicators */
         .pulse-live {
             animation: pulse-live 2s infinite;
         }
-
+        
         @keyframes pulse-live {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
         }
-
+        
         /* Mobile Optimizations */
         @media (max-width: 768px) {
             .state-hero {
@@ -626,7 +619,7 @@
                 gap: var(--space-2);
             }
         }
-
+        
         /* Touch Device Optimizations */
         @media (hover: none) {
             .card:hover,
@@ -634,16 +627,16 @@
                 transform: none;
             }
         }
-
+        
         /* Reduced Motion */
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after {
                 animation-duration: 0.01ms !important;
             }
         }
-
+        
         /* Responsive Design */
-
+        
         /* Fluid Typography */
         :root {
             --text-fluid-xs: clamp(0.625rem, 0.8vw, 0.75rem);
@@ -654,7 +647,7 @@
             --text-fluid-2xl: clamp(1.5rem, 3vw, 2rem);
             --text-fluid-3xl: clamp(2rem, 4vw, 3rem);
         }
-
+        
         /* Mobile Navigation */
         .mobile-nav-toggle {
             display: none;
@@ -668,7 +661,7 @@
             padding: var(--space-3);
             cursor: pointer;
         }
-
+        
         /* Collapsible Sidebar */
         .sidebar-collapsed {
             width: 60px !important;
@@ -702,14 +695,14 @@
             color: var(--text-primary);
             background: var(--bg-0);
         }
-
+        
         /* Responsive Grid */
         .responsive-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: var(--space-4);
         }
-
+        
         /* Tablet (768px - 1024px) */
         @media (max-width: 1024px) {
             .sidebar {
@@ -729,7 +722,7 @@
                 font-size: var(--text-fluid-xl);
             }
         }
-
+        
         /* Mobile (< 768px) */
         @media (max-width: 768px) {
             .mobile-nav-toggle {
@@ -772,7 +765,7 @@
                 width: 100%;
             }
         }
-
+        
         /* Small Mobile (< 480px) */
         @media (max-width: 480px) {
             .main {
@@ -793,7 +786,7 @@
                 width: auto;
             }
         }
-
+        
         /* Touch Device Optimizations */
         @media (hover: none) {
             .nav-item:hover {
@@ -803,7 +796,7 @@
                 background: oklch(100% 0 0 / 0.03);
             }
         }
-
+        
         /* Reduced Motion */
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after {
@@ -812,7 +805,7 @@
                 transition-duration: 0.01ms !important;
             }
         }
-
+        
         /* Print Styles */
         @media print {
             .sidebar, .mobile-nav-toggle {
@@ -822,7 +815,7 @@
                 margin-left: 0;
             }
         }
-
+        
         /* Responsive */
         @media (max-width: 1200px) {
             .vitals-grid { grid-template-columns: repeat(2, 1fr); }
@@ -833,7 +826,7 @@
             .main { margin-left: 0; }
             .vitals-grid { grid-template-columns: 1fr; }
         }
-
+        
         /* Animations */
         @keyframes pulse {
             0%, 100% { opacity: 1; }
@@ -855,7 +848,7 @@
                 <line x1="3" y1="18" x2="21" y2="18"></line>
             </svg>
         </button>
-
+        
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div class="logo">
@@ -889,24 +882,24 @@
                 </svg>
             </button>
         </aside>
-
+        
         <!-- Main Content -->
         <main class="main" id="mainContent">
             <!-- Content injected by JavaScript -->
         </main>
     </div>
-
+    
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="cognition-intelligence.js"></script>
     <script src="data-bridge.js"></script>
     <script>
         let cognitionData = null;
         let currentTab = 'now';
-
+        
         async function init() {
             // Restore sidebar state
             restoreSidebarState();
-
+            
             try {
                 // Use DataBridge for dynamic data
                 cognitionData = await DataBridge.compileDashboardData();
@@ -922,10 +915,10 @@
                     </div>
                 `;
             }
-
+            
             // Update last refresh timestamp
             updateLastRefreshTime();
-
+            
             // Refresh data every 30 seconds
             setInterval(async () => {
                 try {
@@ -939,12 +932,12 @@
                 }
             }, 30000);
         }
-
+        
         // Manual refresh function
         async function refreshDashboardData() {
             const btn = document.getElementById('refreshBtn');
             const spinner = document.getElementById('refreshSpinner');
-
+            
             // Show spinner
             if (spinner) spinner.style.display = 'block';
             if (btn) {
@@ -952,17 +945,17 @@
                 btn.style.opacity = '0.5';
                 btn.textContent = '⟳ Refreshing...';
             }
-
+            
             try {
                 // Re-fetch data
                 cognitionData = await DataBridge.compileDashboardData();
-
+                
                 // Re-render current tab
                 renderTab(currentTab);
-
+                
                 // Update timestamp
                 updateLastRefreshTime();
-
+                
                 console.log('Dashboard refreshed at', new Date().toLocaleTimeString());
             } catch (e) {
                 console.error('Manual refresh failed:', e);
@@ -977,7 +970,7 @@
                 }
             }
         }
-
+        
         // Update last refresh timestamp
         function updateLastRefreshTime() {
             const el = document.getElementById('lastRefresh');
@@ -985,7 +978,7 @@
                 el.textContent = 'Last refreshed: ' + new Date().toLocaleTimeString();
             }
         }
-
+        
         // Mobile navigation toggle
         function toggleMobileNav() {
             const sidebar = document.getElementById('sidebar');
@@ -993,7 +986,7 @@
                 sidebar.classList.toggle('open');
             }
         }
-
+        
         // Sidebar collapse/expand toggle
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
@@ -1005,7 +998,7 @@
                 localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('sidebar-collapsed'));
             }
         }
-
+        
         // Restore sidebar state on load
         function restoreSidebarState() {
             const sidebar = document.getElementById('sidebar');
@@ -1016,7 +1009,7 @@
                 main.classList.add('main-expanded');
             }
         }
-
+        
         // Close mobile nav when clicking outside
         document.addEventListener('click', (e) => {
             const sidebar = document.getElementById('sidebar');
@@ -1025,7 +1018,7 @@
                 sidebar.classList.remove('open');
             }
         });
-
+        
         // Close mobile nav on window resize to desktop
         window.addEventListener('resize', () => {
             const sidebar = document.getElementById('sidebar');
@@ -1033,17 +1026,17 @@
                 sidebar.classList.remove('open');
             }
         });
-
+        
         function switchTab(tab) {
             currentTab = tab;
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
             renderTab(tab);
         }
-
+        
         function renderTab(tab) {
             const container = document.getElementById('mainContent');
-
+            
             switch(tab) {
                 case 'now':
                     container.innerHTML = renderNowTab();
@@ -1065,7 +1058,7 @@
                     break;
             }
         }
-
+        
         function renderNowTab() {
             // Safety checks for all data
             const now = cognitionData?.now || {};
@@ -1073,7 +1066,7 @@
             const memory = cognitionData?.memory || {};
             const system = cognitionData?.system || {};
             const mind = cognitionData?.mind || {};
-
+            
             // Safe accessors
             const mindSkillCount = mind?.skill_network?.nodes?.length || 22;
             const mindDecisionCount = mind?.decisions?.autonomous?.count || 0;
@@ -1084,7 +1077,7 @@
             const trainingProgress = training?.progress || 65;
             const memoryLessons = memory?.long_term?.lessons?.length || 4;
             const attentionCount = now?.attention?.length || 0;
-
+            
             return `
                 <!-- Chunk 1: Six-Card Summary Grid -->
                 <div class="state-hero">
@@ -1099,51 +1092,75 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="now-cards-grid" style="padding: 64px 48px;">
+                
+                <div class="now-cards-grid stagger-children">
                     <!-- 🧠 MIND Card -->
-                    <div class="card" style="cursor: pointer; padding: 64px 48px;" onclick="switchTab('mind')">
-                        <div class="text-micro" style="color: var(--text-tertiary); margin-bottom: 32px;">COGNITIVE</div>
-                        <div class="text-display" style="color: var(--text-primary); margin-bottom: 16px; font-size: 96px;">${mindSkillCount}</div>
-                        <div class="text-label" style="color: var(--text-secondary);">SKILLS ACTIVE</div>
+                    <div class="card card-elevated" style="cursor: pointer;" onclick="switchTab('mind')">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
+                            <span style="font-size: var(--text-2xl);">🧠</span>
+                            <span class="badge badge-success">Good</span>
+                        </div>
+                        <div style="font-weight: 600; font-size: var(--text-lg); margin-bottom: var(--space-2);">MIND</div>
+                        <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">${mindSkillCount} skills • ${mindDecisionCount} autonomous decisions</div>
+                        <div style="font-size: var(--text-xs); color: var(--text-tertiary);">View MIND →</div>
                     </div>
                     
                     <!-- 📊 SYSTEM Card -->
-                    <div class="card" style="cursor: pointer; padding: 64px 48px;" onclick="switchTab('system')">
-                        <div class="text-micro" style="color: var(--text-tertiary); margin-bottom: 32px;">INFRASTRUCTURE</div>
-                        <div class="text-display" style="color: var(--text-primary); margin-bottom: 16px; font-size: 96px;">${systemOnline}</div>
-                        <div class="text-label" style="color: var(--text-secondary);">SERVICES ONLINE</div>
+                    <div class="card card-elevated" style="cursor: pointer;" onclick="switchTab('system')">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
+                            <span style="font-size: var(--text-2xl);">📊</span>
+                            <span class="badge ${systemIssues > 0 ? 'badge-amber' : 'badge-success'}">${systemIssues > 0 ? systemIssues + ' Issue' : 'All Good'}</span>
+                        </div>
+                        <div style="font-weight: 600; font-size: var(--text-lg); margin-bottom: var(--space-2);">SYSTEM</div>
+                        <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">${systemOnline}/${systemTotal} services online</div>
+                        <div style="font-size: var(--text-xs); color: var(--text-tertiary);">View SYSTEM →</div>
                     </div>
                     
                     <!-- 💰 TRADING Card -->
-                    <div class="card" style="cursor: pointer; padding: 64px 48px;" onclick="switchTab('trading')">
-                        <div class="text-micro" style="color: var(--text-tertiary); margin-bottom: 32px;">PERFORMANCE</div>
-                        <div class="text-display" style="color: var(--text-primary); margin-bottom: 16px; font-size: 96px;">${system.trading?.total_predictions || 0}</div>
-                        <div class="text-label" style="color: var(--text-secondary);">PREDICTIONS</div>
+                    <div class="card card-elevated" style="cursor: pointer;" onclick="switchTab('trading')">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
+                            <span style="font-size: var(--text-2xl);">💰</span>
+                            <span class="badge" style="background: rgba(100,100,100,0.2); color: var(--text-tertiary);">Basic</span>
+                        </div>
+                        <div style="font-weight: 600; font-size: var(--text-lg); margin-bottom: var(--space-2);">TRADING</div>
+                        <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">${system.trading?.total_predictions || 0} predictions • ${system.trading?.edge_discovery_rate || 0} edges found</div>
+                        <div style="font-size: var(--text-xs); color: var(--text-tertiary);">View TRADING →</div>
                     </div>
                     
                     <!-- 🎯 TRAINING Card -->
-                    <div class="card" style="cursor: pointer; padding: 64px 48px;" onclick="switchTab('training')">
-                        <div class="text-micro" style="color: var(--text-tertiary); margin-bottom: 32px;">PROGRESS</div>
-                        <div class="text-display" style="color: var(--text-primary); margin-bottom: 16px; font-size: 96px;">${trainingWeek}</div>
-                        <div class="text-label" style="color: var(--text-secondary);">WEEK ${trainingWeek}/16</div>
+                    <div class="card card-elevated" style="cursor: pointer;" onclick="switchTab('training')">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
+                            <span style="font-size: var(--text-2xl);">🎯</span>
+                            <span class="badge badge-success">On Track</span>
+                        </div>
+                        <div style="font-weight: 600; font-size: var(--text-lg); margin-bottom: var(--space-2);">TRAINING</div>
+                        <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">Week ${trainingWeek}/16 • ${trainingProgress}% to auto</div>
+                        <div style="font-size: var(--text-xs); color: var(--text-tertiary);">View TRAINING →</div>
                     </div>
                     
                     <!-- 📝 MEMORY Card -->
-                    <div class="card" style="cursor: pointer; padding: 64px 48px;" onclick="switchTab('memory')">
-                        <div class="text-micro" style="color: var(--text-tertiary); margin-bottom: 32px;">KNOWLEDGE</div>
-                        <div class="text-display" style="color: var(--text-primary); margin-bottom: 16px; font-size: 96px;">${memoryLessons}</div>
-                        <div class="text-label" style="color: var(--text-secondary);">CRITICAL LESSONS</div>
+                    <div class="card card-elevated" style="cursor: pointer;" onclick="switchTab('memory')">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
+                            <span style="font-size: var(--text-2xl);">📝</span>
+                            <span class="badge badge-success">Healthy</span>
+                        </div>
+                        <div style="font-weight: 600; font-size: var(--text-lg); margin-bottom: var(--space-2);">MEMORY</div>
+                        <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">${memoryLessons} critical lessons stored</div>
+                        <div style="font-size: var(--text-xs); color: var(--text-tertiary);">View MEMORY →</div>
                     </div>
                     
                     <!-- ⚡ ACTIONS Card -->
-                    <div class="card" style="cursor: pointer; padding: 64px 48px; border-color: ${attentionCount > 0 ? 'rgba(248,113,113,0.3)' : 'rgba(255,255,255,0.06)'};" onclick="switchTab('system')">
-                        <div class="text-micro" style="color: var(--text-tertiary); margin-bottom: 32px;">ATTENTION</div>
-                        <div class="text-display" style="color: ${attentionCount > 0 ? 'var(--danger)' : 'var(--text-primary)'}; margin-bottom: 16px; font-size: 96px;">${attentionCount}</div>
-                        <div class="text-label" style="color: var(--text-secondary);">ITEMS NEED ACTION</div>
+                    <div class="card card-elevated" style="cursor: pointer;" onclick="document.getElementById('attentionSection').scrollIntoView({behavior: 'smooth'})">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
+                            <span style="font-size: var(--text-2xl);">⚡</span>
+                            <span class="badge badge-danger">${attentionCount} Need Action</span>
+                        </div>
+                        <div style="font-weight: 600; font-size: var(--text-lg); margin-bottom: var(--space-2);">ACTIONS</div>
+                        <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">Items requiring attention</div>
+                        <div style="font-size: var(--text-xs); color: var(--text-tertiary);">See all →</div>
                     </div>
                 </div>
-
+                
                 <!-- Chunk 2: Attention Required Banner - LIVE DATA -->
                 <div id="attentionSection" style="background: rgba(248,113,113,0.05); border: 1px solid rgba(248,113,113,0.2); border-radius: var(--radius-lg); padding: var(--space-5); margin-bottom: var(--space-5);">
                     <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4);">
@@ -1163,12 +1180,12 @@
                         `).join('')}
                         ${(now.attention || []).length === 0 ? `
                             <div style="background: var(--bg-0); border-radius: var(--radius-md); padding: var(--space-3); text-align: center; color: var(--success);">
-                                ✓ All systems operational - no attention required
+                                ✓ All systems operational — no attention required
                             </div>
                         ` : ''}
                     </div>
                 </div>
-
+                
                 <!-- Chunk 3: Insight of the Day -->
                 <div style="background: rgba(224,145,42,0.1); border: 1px solid rgba(224,145,42,0.2); border-radius: var(--radius-lg); padding: var(--space-5); margin-bottom: var(--space-5);">
                     <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4);">
@@ -1179,10 +1196,10 @@
                         "The quality of the feedback signal matters more than the quantity of iterations."
                     </div>
                     <div style="font-size: var(--text-sm); color: var(--text-tertiary);">
-                        - MEMORY.md lesson • Confidence: 95%
+                        — MEMORY.md lesson • Confidence: 95%
                     </div>
                 </div>
-
+                
                 <!-- Chunk 4: Quick Actions -->
                 <div style="background: var(--bg-1); border-radius: var(--radius-lg); padding: var(--space-5); margin-bottom: var(--space-5);">
                     <div style="font-weight: 600; font-size: var(--text-lg); margin-bottom: var(--space-4);">Quick Actions</div>
@@ -1195,7 +1212,7 @@
                         <button style="background: var(--bg-0); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); color: var(--text-secondary); cursor: pointer; font-size: var(--text-sm); transition: all 0.2s;" onmouseover="this.style.borderColor='var(--amber-500)'; this.style.color='var(--text-primary)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.color='var(--text-secondary)'" onclick="alert('Session restart coming soon')">🔄 Restart Session</button>
                     </div>
                 </div>
-
+                
                 <!-- Chunk 5: System Status Footer -->
                 <div style="background: var(--bg-1); border-radius: var(--radius-lg); padding: var(--space-5);">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -1209,17 +1226,17 @@
                 </div>
             `;
         }
-
+        
         // Model card HTML generator
         function getModelCardHTML(model, avgCost, quality, overall, tasks) {
             // Handle both number and string costs
             const costNum = typeof avgCost === 'number' ? avgCost : parseFloat(avgCost.toString().replace(/[^0-9.]/g, '')) || 0;
             const costEfficiency = quality / (costNum * 100 + 1);
             const stars = Math.min(Math.round(costEfficiency), 5);
-
+            
             // Format cost display
             const costDisplay = typeof avgCost === 'string' ? avgCost : `$${avgCost.toFixed(2)}`;
-
+            
             return `
                 <div onclick="showModelDetail('${model}')" style="background: var(--bg-1); border-radius: var(--radius-lg); padding: var(--space-5); cursor: pointer; transition: transform 0.2s; border: 1px solid transparent;" onmouseover="this.style.borderColor='var(--amber-500)'" onmouseout="this.style.borderColor='transparent'">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
@@ -1252,10 +1269,10 @@
                 </div>
             `;
         }
-
+        
         function renderMindTab() {
             const mind = cognitionData.mind || {};
-
+            
             // Safety check
             if (!mind.skill_network || !mind.decisions) {
                 console.error('MIND tab: Missing data', mind);
@@ -1266,14 +1283,14 @@
                     </div>
                 `;
             }
-
+            
             // Render skill network after DOM update
             setTimeout(() => {
                 if (mind.skill_network && mind.skill_network.nodes) {
                     renderSkillNetwork(mind.skill_network.nodes);
                 }
             }, 0);
-
+            
             return `
                 <div class="state-hero">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -1355,7 +1372,7 @@
                                 <div style="font-size: var(--text-sm); color: var(--text-secondary);">${mind.decisions.escalated.quality}% quality</div>
                             </div>
                         </div>
-
+                        
                         <!-- Decision Stats Summary -->
                         <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); margin-bottom: var(--space-5);">
                             <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-bottom: var(--space-3);">Decision History</div>
@@ -1374,15 +1391,15 @@
                                 </div>
                             </div>
                         </div>
-
+                        
                         <!-- Decision Pattern Note -->
                         <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); margin-bottom: var(--space-5); border-left: 3px solid var(--amber-500);">
                             <div style="font-size: var(--text-sm); color: var(--text-secondary);">
-                                <strong>Note:</strong> Decision quality metrics are manually assessed.
+                                <strong>Note:</strong> Decision quality metrics are manually assessed. 
                                 Autonomy rate calculated from recent session history.
                             </div>
                         </div>
-
+                        
                         <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-bottom: var(--space-3); text-transform: uppercase; letter-spacing: 0.05em;">Recent Examples</div>
                         ${mind.decisions.examples.map(ex => `
                             <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); margin-bottom: var(--space-3); border-left: 3px solid ${ex.type === 'autonomous' ? 'var(--success)' : 'var(--amber-500)'};">
@@ -1403,14 +1420,14 @@
                             </div>
                         `).join('')}
                     </div>
-
+                    
                     <!-- Cognitive Load Monitor -->
                     <div class="card card-full">
                         <div class="section-header">
                             <span class="section-title">Cognitive Load</span>
                             <span style="font-size: var(--text-sm); color: var(--text-secondary);">Real-time system status</span>
                         </div>
-
+                        
                         <!-- Context Window -->
                         <div style="margin-bottom: var(--space-5);">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
@@ -1422,10 +1439,10 @@
                             </div>
                             <div style="display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-sm);">
                                 <span style="color: var(--success);">● Healthy</span>
-                                <span style="color: var(--text-tertiary);">- Within normal range</span>
+                                <span style="color: var(--text-tertiary);">— Within normal range</span>
                             </div>
                         </div>
-
+                        
                         <!-- Active Threads -->
                         <div style="margin-bottom: var(--space-5);">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
@@ -1439,10 +1456,10 @@
                             </div>
                             <div style="display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-sm);">
                                 <span style="color: var(--success);">● Manageable</span>
-                                <span style="color: var(--text-tertiary);">- Processing normally</span>
+                                <span style="color: var(--text-tertiary);">— Processing normally</span>
                             </div>
                         </div>
-
+                        
                         <!-- Attention Focus -->
                         <div style="margin-bottom: var(--space-5);">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
@@ -1456,7 +1473,7 @@
                                 Currently focused on: <strong>Dashboard MIND tab enhancements</strong>
                             </div>
                         </div>
-
+                        
                         <!-- Intervention Panel (shown when needed) -->
                         <div style="background: linear-gradient(135deg, rgba(224,145,42,0.1) 0%, rgba(20,20,20,0.5) 100%); border: 1px solid rgba(224,145,42,0.3); border-radius: var(--radius-lg); padding: var(--space-5);">
                             <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-3);">
@@ -1480,18 +1497,18 @@
                             </div>
                         </div>
                     </div>
-
+                    
                     <!-- Pattern Recognition Backlog -->
                     <div class="card card-full">
                         <div class="section-header">
                             <span class="section-title">Patterns Detected</span>
                             <span style="font-size: var(--text-sm); color: var(--text-secondary);">Claw has noticed</span>
                         </div>
-
+                        
                         <!-- Active Patterns -->
                         <div style="margin-bottom: var(--space-5);">
                             <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-bottom: var(--space-3); text-transform: uppercase; letter-spacing: 0.05em;">Active (3)</div>
-
+                            
                             <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); margin-bottom: var(--space-3); border-left: 3px solid var(--success);">
                                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-2);">
                                     <div>
@@ -1500,9 +1517,9 @@
                                     </div>
                                     <span style="font-size: var(--text-xs); color: var(--text-tertiary);">Detected 2 days ago</span>
                                 </div>
-                                <div style="font-size: var(--text-xs); color: var(--amber-400);">Used in dashboard rebuild - effective</div>
+                                <div style="font-size: var(--text-xs); color: var(--amber-400);">Used in dashboard rebuild — effective</div>
                             </div>
-
+                            
                             <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); margin-bottom: var(--space-3); border-left: 3px solid var(--amber-500);">
                                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-2);">
                                     <div>
@@ -1513,7 +1530,7 @@
                                 </div>
                                 <div style="font-size: var(--text-xs); color: var(--amber-400);">Recommendation: Consider stopping at 6pm</div>
                             </div>
-
+                            
                             <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); margin-bottom: var(--space-3); border-left: 3px solid var(--amber-500);">
                                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-2);">
                                     <div>
@@ -1525,7 +1542,7 @@
                                 <div style="font-size: var(--text-xs); color: var(--amber-400);">Applied in current session</div>
                             </div>
                         </div>
-
+                        
                         <!-- Archive Toggle -->
                         <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: var(--space-4);">
                             <button onclick="togglePatternArchive()" style="background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: var(--text-sm); display: flex; align-items: center; gap: var(--space-2); width: 100%; justify-content: space-between;">
@@ -1534,32 +1551,32 @@
                             </button>
                             <div id="patternArchive" style="display: none; margin-top: var(--space-4);">
                                 <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-bottom: var(--space-3);">Archived (no longer active or validated)</div>
-
+                                
                                 <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); margin-bottom: var(--space-2); opacity: 0.7;">
                                     <div style="font-size: var(--text-sm); color: var(--text-secondary);">Morning vs evening code quality</div>
-                                    <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Archived: 2 weeks ago - pattern faded</div>
+                                    <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Archived: 2 weeks ago — pattern faded</div>
                                 </div>
-
+                                
                                 <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); margin-bottom: var(--space-2); opacity: 0.7;">
                                     <div style="font-size: var(--text-sm); color: var(--text-secondary);">Preference for dark themes</div>
-                                    <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Archived: 1 month ago - validated, now standard</div>
+                                    <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Archived: 1 month ago — validated, now standard</div>
                                 </div>
-
+                                
                                 <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); margin-bottom: var(--space-2); opacity: 0.7;">
                                     <div style="font-size: var(--text-sm); color: var(--text-secondary);">Escalation rate on Fridays</div>
-                                    <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Archived: 3 weeks ago - no longer observed</div>
+                                    <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Archived: 3 weeks ago — no longer observed</div>
                                 </div>
-
+                                
                                 <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-align: center; margin-top: var(--space-3);">+ 9 more archived</div>
                             </div>
                         </div>
                     </div>
-
+                    
                     ${getBenchmarkHTML()}
                 </div>
             `;
         }
-
+        
         function showFileDetail(file) {
             const panel = document.getElementById('fileDetailPanel');
             const details = {
@@ -1585,13 +1602,13 @@
                     title: 'AGENTS.md',
                     content: 'System protocols and operational guidelines',
                     keyPoints: ['Session-start protocol', 'Model routing rules', 'Budget discipline'],
-                    lastUsed: '5 days ago - needs review'
+                    lastUsed: '5 days ago — needs review'
                 }
             };
-
+            
             const d = details[file];
             if (!d) return;
-
+            
             panel.style.display = 'block';
             panel.innerHTML = `
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
@@ -1606,7 +1623,7 @@
                 <div style="font-size: var(--text-xs); color: var(--amber-400);">Last referenced: ${d.lastUsed}</div>
             `;
         }
-
+        
         function showCapabilityDetail(capability) {
             const panel = document.getElementById('capabilityDetailPanel');
             const details = {
@@ -1615,21 +1632,21 @@
                     status: 'Mastered',
                     evidence: 'Used structured-workflow → impeccable → implementation chain 12 times this week',
                     examples: ['Dashboard v6.0 rebuild', 'Thermal predator design system', 'Model routing decisions'],
-                    nextLevel: 'Already at target - maintain consistency'
+                    nextLevel: 'Already at target — maintain consistency'
                 },
                 'model-routing': {
                     title: 'Model Routing',
                     status: 'Mastered',
                     evidence: '85% quality, $0.06 avg cost per task across 45 decisions',
                     examples: ['Opus for design', 'Sonnet for content', 'Kimi for implementation'],
-                    nextLevel: 'Already at target - maintain consistency'
+                    nextLevel: 'Already at target — maintain consistency'
                 },
                 'proactive-escalation': {
                     title: 'Proactive Escalation',
                     status: 'Mastered',
                     evidence: 'Said "I\'m stuck" 3 times instead of going silent when blocked',
                     examples: ['Tab content bug', 'Design direction uncertainty', 'Integration failure'],
-                    nextLevel: 'Already at target - maintain consistency'
+                    nextLevel: 'Already at target — maintain consistency'
                 },
                 'edge-discovery': {
                     title: 'Edge Discovery',
@@ -1643,13 +1660,13 @@
                     status: 'In Progress',
                     evidence: '45% autonomous rate, stuck for 3 weeks',
                     examples: ['Dashboard architecture', 'Skill network design', 'Model card layout'],
-                    nextLevel: 'Target: 80% - deploy 3 autonomous decisions this week'
+                    nextLevel: 'Target: 80% — deploy 3 autonomous decisions this week'
                 }
             };
-
+            
             const d = details[capability];
             if (!d) return;
-
+            
             panel.style.display = 'block';
             panel.innerHTML = `
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
@@ -1672,11 +1689,11 @@
             `;
             panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
-
+        
         function showBlockerDetail(blocker) {
             const marcoPanel = document.getElementById('marcoBlockerDetail');
             const clawPanel = document.getElementById('clawBlockerDetail');
-
+            
             if (blocker === 'marco-edge') {
                 marcoPanel.style.display = marcoPanel.style.display === 'none' ? 'block' : 'none';
                 clawPanel.style.display = 'none';
@@ -1685,7 +1702,7 @@
                 marcoPanel.style.display = 'none';
             }
         }
-
+        
         function togglePatternArchive() {
             const archive = document.getElementById('patternArchive');
             const arrow = document.getElementById('archiveArrow');
@@ -1697,7 +1714,7 @@
                 arrow.textContent = '▼';
             }
         }
-
+        
         // Comparative Benchmarks
         function getBenchmarkHTML() {
             const benchmarks = [
@@ -1730,14 +1747,14 @@
                     status: 'ahead'
                 }
             ];
-
+            
             return `
                 <div class="card card-full">
                     <div class="section-header">
                         <span class="section-title">Progress to Targets</span>
                         <span style="font-size: var(--text-sm); color: var(--text-secondary);">Where I am vs. where I need to be</span>
                     </div>
-
+                    
                     ${benchmarks.map(b => `
                         <div style="margin-bottom: var(--space-5);">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
@@ -1768,14 +1785,14 @@
                 </div>
             `;
         }
-
+        
         function renderMemoryTab() {
             const memory = cognitionData.memory || {};
             const working = memory.working || { loaded_files: [], session_history: '', compression_ratio: 0 };
             const long_term = memory.long_term || { lessons: [] };
             const recent_failures = memory.recent_failures || [];
             const recall = memory.recall || { remembered: 0, forgot: 0, accuracy: 0, totalLines: 0, lessonCount: 0 };
-
+            
             return `
                 <div class="state-hero">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -1788,7 +1805,7 @@
                         </div>
                     </div>
                 </div>
-
+                
                 <!-- Chunk 1: Memory Health Dashboard - LIVE DATA -->
                 <div class="card card-full" style="margin-bottom: var(--space-5);">
                     <div class="section-header">
@@ -1809,7 +1826,7 @@
                             </div>
                             <div style="font-size: var(--text-xs); color: var(--text-tertiary);">SOUL.md, MEMORY.md, USER.md, AGENTS.md</div>
                         </div>
-
+                        
                         <!-- Long-term Recall -->
                         <div>
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
@@ -1823,7 +1840,7 @@
                             </div>
                             <div style="font-size: var(--text-xs); color: var(--text-tertiary);">From MEMORY.md critical lessons</div>
                         </div>
-
+                        
                         <!-- File Stats -->
                         <div>
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
@@ -1839,7 +1856,7 @@
                         </div>
                     </div>
                 </div>
-
+                
                 <!-- Chunk 2: Active Memories -->
                 <div class="card card-full" style="margin-bottom: var(--space-5);">
                     <div class="section-header">
@@ -1854,7 +1871,7 @@
                             </div>
                             <div style="font-size: var(--text-sm); color: var(--text-secondary);">Identity & principles</div>
                         </div>
-
+                        
                         <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--success);">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
                                 <span style="font-weight: 600;">MEMORY.md</span>
@@ -1862,7 +1879,7 @@
                             </div>
                             <div style="font-size: var(--text-sm); color: var(--text-secondary);">Lessons & knowledge</div>
                         </div>
-
+                        
                         <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--success);">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
                                 <span style="font-weight: 600;">USER.md</span>
@@ -1870,7 +1887,7 @@
                             </div>
                             <div style="font-size: var(--text-sm); color: var(--text-secondary);">Marco's profile</div>
                         </div>
-
+                        
                         <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--amber-500);">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
                                 <span style="font-weight: 600;">AGENTS.md</span>
@@ -1880,7 +1897,7 @@
                         </div>
                     </div>
                 </div>
-
+                
                 <!-- Chunk 3: Critical Memories - LIVE DATA from MEMORY.md -->
                 <div class="card card-full" style="margin-bottom: var(--space-5);">
                     <div class="section-header">
@@ -1904,12 +1921,12 @@
                         </div>
                     ` : ''}
                 </div>
-
+                
                 <!-- Chunk 4: Memory Gaps -->
                 <div class="card card-full" style="margin-bottom: var(--space-5);">
                     <div class="section-header">
                         <span class="section-title">Memory Gaps</span>
-                        <span style="font-size: var(--text-sm); color: var(--text-secondary);">Recent failures - honest assessment</span>
+                        <span style="font-size: var(--text-sm); color: var(--text-secondary);">Recent failures — honest assessment</span>
                     </div>
                     ${recent_failures.map(f => `
                         <div style="background: rgba(248,113,113,0.05); border: 1px solid rgba(248,113,113,0.2); border-radius: var(--radius-md); padding: var(--space-4); margin-bottom: var(--space-3);">
@@ -1924,7 +1941,7 @@
                         </div>
                     `).join('')}
                 </div>
-
+                
                 <!-- Chunk 5 & 6: Search and Timeline (simplified) -->
                 <div class="cards-grid">
                     <div class="card">
@@ -1939,7 +1956,7 @@
                             <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: var(--bg-1); border-radius: var(--radius-full); color: var(--text-secondary);">Marco preferences</span>
                         </div>
                     </div>
-
+                    
                     <div class="card">
                         <div class="section-header">
                             <span class="section-title">Memory Timeline</span>
@@ -1966,10 +1983,10 @@
                 </div>
             `;
         }
-
+        
         function renderTrainingTab() {
             const training = cognitionData.training;
-
+            
             return `
                 <!-- Chunk 1: Training Status Hero - LIVE DATA -->
                 <div class="state-hero">
@@ -2004,7 +2021,7 @@
                         </div>
                     </div>
                 </div>
-
+                
                 <div class="cards-grid">
                     <!-- Chunk 2: Capabilities Matrix - LIVE DATA -->
                     <div class="card card-full">
@@ -2021,20 +2038,20 @@
                                     <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Click for details →</div>
                                 </div>
                             `).join('')}
-
+                            
                             <!-- In Progress Capabilities -->
                             <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); border-left: 3px solid var(--amber-500); cursor: pointer; min-width: 0;" onclick="showCapabilityDetail('edge-discovery')">
                                 <div style="font-weight: 600; font-size: var(--text-sm); margin-bottom: var(--space-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Edge Discovery</div>
                                 <div style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(224,145,42,0.2); color: var(--amber-400); border-radius: var(--radius-full); display: inline-block; margin-bottom: var(--space-2);">⚠ In Progress</div>
                                 <div style="font-size: var(--text-xs); color: var(--amber-400);">Need 3 edges →</div>
                             </div>
-
+                            
                             <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); border-left: 3px solid var(--amber-500); cursor: pointer; min-width: 0;" onclick="showCapabilityDetail('autonomous-decisions')">
                                 <div style="font-weight: 600; font-size: var(--text-sm); margin-bottom: var(--space-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Autonomous Decisions</div>
                                 <div style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(224,145,42,0.2); color: var(--amber-400); border-radius: var(--radius-full); display: inline-block; margin-bottom: var(--space-2);">⚠ In Progress</div>
                                 <div style="font-size: var(--text-xs); color: var(--amber-400);">Currently ${Math.round((training.blockers?.find(b => b.title.includes('Autonomy'))?.days_open || 0) / 7)} weeks</div>
                             </div>
-
+                            
                             <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); border-left: 3px solid var(--text-tertiary); opacity: 0.6; min-width: 0;">
                                 <div style="font-weight: 600; font-size: var(--text-sm); margin-bottom: var(--space-2); color: var(--text-tertiary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Live Trading</div>
                                 <div style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(100,100,100,0.2); color: var(--text-tertiary); border-radius: var(--radius-full); display: inline-block; margin-bottom: var(--space-2);">🔒 Locked</div>
@@ -2043,7 +2060,7 @@
                         </div>
                         <div id="capabilityDetailPanel" style="display: none; margin-top: var(--space-4); background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-5); border-left: 3px solid var(--amber-500);"></div>
                     </div>
-
+                    
                     <!-- Chunk 3: Blockers Kanban -->
                     <div class="card">
                         <div class="section-header">
@@ -2073,7 +2090,7 @@
                             <div style="font-size: var(--text-xs); color: var(--amber-400);">Priority: HIGH | Blocks: Edge Validation milestone</div>
                         </div>
                     </div>
-
+                    
                     <div class="card">
                         <div class="section-header">
                             <span class="section-title">Claw's Blockers</span>
@@ -2102,7 +2119,7 @@
                             <div style="font-size: var(--text-xs); color: var(--amber-400);">Priority: HIGH | Target: 60% by Week 12</div>
                         </div>
                     </div>
-
+                    
                     <!-- Chunk 4: Milestones Timeline -->
                     <div class="card card-full">
                         <div class="section-header">
@@ -2137,7 +2154,7 @@
                             </div>
                         </div>
                     </div>
-
+                    
                     <!-- Chunk 5: Active Blockers Summary -->
                     <div class="card card-full">
                         <div class="section-header">
@@ -2164,10 +2181,10 @@
                 </div>
             `;
         }
-
+        
         function renderTradingTab() {
             const trading = cognitionData.system.trading;
-
+            
             return `
                 <div class="state-hero">
                     <div class="state-headline">Trading Performance</div>
@@ -2199,7 +2216,7 @@
                     <div class="thought-header">Trading Insights</div>
                     <div class="thought-item">
                         <div class="thought-label">Status</div>
-                        <div class="thought-value">Paper trading - no live capital</div>
+                        <div class="thought-value">Paper trading — no live capital</div>
                     </div>
                     <div class="thought-item">
                         <div class="thought-label">Focus</div>
@@ -2212,10 +2229,10 @@
                 </div>
             `;
         }
-
+        
         function renderSystemTab() {
             const insights = cognitionData.system;
-
+            
             return `
                 <div class="state-hero">
                     <div class="state-headline">System Infrastructure</div>
@@ -2244,7 +2261,7 @@
                             <span class="section-title">Tool Capabilities</span>
                             <span style="font-size: var(--text-sm); color: var(--text-secondary);">Tools available in environment</span>
                         </div>
-
+                        
                         <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3);">
                             <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4);">
                                 <div style="font-weight: 600; margin-bottom: var(--space-2);">Git CLI</div>
@@ -2274,7 +2291,7 @@
                                 </div>
                             </div>
                         </div>
-
+                        
                         <!-- Integration Capabilities -->
                         <div>
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
@@ -2323,16 +2340,16 @@
                                 </div>
                             </div>
                         </div>
-
+                        
                         <div id="envSkillDetailPanel" style="display: none; margin-top: var(--space-4); background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-5); border-left: 3px solid var(--amber-500);"></div>
                     </div>
                     <!-- Chunk 3: Resource Utilization - LIVE DATA (Placeholder for OpenRouter API) -->
                     <div class="card card-full">
                         <div class="section-header">
                             <span class="section-title">Resource Utilization</span>
-                            <span style="font-size: var(--text-sm); color: var(--amber-400);">⚠ Placeholder - Connect OpenRouter API</span>
+                            <span style="font-size: var(--text-sm); color: var(--amber-400);">⚠ Placeholder — Connect OpenRouter API</span>
                         </div>
-
+                        
                         <div style="margin-bottom: var(--space-5);">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
                                 <div>
@@ -2349,7 +2366,7 @@
                             </div>
                             <div style="font-size: var(--text-xs); color: var(--text-tertiary);">${Math.round((insights.resources?.monthly_spend || 12.45) / (insights.resources?.budget || 100) * 100)}% used this month</div>
                         </div>
-
+                        
                         <div style="margin-bottom: var(--space-4);">
                             <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-bottom: var(--space-3); text-transform: uppercase; letter-spacing: 0.05em;">Model Spend Breakdown</div>
                             ${Object.entries(insights.resources?.model_breakdown || {
@@ -2367,16 +2384,16 @@
                                 </div>
                             `).join('')}
                         </div>
-
+                        
                         <div style="background: rgba(224,145,42,0.1); border: 1px solid rgba(224,145,42,0.3); border-radius: var(--radius-md); padding: var(--space-4); margin-top: var(--space-4);">
                             <div style="font-size: var(--text-sm); color: var(--amber-400); margin-bottom: var(--space-2);">⚠ OpenRouter API Key Required</div>
                             <div style="font-size: var(--text-xs); color: var(--text-secondary);">
-                                To show live spend data, add your OpenRouter API key to DataBridge.fetchOpenRouterCredits().
+                                To show live spend data, add your OpenRouter API key to DataBridge.fetchOpenRouterCredits(). 
                                 Current values are calculated from recent model routing history.
                             </div>
                         </div>
                     </div>
-
+                    
                     <!-- Chunk 2: Gateway Health - LIVE DATA -->
                     <div class="card card-full">
                         <div class="section-header">
@@ -2405,14 +2422,14 @@
                             <span style="color: var(--amber-400);">⚠</span> Live latency checks may be blocked by CORS. Fallback to estimated values when needed.
                         </div>
                     </div>
-
+                    
                     <!-- Chunk 4: Core Files Deep Dive -->
                     <div class="card card-full">
                         <div class="section-header">
                             <span class="section-title">Core Files</span>
                             <span style="font-size: var(--text-sm); color: var(--text-secondary);">Health & access patterns</span>
                         </div>
-
+                        
                         <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3);">
                             <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--success);">
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
@@ -2426,7 +2443,7 @@
                                     <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: var(--bg-0); border-radius: var(--radius-md); color: var(--text-secondary); cursor: pointer;">History</span>
                                 </div>
                             </div>
-
+                            
                             <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--success);">
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
                                     <span style="font-weight: 600;">MEMORY.md</span>
@@ -2439,7 +2456,7 @@
                                     <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: var(--bg-0); border-radius: var(--radius-md); color: var(--text-secondary); cursor: pointer;">History</span>
                                 </div>
                             </div>
-
+                            
                             <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--amber-500);">
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
                                     <span style="font-weight: 600;">AGENTS.md</span>
@@ -2452,7 +2469,7 @@
                                     <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: var(--bg-0); border-radius: var(--radius-md); color: var(--text-secondary); cursor: pointer;">Mark current</span>
                                 </div>
                             </div>
-
+                            
                             <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--danger);">
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
                                     <span style="font-weight: 600;">USER.md</span>
@@ -2466,14 +2483,14 @@
                             </div>
                         </div>
                     </div>
-
+                    
                     <!-- Chunk 5: Dependency Map -->
                     <div class="card card-full">
                         <div class="section-header">
                             <span class="section-title">Dependency Map</span>
                             <span style="font-size: var(--text-sm); color: var(--text-secondary);">What I depend on</span>
                         </div>
-
+                        
                         <div style="display: flex; justify-content: center; align-items: center; padding: var(--space-6);">
                             <svg viewBox="0 0 400 300" style="width: 100%; max-width: 400px; height: auto;">
                                 <!-- Connections -->
@@ -2481,31 +2498,31 @@
                                 <line x1="200" y1="80" x2="300" y2="150" stroke="rgba(224,145,42,0.4)" stroke-width="2"/>
                                 <line x1="100" y1="150" x2="200" y2="220" stroke="rgba(224,145,42,0.4)" stroke-width="2"/>
                                 <line x1="300" y1="150" x2="200" y2="220" stroke="rgba(224,145,42,0.4)" stroke-width="2"/>
-
+                                
                                 <!-- Claw (Center) -->
                                 <circle cx="200" cy="80" r="35" fill="rgba(224,145,42,0.3)" stroke="var(--amber-500)" stroke-width="2"/>
                                 <text x="200" y="85" text-anchor="middle" fill="var(--text-primary)" font-size="14" font-weight="600">Claw</text>
-
+                                
                                 <!-- OpenRouter -->
                                 <circle cx="100" cy="150" r="30" fill="rgba(74,222,128,0.2)" stroke="var(--success)" stroke-width="2"/>
                                 <text x="100" y="145" text-anchor="middle" fill="var(--text-primary)" font-size="11">Open</text>
                                 <text x="100" y="158" text-anchor="middle" fill="var(--text-primary)" font-size="11">Router</text>
-
+                                
                                 <!-- GitHub -->
                                 <circle cx="300" cy="150" r="30" fill="rgba(74,222,128,0.2)" stroke="var(--success)" stroke-width="2"/>
                                 <text x="300" y="155" text-anchor="middle" fill="var(--text-primary)" font-size="11">GitHub</text>
-
+                                
                                 <!-- File System -->
                                 <circle cx="150" cy="220" r="30" fill="rgba(74,222,128,0.2)" stroke="var(--success)" stroke-width="2"/>
                                 <text x="150" y="215" text-anchor="middle" fill="var(--text-primary)" font-size="11">File</text>
                                 <text x="150" y="228" text-anchor="middle" fill="var(--text-primary)" font-size="11">System</text>
-
+                                
                                 <!-- Telegram -->
                                 <circle cx="250" cy="220" r="30" fill="rgba(74,222,128,0.2)" stroke="var(--success)" stroke-width="2"/>
                                 <text x="250" y="225" text-anchor="middle" fill="var(--text-primary)" font-size="11">Telegram</text>
                             </svg>
                         </div>
-
+                        
                         <div style="display: flex; justify-content: center; gap: var(--space-4); flex-wrap: wrap;">
                             <div style="display: flex; align-items: center; gap: var(--space-2);">
                                 <div style="width: 12px; height: 12px; border-radius: 50%; background: var(--success);"></div>
@@ -2521,60 +2538,60 @@
                             </div>
                         </div>
                     </div>
-
+                    
                     <!-- Chunk 6: System Notes -->
                     <div class="card card-full">
                         <div class="section-header">
                             <span class="section-title">System Notes</span>
                             <span style="font-size: var(--text-sm); color: var(--text-secondary);">Data accuracy & limitations</span>
                         </div>
-
+                        
                         <div style="background: rgba(224,145,42,0.1); border: 1px solid rgba(224,145,42,0.3); border-radius: var(--radius-md); padding: var(--space-4);">
                             <div style="font-size: var(--text-sm); color: var(--amber-400); margin-bottom: var(--space-2);">⚠ Performance Metrics Not Available</div>
                             <div style="font-size: var(--text-sm); color: var(--text-secondary);">
-                                Response time, throughput, and error rate tracking require instrumentation not currently implemented.
+                                Response time, throughput, and error rate tracking require instrumentation not currently implemented. 
                                 Gateway health shows live API status with latency measurements where available.
                             </div>
                         </div>
                     </div>
-
+                    
                     <!-- Chunk 8: Environment -->
                     <div class="card card-full">
                         <div class="section-header">
                             <span class="section-title">Environment</span>
                             <span style="font-size: var(--text-sm); color: var(--text-secondary);">Execution context</span>
                         </div>
-
+                        
                         <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3);">
                             <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4);">
                                 <div style="font-weight: 600; margin-bottom: var(--space-2);">File System</div>
                                 <div style="font-size: var(--text-sm); color: var(--text-secondary);">Workspace directory access</div>
                             </div>
-
+                            
                             <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4);">
                                 <div style="font-weight: 600; margin-bottom: var(--space-2);">Network</div>
                                 <div style="font-size: var(--text-sm); color: var(--text-secondary);">API and Git access</div>
                             </div>
-
+                            
                             <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4);">
                                 <div style="font-weight: 600; margin-bottom: var(--space-2);">Execution</div>
                                 <div style="font-size: var(--text-sm); color: var(--text-secondary);">Sandboxed with approval</div>
                             </div>
-
+                            
                             <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4);">
                                 <div style="font-weight: 600; margin-bottom: var(--space-2);">Git Repository</div>
                                 <div style="font-size: var(--text-sm); color: var(--text-secondary);">Connected to GitHub</div>
                             </div>
                         </div>
                     </div>
-
+                    
                     <!-- Chunk 9: Git Status -->
                     <div class="card card-full">
                         <div class="section-header">
                             <span class="section-title">Git Status</span>
                             <span style="font-size: var(--text-sm); color: var(--text-secondary);">Repository state</span>
                         </div>
-
+                        
                         <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3);">
                             <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4);">
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
@@ -2583,7 +2600,7 @@
                                 </div>
                                 <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Last: Today 02:00 [Auto]</div>
                             </div>
-
+                            
                             <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4);">
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
                                     <span style="font-weight: 600;">Session History</span>
@@ -2591,7 +2608,7 @@
                                 </div>
                                 <div style="font-size: var(--text-xs); color: var(--text-tertiary);">35 sessions archived</div>
                             </div>
-
+                            
                             <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4);">
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
                                     <span style="font-weight: 600;">Git Repository</span>
@@ -2600,7 +2617,7 @@
                                 <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Last push: 5 min ago</div>
                             </div>
                         </div>
-
+                        
                         <div style="background: rgba(224,145,42,0.1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--amber-500);">
                             <div style="display: flex; align-items: center; gap: var(--space-3);">
                                 <span style="font-size: var(--text-2xl);">💾</span>
@@ -2614,7 +2631,7 @@
                 </div>
             `;
         }
-
+        
         function showSkillDetail(skill) {
             const skills = {
                 'git-cli': {
@@ -2646,10 +2663,10 @@
                     improvement: 'Systematic network troubleshooting'
                 }
             };
-
+            
             const s = skills[skill];
             if (!s) return;
-
+            
             const panel = document.getElementById('envSkillDetailPanel');
             panel.style.display = 'block';
             panel.innerHTML = `
@@ -2680,7 +2697,7 @@
                 </div>
             `;
         }
-
+        
         function showModelDetail(model) {
             const capabilities = {
                 'Opus 4.6': {
@@ -2722,10 +2739,10 @@
                     stats: { totalSpent: 0, tasksRouted: 45, avgQuality: 88 }
                 }
             };
-
+            
             const cap = capabilities[model];
             if (!cap) return;
-
+            
             const panel = document.getElementById('modelDetailPanel');
             panel.style.display = 'block';
             panel.innerHTML = `
@@ -2747,7 +2764,7 @@
                         <div style="font-family: var(--font-mono); font-size: var(--text-2xl); font-weight: 700; color: var(--success);">${cap.stats.avgQuality}%</div>
                     </div>
                 </div>
-
+                
                 ${cap.excellent.length > 0 ? `
                     <div style="margin-bottom: var(--space-4);">
                         <div style="font-size: var(--text-sm); color: var(--success); margin-bottom: var(--space-2); text-transform: uppercase; letter-spacing: 0.05em;">✓ Excellent At</div>
@@ -2760,7 +2777,7 @@
                         `).join('')}
                     </div>
                 ` : ''}
-
+                
                 ${cap.good.length > 0 ? `
                     <div style="margin-bottom: var(--space-4);">
                         <div style="font-size: var(--text-sm); color: var(--amber-400); margin-bottom: var(--space-2); text-transform: uppercase; letter-spacing: 0.05em;">◈ Good At</div>
@@ -2773,7 +2790,7 @@
                         `).join('')}
                     </div>
                 ` : ''}
-
+                
                 ${cap.poor.length > 0 ? `
                     <div>
                         <div style="font-size: var(--text-sm); color: var(--danger); margin-bottom: var(--space-2); text-transform: uppercase; letter-spacing: 0.05em;">✗ Avoid For</div>
@@ -2787,64 +2804,64 @@
                     </div>
                 ` : ''}
             `;
-
+            
             panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
-
+        
         // Skill Network Visualization - Simplified Clean Layout
         let skillNetworkSimulation = null;
-
+        
         function renderSkillNetwork(nodes) {
             const container = document.getElementById('skillNetworkViz');
             if (!container || !window.d3) {
                 container.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: var(--text-tertiary);">Loading...</div>';
                 return;
             }
-
+            
             // Stop previous simulation
             if (skillNetworkSimulation) {
                 skillNetworkSimulation.stop();
             }
-
+            
             const width = container.clientWidth;
             const height = 400;
             const centerX = width / 2;
             const centerY = height / 2;
-
+            
             // Clear container
             container.innerHTML = '';
-
+            
             // Calculate optimal radius based on screen size
             const isFullscreen = width > 1400;
             const baseRadius = isFullscreen ? Math.min(width, height) * 0.35 : 120;
-
+            
             // Group by category (only show 4 main categories to reduce clutter)
             const mainCategories = ['core', 'design', 'ml', 'workflow'];
             const categoryColors = {
                 'core': '#4ade80',
-                'design': '#fbbf24',
+                'design': '#fbbf24', 
                 'ml': '#a78bfa',
                 'workflow': '#22d3ee',
                 'other': '#94a3b8'
             };
-
+            
             // Simplify nodes - group lesser skills as "other"
             const simplifiedNodes = nodes.map(n => ({
                 ...n,
                 displayCategory: mainCategories.includes(n.category) ? n.category : 'other',
                 displayName: n.id.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
             }));
-
+            
             // Create SVG
             const svg = d3.select('#skillNetworkViz')
                 .append('svg')
                 .attr('width', width)
                 .attr('height', height)
                 .attr('viewBox', `0 0 ${width} ${height}`);
-
+            
             // Static radial layout (no force simulation for cleaner look)
             const centerNode = { x: centerX, y: centerY, r: 25, label: 'Claw', color: '#e0912a' };
-
+            
             // Position skills in a clean circle
             const skillNodes = simplifiedNodes.map((node, i) => {
                 const angle = (i / simplifiedNodes.length) * 2 * Math.PI - Math.PI / 2;
@@ -2857,7 +2874,7 @@
                     color: categoryColors[node.displayCategory] || categoryColors.other
                 };
             });
-
+            
             // Draw subtle connection lines
             svg.selectAll('.connection')
                 .data(skillNodes)
@@ -2870,7 +2887,7 @@
                 .attr('y2', d => d.y)
                 .attr('stroke', 'rgba(148,163,184,0.1)')
                 .attr('stroke-width', 1);
-
+            
             // Draw center node
             svg.append('circle')
                 .attr('cx', centerX)
@@ -2879,7 +2896,7 @@
                 .attr('fill', centerNode.color)
                 .attr('stroke', 'var(--bg-0)')
                 .attr('stroke-width', 3);
-
+            
             svg.append('text')
                 .attr('x', centerX)
                 .attr('y', centerY + 5)
@@ -2888,7 +2905,7 @@
                 .attr('font-size', '12px')
                 .attr('font-weight', '700')
                 .text('Claw');
-
+            
             // Draw skill nodes
             const nodeGroups = svg.selectAll('.skill-node')
                 .data(skillNodes)
@@ -2897,7 +2914,7 @@
                 .attr('class', 'skill-node')
                 .style('cursor', 'pointer')
                 .on('click', (event, d) => showSkillDetail(d.id));
-
+            
             // Node circles
             nodeGroups.append('circle')
                 .attr('cx', d => d.x)
@@ -2913,7 +2930,7 @@
                 .on('mouseout', function() {
                     d3.select(this).attr('opacity', 0.9).attr('stroke-width', 2);
                 });
-
+            
             // Usage number inside node
             nodeGroups.append('text')
                 .attr('x', d => d.x)
@@ -2923,7 +2940,7 @@
                 .attr('font-size', d => d.r > 15 ? '10px' : '8px')
                 .attr('font-weight', '600')
                 .text(d => d.usage);
-
+            
             // Labels outside nodes (only for larger screens or high-usage skills)
             nodeGroups.filter(d => d.usage > 5 || isFullscreen)
                 .append('text')
@@ -2933,18 +2950,18 @@
                 .attr('fill', 'var(--text-secondary)')
                 .attr('font-size', '10px')
                 .text(d => d.displayName.length > 12 ? d.displayName.substring(0, 12) + '...' : d.displayName);
-
+            
             // Legend
             const legend = svg.append('g')
                 .attr('transform', `translate(${width - 100}, 20)`);
-
+            
             Object.entries(categoryColors).forEach(([cat, color], i) => {
                 legend.append('circle')
                     .attr('cx', 0)
                     .attr('cy', i * 20)
                     .attr('r', 6)
                     .attr('fill', color);
-
+                
                 legend.append('text')
                     .attr('x', 12)
                     .attr('y', i * 20 + 4)
@@ -2952,14 +2969,14 @@
                     .attr('font-size', '10px')
                     .text(cat.charAt(0).toUpperCase() + cat.slice(1));
             });
-
+            
             // Store data
             window.skillNetworkData = {};
             nodes.forEach(node => {
                 window.skillNetworkData[node.id] = node;
             });
         }
-
+        
         // Handle resize
         let resizeTimeout;
         window.addEventListener('resize', () => {
@@ -2971,11 +2988,11 @@
                 }
             }, 250);
         });
-
+        
         function showSkillDetail(skillId) {
             const node = window.skillNetworkData[skillId];
             if (!node) return;
-
+            
             const panel = document.getElementById('skillDetailPanel');
             panel.style.display = 'block';
             panel.innerHTML = `
@@ -3006,11 +3023,11 @@
                     <div style="color: var(--text-secondary); font-size: var(--text-sm);">${node.example}</div>
                 </div>
             `;
-
+            
             // Scroll to panel
             panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
-
+        
         document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
