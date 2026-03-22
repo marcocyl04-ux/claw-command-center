@@ -71,40 +71,11 @@
     </style>
     <link rel="stylesheet" href="design-system.css">
     <style>
-        /* App Shell with Animated Gradient Mesh */
+        /* App Shell - Flat, No Texture */
         .app {
             display: flex;
             min-height: 100vh;
-            background: var(--bg-0);
-            position: relative;
-        }
-
-        .app::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background:
-                radial-gradient(ellipse at 20% 20%, rgba(224, 145, 42, 0.12) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 80%, rgba(224, 145, 42, 0.08) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 50%, rgba(251, 191, 36, 0.05) 0%, transparent 70%);
-            animation: meshMove 25s ease-in-out infinite;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        @keyframes meshMove {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            25% { transform: translate(2%, 2%) scale(1.05); }
-            50% { transform: translate(-1%, 3%) scale(1); }
-            75% { transform: translate(3%, -2%) scale(1.03); }
-        }
-
-        .sidebar, .main {
-            position: relative;
-            z-index: 1;
+            background: #0a0a0a;
         }
 
         /* Sidebar - Precision + Breath */
@@ -154,12 +125,12 @@
             position: relative;
         }
 
-        .nav-item:hover { 
-            color: var(--text-primary); 
+        .nav-item:hover {
+            color: var(--text-primary);
             background: rgba(255, 255, 255, 0.02);
         }
-        
-        .nav-item.active { 
+
+        .nav-item.active {
             color: var(--amber-400);
             background: transparent;
             border-left: 2px solid var(--amber-400);
@@ -527,18 +498,11 @@
             box-shadow: var(--elevation-5);
         }
 
-        /* Global card style override - makes all cards consistent */
+        /* Global card override - flat, minimal */
         .main [style*="background: var(--bg-1)"][style*="border-radius: var(--radius-lg)"] {
-            background: rgba(40, 40, 40, 0.6) !important;
-            backdrop-filter: blur(12px);
+            background: #111111 !important;
             border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .main [style*="background: var(--bg-1)"][style*="border-radius: var(--radius-lg)"]:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            border-radius: 2px !important;
         }
 
         /* Stagger animation for children - only animate once */
