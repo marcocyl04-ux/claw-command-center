@@ -8,19 +8,55 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="design-system.css">
     <style>
-        /* App Shell */
-        .app { display: flex; min-height: 100vh; background: var(--bg-0); }
+        /* App Shell with Animated Gradient Mesh */
+        .app { 
+            display: flex; 
+            min-height: 100vh; 
+            background: var(--bg-0);
+            position: relative;
+        }
         
-        /* Sidebar */
+        .app::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(224, 145, 42, 0.12) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(224, 145, 42, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(251, 191, 36, 0.05) 0%, transparent 70%);
+            animation: meshMove 25s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        @keyframes meshMove {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(2%, 2%) scale(1.05); }
+            50% { transform: translate(-1%, 3%) scale(1); }
+            75% { transform: translate(3%, -2%) scale(1.03); }
+        }
+        
+        .sidebar, .main {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Sidebar - Glassmorphism */
         .sidebar { 
             width: 280px; 
-            background: var(--bg-1); 
-            border-right: 1px solid oklch(100% 0 0 / 0.05);
+            background: rgba(16, 16, 16, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
             display: flex; 
             flex-direction: column;
             position: fixed;
             height: 100vh;
             z-index: 100;
+            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3);
         }
         .logo { 
             padding: var(--space-6); 
@@ -53,15 +89,37 @@
             transition: all var(--duration-fast) var(--ease-out-quart);
             border: 1px solid transparent;
             font-size: var(--text-sm);
+            position: relative;
+            overflow: hidden;
         }
+        
+        /* Shimmer effect on hover */
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(224, 145, 42, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .nav-item:hover::before {
+            left: 100%;
+        }
+        
         .nav-item:hover { 
             color: var(--text-primary); 
-            background: oklch(100% 0 0 / 0.03);
+            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.1);
         }
+        
         .nav-item.active { 
             color: var(--amber-400);
-            background: oklch(68% 0.18 75 / 0.08);
-            border-color: oklch(68% 0.18 75 / 0.2);
+            background: rgba(224, 145, 42, 0.1);
+            border-color: rgba(224, 145, 42, 0.3);
+            box-shadow: 0 0 20px rgba(224, 145, 42, 0.15);
         }
         .nav-badge {
             margin-left: auto;
