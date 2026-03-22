@@ -1729,7 +1729,72 @@
         }
 
         function renderTradingTab() {
-            return `<div class="text-on-surface/60 text-center py-20">TRADING tab content coming in Phase 4</div>`;
+            const system = cognitionData?.system || {};
+            const predictions = system?.trading?.total_predictions || 0;
+            const edges = system?.trading?.edge_discovery_rate || 0;
+            const winRate = system?.trading?.win_rate || 0;
+
+            return `
+                <!-- Header -->
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-12">
+                    <div>
+                        <h1 class="font-headline text-4xl sm:text-5xl italic tracking-tight mb-2 text-on-surface">Trading</h1>
+                        <p class="text-on-surface-variant/60 font-body text-sm uppercase tracking-widest">Paper Trading • Polymarket Weather</p>
+                    </div>
+                    <div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container-low hairline-border rounded">
+                        <span class="w-1.5 h-1.5 rounded-full bg-on-surface/40"></span>
+                        <span class="text-[11px] font-mono uppercase tracking-wider text-on-surface/40">Paper Only</span>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Main Stats (8 cols) -->
+                    <div class="lg:col-span-8">
+                        <div class="milled-surface hairline-border rounded p-6">
+                            <div class="flex justify-between items-start mb-6">
+                                <h3 class="font-headline text-xl italic">Performance</h3>
+                                <span class="text-[10px] font-mono text-on-surface/40 uppercase tracking-widest">All Time</span>
+                            </div>
+                            <div class="grid grid-cols-3 gap-6">
+                                <div>
+                                    <div class="text-[10px] font-mono uppercase tracking-widest text-on-surface/40 mb-2">Predictions</div>
+                                    <div class="font-mono text-4xl text-on-surface">${predictions}</div>
+                                </div>
+                                <div>
+                                    <div class="text-[10px] font-mono uppercase tracking-widest text-on-surface/40 mb-2">Win Rate</div>
+                                    <div class="font-mono text-4xl text-on-surface">${winRate}%</div>
+                                </div>
+                                <div>
+                                    <div class="text-[10px] font-mono uppercase tracking-widest text-on-surface/40 mb-2">Edges</div>
+                                    <div class="font-mono text-4xl text-primary-container">${edges}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Status (4 cols) -->
+                    <div class="lg:col-span-4">
+                        <div class="milled-surface hairline-border rounded p-6">
+                            <h3 class="font-headline text-xl italic mb-6">Status</h3>
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm text-on-surface/60">Mode</span>
+                                    <span class="text-xs font-mono text-on-surface/40">PAPER</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm text-on-surface/60">Markets</span>
+                                    <span class="text-xs font-mono text-on-surface/40">WEATHER</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm text-on-surface/60">Next Milestone</span>
+                                    <span class="text-xs font-mono text-primary-container">$10 LIVE</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
         }
 
         function renderSystemTab() {
