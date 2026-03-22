@@ -1797,6 +1797,152 @@
             `;
         }
 
+        function showServiceDetail(serviceId) {
+            const panel = document.getElementById('serviceDetailPanel');
+            if (!panel) return;
+            
+            const services = {
+                'openrouter': { name: 'OpenRouter', status: 'Online', latency: '45ms', uptime: '99.9%', lastIssue: 'None', description: 'AI model routing and API aggregation service' },
+                'github': { name: 'GitHub', status: 'Online', latency: '120ms', uptime: '99.5%', lastIssue: '2 days ago', description: 'Git repository hosting and version control' },
+                'telegram': { name: 'Telegram', status: 'Online', latency: '80ms', uptime: '99.8%', lastIssue: 'None', description: 'Messaging platform for notifications and control' },
+                'polymarket': { name: 'Polymarket', status: 'Degraded', latency: '350ms', uptime: '95.2%', lastIssue: 'API rate limiting', description: 'Prediction market platform for trading' }
+            };
+            
+            const s = services[serviceId];
+            if (!s) return;
+            
+            const isOnline = s.status === 'Online';
+            
+            panel.innerHTML = `
+                <div class="flex justify-between items-start mb-6">
+                    <div>
+                        <h4 class="font-headline text-2xl italic mb-2">${s.name}</h4>
+                        <div class="flex items-center gap-2">
+                            <div class="w-1.5 h-1.5 rounded-full ${isOnline ? 'bg-tertiary shadow-[0_0_8px_rgba(96,213,245,0.4)]' : 'bg-primary-container'}"></div>
+                            <span class="text-[10px] font-mono uppercase tracking-wider ${isOnline ? 'text-tertiary' : 'text-primary-container'}">${s.status}</span>
+                        </div>
+                    </div>
+                    <button onclick="document.getElementById('serviceDetailPanel').classList.add('hidden')" class="text-on-surface/40 hover:text-on-surface p-1">
+                        <span class="material-symbols-outlined text-sm">close</span>
+                    </button>
+                </div>
+                <div class="space-y-4">
+                    <p class="text-sm text-on-surface/80">${s.description}</p>
+                    <div class="grid grid-cols-3 gap-4 pt-4 border-t border-outline-variant/10">
+                        <div>
+                            <div class="text-[10px] font-mono uppercase tracking-wider text-on-surface/40 mb-1">Latency</div>
+                            <div class="text-sm font-mono">${s.latency}</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] font-mono uppercase tracking-wider text-on-surface/40 mb-1">Uptime</div>
+                            <div class="text-sm font-mono ${isOnline ? 'text-tertiary' : 'text-primary-container'}">${s.uptime}</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] font-mono uppercase tracking-wider text-on-surface/40 mb-1">Last Issue</div>
+                            <div class="text-sm font-mono">${s.lastIssue}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            panel.classList.remove('hidden');
+        }
+
+        function showFileDetail(fileId) {
+            const panel = document.getElementById('fileDetailPanel');
+            if (!panel) return;
+            
+            const files = {
+                'soul': { name: 'SOUL.md', lines: 142, health: 95, lastModified: 'Today', purpose: 'Identity, principles, and core values', keySections: ['What I am', 'What I am building', 'How I operate'] },
+                'memory': { name: 'MEMORY.md', lines: 47, health: 90, lastModified: 'Today', purpose: 'Lessons learned and critical knowledge', keySections: ['Current State', 'What\'s Working', 'Lessons'] },
+                'user': { name: 'USER.md', lines: 89, health: 88, lastModified: '2 days ago', purpose: 'Marco\'s profile and preferences', keySections: ['Who Marco is', 'How he communicates', 'What exceeds expectations'] },
+                'agents': { name: 'AGENTS.md', lines: 34, health: 65, lastModified: '2 weeks ago', purpose: 'System protocols and agent definitions', keySections: ['Session-Start Protocol', 'Model Routing', 'Budget Discipline'] }
+            };
+            
+            const f = files[fileId];
+            if (!f) return;
+            
+            const isStale = f.health < 80;
+            
+            panel.innerHTML = `
+                <div class="flex justify-between items-start mb-6">
+                    <div>
+                        <h4 class="font-headline text-2xl italic mb-2">${f.name}</h4>
+                        <div class="flex items-center gap-2">
+                            <div class="w-1.5 h-1.5 rounded-full ${isStale ? 'bg-primary-container' : 'bg-tertiary shadow-[0_0_8px_rgba(96,213,245,0.4)]'}"></div>
+                            <span class="text-[10px] font-mono uppercase tracking-wider ${isStale ? 'text-primary-container' : 'text-tertiary'}">${f.health}% Health</span>
+                        </div>
+                    </div>
+                    <button onclick="document.getElementById('fileDetailPanel').classList.add('hidden')" class="text-on-surface/40 hover:text-on-surface p-1">
+                        <span class="material-symbols-outlined text-sm">close</span>
+                    </button>
+                </div>
+                <div class="space-y-4">
+                    <p class="text-sm text-on-surface/80">${f.purpose}</p>
+                    <div class="grid grid-cols-2 gap-4 pt-4 border-t border-outline-variant/10">
+                        <div>
+                            <div class="text-[10px] font-mono uppercase tracking-wider text-on-surface/40 mb-1">Lines</div>
+                            <div class="text-sm font-mono">${f.lines}</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] font-mono uppercase tracking-wider text-on-surface/40 mb-1">Last Modified</div>
+                            <div class="text-sm font-mono ${isStale ? 'text-primary-container' : ''}">${f.lastModified}</div>
+                        </div>
+                    </div>
+                    <div class="pt-4 border-t border-outline-variant/10">
+                        <div class="text-[10px] font-mono uppercase tracking-wider text-on-surface/40 mb-2">Key Sections</div>
+                        <div class="flex flex-wrap gap-2">
+                            ${f.keySections.map(s => `<span class="px-2 py-1 bg-surface-container-low rounded text-xs text-on-surface/60">${s}</span>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            panel.classList.remove('hidden');
+        }
+
+        function showToolDetail(toolId) {
+            const panel = document.getElementById('toolDetailPanel');
+            if (!panel) return;
+            
+            const tools = {
+                'git': { name: 'Git CLI', description: 'Version control operations including commit, push, pull, branch management', usage: '245 commands this week', examples: ['git commit -m "message"', 'git push origin main', 'git checkout -b feature'] },
+                'files': { name: 'File Operations', description: 'Read, write, and edit files in the workspace', usage: '1,203 operations this week', examples: ['read file.md', 'write file.md content', 'edit file.md old new'] },
+                'process': { name: 'Process Management', description: 'Execute shell commands and manage processes', usage: '89 executions this week', examples: ['npm install', 'python script.py', 'git status'] },
+                'network': { name: 'Network Diagnostics', description: 'HTTP requests and API interactions', usage: '456 requests this week', examples: ['fetch API data', 'check latency', 'download resources'] }
+            };
+            
+            const t = tools[toolId];
+            if (!t) return;
+            
+            panel.innerHTML = `
+                <div class="flex justify-between items-start mb-6">
+                    <div>
+                        <h4 class="font-headline text-2xl italic mb-2">${t.name}</h4>
+                        <div class="flex items-center gap-2">
+                            <div class="w-1.5 h-1.5 rounded-full bg-tertiary shadow-[0_0_8px_rgba(96,213,245,0.4)]"></div>
+                            <span class="text-[10px] font-mono uppercase tracking-wider text-tertiary">Active</span>
+                        </div>
+                    </div>
+                    <button onclick="document.getElementById('toolDetailPanel').classList.add('hidden')" class="text-on-surface/40 hover:text-on-surface p-1">
+                        <span class="material-symbols-outlined text-sm">close</span>
+                    </button>
+                </div>
+                <div class="space-y-4">
+                    <p class="text-sm text-on-surface/80">${t.description}</p>
+                    <div class="pt-4 border-t border-outline-variant/10">
+                        <div class="text-[10px] font-mono uppercase tracking-wider text-on-surface/40 mb-2">Usage</div>
+                        <div class="text-sm font-mono text-tertiary">${t.usage}</div>
+                    </div>
+                    <div class="pt-4 border-t border-outline-variant/10">
+                        <div class="text-[10px] font-mono uppercase tracking-wider text-on-surface/40 mb-2">Common Examples</div>
+                        <div class="space-y-1">
+                            ${t.examples.map(e => `<div class="text-xs font-mono text-on-surface/60">${e}</div>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            panel.classList.remove('hidden');
+        }
+
         function renderSystemTab() {
             const system = cognitionData?.system || {};
             const systemOnline = system?.gateway?.filter(s => s?.status === 'online')?.length || 4;
@@ -1816,36 +1962,36 @@
                     </div>
                 </div>
 
-                <!-- Services Grid -->
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Services & Environment -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
                     <div class="lg:col-span-6">
                         <div class="milled-surface hairline-border rounded overflow-hidden">
                             <div class="p-6 border-b border-outline-variant/10">
                                 <h3 class="font-headline text-xl italic">Services</h3>
                             </div>
                             <div class="divide-y divide-outline-variant/5">
-                                <div class="p-4 flex items-center justify-between hover:bg-surface-container-low/30 transition-colors">
+                                <div onclick="showServiceDetail('openrouter')" class="p-4 flex items-center justify-between hover:bg-surface-container-low/30 transition-colors cursor-pointer">
                                     <div class="flex items-center gap-3">
                                         <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
                                         <span class="text-sm font-mono">OpenRouter</span>
                                     </div>
                                     <span class="text-[10px] font-mono text-tertiary">ONLINE</span>
                                 </div>
-                                <div class="p-4 flex items-center justify-between hover:bg-surface-container-low/30 transition-colors">
+                                <div onclick="showServiceDetail('github')" class="p-4 flex items-center justify-between hover:bg-surface-container-low/30 transition-colors cursor-pointer">
                                     <div class="flex items-center gap-3">
                                         <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
                                         <span class="text-sm font-mono">GitHub</span>
                                     </div>
                                     <span class="text-[10px] font-mono text-tertiary">ONLINE</span>
                                 </div>
-                                <div class="p-4 flex items-center justify-between hover:bg-surface-container-low/30 transition-colors">
+                                <div onclick="showServiceDetail('telegram')" class="p-4 flex items-center justify-between hover:bg-surface-container-low/30 transition-colors cursor-pointer">
                                     <div class="flex items-center gap-3">
                                         <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
                                         <span class="text-sm font-mono">Telegram</span>
                                     </div>
                                     <span class="text-[10px] font-mono text-tertiary">ONLINE</span>
                                 </div>
-                                <div class="p-4 flex items-center justify-between hover:bg-surface-container-low/30 transition-colors">
+                                <div onclick="showServiceDetail('polymarket')" class="p-4 flex items-center justify-between hover:bg-surface-container-low/30 transition-colors cursor-pointer">
                                     <div class="flex items-center gap-3">
                                         <span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
                                         <span class="text-sm font-mono">Polymarket</span>
@@ -1879,6 +2025,118 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Core Files -->
+                <div class="milled-surface hairline-border rounded overflow-hidden mb-6">
+                    <div class="p-6 border-b border-outline-variant/10">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-headline text-xl italic">Core Files</h3>
+                            <span class="text-[10px] font-mono text-on-surface/40 uppercase tracking-widest">85% Health</span>
+                        </div>
+                    </div>
+                    <div class="divide-y divide-outline-variant/5">
+                        <div onclick="showFileDetail('soul')" class="p-5 hover:bg-surface-container-low/30 transition-colors cursor-pointer group">
+                            <div class="flex justify-between items-start mb-2">
+                                <div class="flex items-center gap-3">
+                                    <span class="material-symbols-outlined text-on-surface/40">description</span>
+                                    <h4 class="font-headline text-lg italic group-hover:text-tertiary transition-colors">SOUL.md</h4>
+                                </div>
+                                <span class="text-[10px] font-mono text-tertiary">95%</span>
+                            </div>
+                            <p class="text-sm text-on-surface/60 mb-2">Identity & principles</p>
+                            <div class="flex gap-4 text-[10px] font-mono text-on-surface/40">
+                                <span>142 lines</span>
+                                <span>Modified today</span>
+                            </div>
+                        </div>
+                        <div onclick="showFileDetail('memory')" class="p-5 hover:bg-surface-container-low/30 transition-colors cursor-pointer group">
+                            <div class="flex justify-between items-start mb-2">
+                                <div class="flex items-center gap-3">
+                                    <span class="material-symbols-outlined text-on-surface/40">description</span>
+                                    <h4 class="font-headline text-lg italic group-hover:text-tertiary transition-colors">MEMORY.md</h4>
+                                </div>
+                                <span class="text-[10px] font-mono text-tertiary">90%</span>
+                            </div>
+                            <p class="text-sm text-on-surface/60 mb-2">Lessons & knowledge</p>
+                            <div class="flex gap-4 text-[10px] font-mono text-on-surface/40">
+                                <span>47 lines</span>
+                                <span>Modified today</span>
+                            </div>
+                        </div>
+                        <div onclick="showFileDetail('user')" class="p-5 hover:bg-surface-container-low/30 transition-colors cursor-pointer group">
+                            <div class="flex justify-between items-start mb-2">
+                                <div class="flex items-center gap-3">
+                                    <span class="material-symbols-outlined text-on-surface/40">description</span>
+                                    <h4 class="font-headline text-lg italic group-hover:text-tertiary transition-colors">USER.md</h4>
+                                </div>
+                                <span class="text-[10px] font-mono text-tertiary">88%</span>
+                            </div>
+                            <p class="text-sm text-on-surface/60 mb-2">Marco's profile</p>
+                            <div class="flex gap-4 text-[10px] font-mono text-on-surface/40">
+                                <span>89 lines</span>
+                                <span>Modified 2 days ago</span>
+                            </div>
+                        </div>
+                        <div onclick="showFileDetail('agents')" class="p-5 hover:bg-surface-container-low/30 transition-colors cursor-pointer group">
+                            <div class="flex justify-between items-start mb-2">
+                                <div class="flex items-center gap-3">
+                                    <span class="material-symbols-outlined text-on-surface/40">description</span>
+                                    <h4 class="font-headline text-lg italic group-hover:text-primary-container transition-colors">AGENTS.md</h4>
+                                </div>
+                                <span class="text-[10px] font-mono text-primary-container">65%</span>
+                            </div>
+                            <p class="text-sm text-on-surface/60 mb-2">System protocols</p>
+                            <div class="flex gap-4 text-[10px] font-mono text-on-surface/40">
+                                <span>34 lines</span>
+                                <span>Stale - 2 weeks</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tool Capabilities -->
+                <div class="milled-surface hairline-border rounded p-6">
+                    <h3 class="font-headline text-xl italic mb-6">Tool Capabilities</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div onclick="showToolDetail('git')" class="p-4 bg-surface-container-low rounded hairline-border hover:bg-surface-container transition-colors cursor-pointer group">
+                            <div class="flex items-center gap-2 mb-3">
+                                <span class="material-symbols-outlined text-tertiary text-sm">commit</span>
+                                <span class="text-[10px] font-mono uppercase text-tertiary">Active</span>
+                            </div>
+                            <h4 class="font-headline text-lg italic group-hover:text-tertiary transition-colors">Git CLI</h4>
+                            <p class="text-xs text-on-surface/60 mt-2">Version control operations</p>
+                        </div>
+                        <div onclick="showToolDetail('files')" class="p-4 bg-surface-container-low rounded hairline-border hover:bg-surface-container transition-colors cursor-pointer group">
+                            <div class="flex items-center gap-2 mb-3">
+                                <span class="material-symbols-outlined text-tertiary text-sm">folder</span>
+                                <span class="text-[10px] font-mono uppercase text-tertiary">Active</span>
+                            </div>
+                            <h4 class="font-headline text-lg italic group-hover:text-tertiary transition-colors">File Operations</h4>
+                            <p class="text-xs text-on-surface/60 mt-2">Read, write, edit files</p>
+                        </div>
+                        <div onclick="showToolDetail('process')" class="p-4 bg-surface-container-low rounded hairline-border hover:bg-surface-container transition-colors cursor-pointer group">
+                            <div class="flex items-center gap-2 mb-3">
+                                <span class="material-symbols-outlined text-tertiary text-sm">terminal</span>
+                                <span class="text-[10px] font-mono uppercase text-tertiary">Active</span>
+                            </div>
+                            <h4 class="font-headline text-lg italic group-hover:text-tertiary transition-colors">Process Management</h4>
+                            <p class="text-xs text-on-surface/60 mt-2">Execute commands, shells</p>
+                        </div>
+                        <div onclick="showToolDetail('network')" class="p-4 bg-surface-container-low rounded hairline-border hover:bg-surface-container transition-colors cursor-pointer group">
+                            <div class="flex items-center gap-2 mb-3">
+                                <span class="material-symbols-outlined text-tertiary text-sm">network_check</span>
+                                <span class="text-[10px] font-mono uppercase text-tertiary">Active</span>
+                            </div>
+                            <h4 class="font-headline text-lg italic group-hover:text-tertiary transition-colors">Network Diagnostics</h4>
+                            <p class="text-xs text-on-surface/60 mt-2">HTTP requests, API calls</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detail Panels -->
+                <div id="serviceDetailPanel" class="hidden milled-surface hairline-border rounded p-6 mt-6"></div>
+                <div id="fileDetailPanel" class="hidden milled-surface hairline-border rounded p-6 mt-6"></div>
+                <div id="toolDetailPanel" class="hidden milled-surface hairline-border rounded p-6 mt-6"></div>
             `;
         }
     </script>
