@@ -165,17 +165,19 @@
 
         async function loadDashboardData() {
             try {
-                if (typeof DataBridge !== 'undefined') {
-                    cognitionData = await DataBridge.compileDashboardData();
+                // Try to fetch live data from dashboard-data.json
+                const response = await fetch('dashboard-data.json?t=' + Date.now());
+                if (response.ok) {
+                    cognitionData = await response.json();
+                    console.log('Loaded live dashboard data');
                 } else {
-                    cognitionData = getFallbackData();
+                    throw new Error('Failed to fetch dashboard data');
                 }
-                renderTab(currentTab);
             } catch (e) {
-                console.error('Failed to load dashboard data:', e);
+                console.log('Using fallback data:', e.message);
                 cognitionData = getFallbackData();
-                renderTab(currentTab);
             }
+            renderTab(currentTab);
         }
 
         function getFallbackData() {
