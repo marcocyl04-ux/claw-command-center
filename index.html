@@ -1438,7 +1438,152 @@
         }
 
         function renderTrainingTab() {
-            return `<div class="text-on-surface/60 text-center py-20">TRAINING tab content coming in Phase 4</div>`;
+            const training = cognitionData?.training || {};
+            const trainingWeek = training?.week || 11;
+            const trainingProgress = training?.progress || 50;
+            const sessionCount = training?.session_count || 35;
+            const capabilities = training?.capabilities || ['Skill Chaining', 'Model Routing', 'Proactive Escalation'];
+            const blockers = training?.blockers || [
+                { title: 'Edge Discovery Rate', description: '0 genuine edges found vs 12 from Marco', days_open: 21 },
+                { title: 'Autonomy Plateau', description: 'Stuck at 45% for 3 weeks', days_open: 21 }
+            ];
+
+            return `
+                <!-- Header -->
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-12">
+                    <div>
+                        <h1 class="font-headline text-4xl sm:text-5xl italic tracking-tight mb-2 text-on-surface">Training</h1>
+                        <p class="text-on-surface-variant/60 font-body text-sm uppercase tracking-widest">Week ${trainingWeek}/16 • ${sessionCount} Sessions</p>
+                    </div>
+                    <div class="text-right">
+                        <div class="font-mono text-5xl text-primary-container">${trainingProgress}%</div>
+                        <div class="text-[10px] font-mono text-on-surface/40 uppercase tracking-widest">To Autonomous</div>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="milled-surface hairline-border rounded p-6 mb-8">
+                    <div class="h-1 w-full bg-surface-container-highest rounded-full overflow-hidden mb-4">
+                        <div class="h-full bg-primary-container" style="width: ${trainingProgress}%"></div>
+                    </div>
+                    <div class="flex justify-between text-[10px] font-mono text-on-surface/40 uppercase tracking-widest">
+                        <span>Week 1</span>
+                        <span>Current: Week ${trainingWeek}</span>
+                        <span>Target: Week 16</span>
+                    </div>
+                </div>
+
+                <!-- Bento Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Capabilities (8 cols) -->
+                    <div class="lg:col-span-8">
+                        <div class="milled-surface hairline-border rounded p-6">
+                            <div class="flex justify-between items-start mb-6">
+                                <h3 class="font-headline text-xl italic">Capabilities</h3>
+                                <span class="text-[10px] font-mono text-on-surface/40 uppercase tracking-widest">${capabilities.length} Mastered</span>
+                            </div>
+                            <div class="grid grid-cols-3 gap-4">
+                                <div class="p-4 bg-surface-container-low rounded border-l-2 border-tertiary">
+                                    <div class="text-sm font-medium mb-2">Skill Chaining</div>
+                                    <span class="text-[10px] font-mono text-tertiary">MASTERED</span>
+                                </div>
+                                <div class="p-4 bg-surface-container-low rounded border-l-2 border-tertiary">
+                                    <div class="text-sm font-medium mb-2">Model Routing</div>
+                                    <span class="text-[10px] font-mono text-tertiary">MASTERED</span>
+                                </div>
+                                <div class="p-4 bg-surface-container-low rounded border-l-2 border-tertiary">
+                                    <div class="text-sm font-medium mb-2">Proactive Escalation</div>
+                                    <span class="text-[10px] font-mono text-tertiary">MASTERED</span>
+                                </div>
+                                <div class="p-4 bg-surface-container-low rounded border-l-2 border-primary-container/60">
+                                    <div class="text-sm font-medium mb-2">Edge Discovery</div>
+                                    <span class="text-[10px] font-mono text-primary-container/60">IN PROGRESS</span>
+                                </div>
+                                <div class="p-4 bg-surface-container-low rounded border-l-2 border-primary-container/60">
+                                    <div class="text-sm font-medium mb-2">Autonomous Decisions</div>
+                                    <span class="text-[10px] font-mono text-primary-container/60">IN PROGRESS</span>
+                                </div>
+                                <div class="p-4 bg-surface-container-low rounded border-l-2 border-on-surface/20 opacity-60">
+                                    <div class="text-sm font-medium mb-2 text-on-surface/40">Live Trading</div>
+                                    <span class="text-[10px] font-mono text-on-surface/20">LOCKED</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Blockers (4 cols) -->
+                    <div class="lg:col-span-4 flex flex-col gap-6">
+                        <div class="milled-surface hairline-border rounded p-6">
+                            <h3 class="font-headline text-xl italic mb-6">Blockers</h3>
+                            <div class="space-y-4">
+                                ${blockers.map((b, i) => `
+                                    <div class="p-4 bg-surface-container-low rounded border-l-2 border-primary-container cursor-pointer hover:bg-surface-container transition-colors" onclick="showBlockerDetail(${i})">
+                                        <div class="text-sm text-primary-container mb-1">${b.title}</div>
+                                        <div class="text-xs text-on-surface/60">${b.description}</div>
+                                        <div class="text-[10px] font-mono text-on-surface/40 mt-2">${Math.round(b.days_open / 7)} weeks open</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Blocker Detail Panel -->
+                <div id="blockerDetailPanel" class="hidden milled-surface hairline-border rounded p-6 mt-6"></div>
+            `;
+        }
+
+        function showBlockerDetail(index) {
+            const panel = document.getElementById('blockerDetailPanel');
+            if (!panel) return;
+
+            const blockers = [
+                {
+                    title: 'Edge Discovery Rate',
+                    problem: 'I can execute edges you identify, but I haven\'t developed the pattern recognition to find them independently. All 12 edges this month came from your analysis.',
+                    impact: 'Blocks Edge Validation milestone. Without independent edge discovery, I can\'t scale beyond your input.',
+                    solution: 'Walk me through your edge detection process step-by-step. Review 3 historical edges and explain the signals. Give me 5 practice markets to analyze independently.',
+                    priority: 'HIGH'
+                },
+                {
+                    title: 'Autonomy Plateau',
+                    problem: 'Fear of making wrong decisions causes over-escalation. I default to asking you rather than trusting my judgment, even when I have the information needed.',
+                    impact: 'Limits throughput and prevents reaching 80% autonomy target. Creates dependency loop.',
+                    solution: 'Deploy 3 autonomous decisions without escalation this week. Document outcomes to build confidence.',
+                    priority: 'MEDIUM'
+                }
+            ];
+
+            const b = blockers[index];
+            if (!b) return;
+
+            panel.innerHTML = `
+                <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-headline text-xl italic">${b.title}</h4>
+                    <button onclick="document.getElementById('blockerDetailPanel').classList.add('hidden')" class="text-on-surface/40 hover:text-on-surface">
+                        <span class="material-symbols-outlined text-sm">close</span>
+                    </button>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <div class="text-[10px] font-mono uppercase text-on-surface/40 mb-1">Problem</div>
+                        <p class="text-sm leading-relaxed">${b.problem}</p>
+                    </div>
+                    <div>
+                        <div class="text-[10px] font-mono uppercase text-on-surface/40 mb-1">Impact</div>
+                        <p class="text-sm text-on-surface/80">${b.impact}</p>
+                    </div>
+                    <div>
+                        <div class="text-[10px] font-mono uppercase text-on-surface/40 mb-1">Solution</div>
+                        <p class="text-sm text-primary-container">${b.solution}</p>
+                    </div>
+                    <div class="flex items-center gap-2 pt-4 border-t border-outline-variant/10">
+                        <span class="text-[10px] font-mono uppercase text-on-surface/40">Priority:</span>
+                        <span class="text-[10px] font-mono text-primary-container">${b.priority}</span>
+                    </div>
+                </div>
+            `;
+            panel.classList.remove('hidden');
         }
 
         function renderTradingTab() {
