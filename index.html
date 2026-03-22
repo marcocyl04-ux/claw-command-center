@@ -1633,12 +1633,10 @@
                         <p class="text-sm leading-relaxed text-on-surface/80">${c.description}</p>
                     </div>
                     ${c.masteredDate ? `
-                    <div class="flex items-center gap-4 p-3 bg-surface-container-low/50 rounded">
-                        <span class="material-symbols-outlined text-tertiary text-sm">check_circle</span>
-                        <div>
-                            <div class="text-[10px] font-mono uppercase text-on-surface/40">Mastered</div>
-                            <div class="text-sm font-medium">${c.masteredDate}</div>
-                        </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-2 h-2 rounded-full bg-tertiary shadow-[0_0_8px_rgba(96,213,245,0.4)]"></div>
+                        <div class="text-[10px] font-mono uppercase tracking-wider text-on-surface/40">Mastered</div>
+                        <div class="text-sm font-mono">${c.masteredDate}</div>
                     </div>
                     ` : ''}
                     <div class="grid grid-cols-2 gap-4">
@@ -1652,8 +1650,8 @@
                         </div>
                     </div>
                     ${c.blocker ? `
-                    <div class="p-4 bg-primary-container/5 rounded border border-primary-container/20">
-                        <div class="flex items-center gap-2 mb-2">
+                    <div class="p-4 bg-surface-container-low rounded hairline-border">
+                        <div class="flex items-center gap-2 mb-3">
                             <span class="material-symbols-outlined text-primary-container text-sm">block</span>
                             <div class="text-[10px] font-mono uppercase tracking-wider text-primary-container">Blocker</div>
                         </div>
@@ -1703,8 +1701,8 @@
                     </button>
                 </div>
                 <div class="space-y-5">
-                    <div class="p-4 bg-primary-container/5 rounded border border-primary-container/20">
-                        <div class="flex items-center gap-2 mb-2">
+                    <div class="p-4 bg-surface-container-low rounded hairline-border">
+                        <div class="flex items-center gap-2 mb-3">
                             <span class="material-symbols-outlined text-primary-container text-sm">error</span>
                             <div class="text-[10px] font-mono uppercase tracking-wider text-primary-container">Problem</div>
                         </div>
@@ -1714,8 +1712,8 @@
                         <div class="text-[10px] font-mono uppercase tracking-wider text-on-surface/40 mb-2">Impact</div>
                         <p class="text-sm text-on-surface/80">${b.impact}</p>
                     </div>
-                    <div class="p-4 bg-tertiary/5 rounded border border-tertiary/20">
-                        <div class="flex items-center gap-2 mb-2">
+                    <div class="p-4 bg-surface-container-low rounded hairline-border">
+                        <div class="flex items-center gap-2 mb-3">
                             <span class="material-symbols-outlined text-tertiary text-sm">lightbulb</span>
                             <div class="text-[10px] font-mono uppercase tracking-wider text-tertiary">Solution</div>
                         </div>
