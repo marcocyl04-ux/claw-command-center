@@ -8,49 +8,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="design-system.css">
     <style>
-        /* App Shell with Animated Gradient Mesh */
-        .app { 
-            display: flex; 
-            min-height: 100vh; 
-            background: var(--bg-0);
-            position: relative;
-        }
-        
-        .app::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(ellipse at 20% 20%, rgba(224, 145, 42, 0.15) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 80%, rgba(224, 145, 42, 0.1) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 50%, rgba(251, 191, 36, 0.05) 0%, transparent 70%);
-            animation: meshMove 20s ease-in-out infinite;
-            pointer-events: none;
-            z-index: 0;
-        }
-        
-        @keyframes meshMove {
-            0%, 100% {
-                transform: translate(0, 0) scale(1);
-            }
-            25% {
-                transform: translate(2%, 2%) scale(1.05);
-            }
-            50% {
-                transform: translate(-1%, 3%) scale(1);
-            }
-            75% {
-                transform: translate(3%, -2%) scale(1.03);
-            }
-        }
-        
-        .sidebar, .main {
-            position: relative;
-            z-index: 1;
-        }
+        /* App Shell */
+        .app { display: flex; min-height: 100vh; background: var(--bg-0); }
         
         /* Sidebar */
         .sidebar { 
@@ -82,22 +41,6 @@
             animation: pulse 2s ease-in-out infinite;
         }
         .nav { padding: var(--space-4); }
-        /* Custom Icons */
-        .icon {
-            width: 20px;
-            height: 20px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .icon-now { color: var(--amber-400); }
-        .icon-mind { color: #a78bfa; }
-        .icon-memory { color: #22d3ee; }
-        .icon-training { color: #4ade80; }
-        .icon-trading { color: #fbbf24; }
-        .icon-system { color: #94a3b8; }
-        
         .nav-item { 
             padding: var(--space-4) var(--space-5); 
             cursor: pointer; 
@@ -289,67 +232,6 @@
             gap: var(--space-5);
         }
         .card-full { grid-column: 1 / -1; }
-        
-        /* Glassmorphism Cards - ensure visibility */
-        .card, .vital-card, .thought-stream {
-            background: rgba(40, 40, 40, 0.95) !important;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 
-                0 4px 6px -1px rgba(0, 0, 0, 0.2),
-                0 2px 4px -1px rgba(0, 0, 0, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.05);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        
-        /* State hero with solid background */
-        .state-hero {
-            background: linear-gradient(135deg, rgba(224, 145, 42, 0.15) 0%, rgba(40, 40, 40, 0.95) 100%) !important;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        /* Fallback for browsers without backdrop-filter */
-        @supports not (backdrop-filter: blur(12px)) {
-            .card, .state-hero, .vital-card, .thought-stream {
-                background: var(--bg-1);
-            }
-        }
-        
-        .card:hover, .vital-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 
-                0 10px 15px -3px rgba(0, 0, 0, 0.2),
-                0 4px 6px -2px rgba(0, 0, 0, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.08);
-        }
-        
-        /* Enhanced State Hero */
-        .state-hero {
-            background: linear-gradient(135deg, rgba(224, 145, 42, 0.1) 0%, rgba(30, 30, 30, 0.8) 100%) !important;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .state-hero::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
-            animation: shimmer 8s infinite;
-        }
-        
-        @keyframes shimmer {
-            0% { left: -100%; }
-            50%, 100% { left: 100%; }
-        }
         
         /* Section Header */
         .section-header {
@@ -765,96 +647,6 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-        @keyframes scaleIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        @keyframes countUp {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* Tab Transitions */
-        .tab-content {
-            animation: fadeIn 0.3s ease-out;
-        }
-        
-        .tab-content > * {
-            animation: slideIn 0.4s ease-out backwards;
-        }
-        
-        .tab-content > *:nth-child(1) { animation-delay: 0.05s; }
-        .tab-content > *:nth-child(2) { animation-delay: 0.1s; }
-        .tab-content > *:nth-child(3) { animation-delay: 0.15s; }
-        .tab-content > *:nth-child(4) { animation-delay: 0.2s; }
-        .tab-content > *:nth-child(5) { animation-delay: 0.25s; }
-        .tab-content > *:nth-child(6) { animation-delay: 0.3s; }
-        
-        /* Card Stagger Animation */
-        .now-cards-grid > div,
-        .model-cards-grid > div {
-            animation: scaleIn 0.4s ease-out backwards;
-        }
-        
-        .now-cards-grid > div:nth-child(1) { animation-delay: 0.05s; }
-        .now-cards-grid > div:nth-child(2) { animation-delay: 0.1s; }
-        .now-cards-grid > div:nth-child(3) { animation-delay: 0.15s; }
-        .now-cards-grid > div:nth-child(4) { animation-delay: 0.2s; }
-        .now-cards-grid > div:nth-child(5) { animation-delay: 0.25s; }
-        .now-cards-grid > div:nth-child(6) { animation-delay: 0.3s; }
-        
-        /* Number Count Animation */
-        .count-animate {
-            display: inline-block;
-            animation: countUp 0.6s ease-out;
-        }
-        
-        /* Nav Item Hover Effect */
-        .nav-item {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .nav-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(224, 145, 42, 0.1), transparent);
-            transition: left 0.5s ease;
-        }
-        
-        .nav-item:hover::before {
-            left: 100%;
-        }
-        
-        /* Button Press Effect */
-        button:active {
-            transform: scale(0.98);
-        }
-        
-        /* Skill Node Pulse on Hover */
-        .skill-node:hover circle {
-            filter: drop-shadow(0 0 8px currentColor);
-        }
-        
-        /* Loading Skeleton */
-        .skeleton {
-            background: linear-gradient(90deg, var(--bg-1) 25%, var(--bg-2) 50%, var(--bg-1) 75%);
-            background-size: 200% 100%;
-            animation: skeleton-loading 1.5s infinite;
-        }
-        
-        @keyframes skeleton-loading {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
     </style>
 </head>
 <body>
@@ -876,47 +668,23 @@
             </div>
             <nav class="nav">
                 <div class="nav-item active" data-tab="now" onclick="switchTab('now')">
-                    <svg class="icon icon-now" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <polyline points="12 6 12 12 16 14"></polyline>
-                    </svg>
-                    <span>NOW</span>
+                    <span>◈</span> NOW
                 </div>
                 <div class="nav-item" data-tab="mind" onclick="switchTab('mind')">
-                    <svg class="icon icon-mind" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
-                    </svg>
-                    <span>MIND</span>
+                    <span>◈</span> MIND
                 </div>
                 <div class="nav-item" data-tab="memory" onclick="switchTab('memory')">
-                    <svg class="icon icon-memory" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 18a8 8 0 110-16 8 8 0 010 16z"></path>
-                        <path d="M12 6v6l4 2"></path>
-                    </svg>
-                    <span>MEMORY</span>
+                    <span>◈</span> MEMORY
                 </div>
                 <div class="nav-item" data-tab="training" onclick="switchTab('training')">
-                    <svg class="icon icon-training" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
-                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                    </svg>
-                    <span>TRAINING</span>
+                    <span>◈</span> TRAINING
                     <span class="nav-badge">2</span>
                 </div>
                 <div class="nav-item" data-tab="trading" onclick="switchTab('trading')">
-                    <svg class="icon icon-trading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
-                        <polyline points="17 6 23 6 23 12"></polyline>
-                    </svg>
-                    <span>TRADING</span>
+                    <span>◈</span> TRADING
                 </div>
                 <div class="nav-item" data-tab="system" onclick="switchTab('system')">
-                    <svg class="icon icon-system" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                        <line x1="8" y1="21" x2="16" y2="21"></line>
-                        <line x1="12" y1="17" x2="12" y2="21"></line>
-                    </svg>
-                    <span>SYSTEM</span>
+                    <span>◈</span> SYSTEM
                 </div>
             </nav>
             <button class="sidebar-toggle" onclick="toggleSidebar()" title="Collapse/Expand sidebar">
@@ -1078,36 +846,26 @@
         }
         
         function renderTab(tab) {
-            currentTab = tab;
             const container = document.getElementById('mainContent');
             
-            // Update nav active state
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-                if (item.dataset.tab === tab) {
-                    item.classList.add('active');
-                }
-            });
-            
-            // Simple switch - direct render
             switch(tab) {
                 case 'now':
-                    container.innerHTML = '<div class="tab-content">' + renderNowTab() + '</div>';
+                    container.innerHTML = renderNowTab();
                     break;
                 case 'mind':
-                    container.innerHTML = '<div class="tab-content">' + renderMindTab() + '</div>';
+                    container.innerHTML = renderMindTab();
                     break;
                 case 'memory':
-                    container.innerHTML = '<div class="tab-content">' + renderMemoryTab() + '</div>';
+                    container.innerHTML = renderMemoryTab();
                     break;
                 case 'training':
-                    container.innerHTML = '<div class="tab-content">' + renderTrainingTab() + '</div>';
+                    container.innerHTML = renderTrainingTab();
                     break;
                 case 'trading':
-                    container.innerHTML = '<div class="tab-content">' + renderTradingTab() + '</div>';
+                    container.innerHTML = renderTradingTab();
                     break;
                 case 'system':
-                    container.innerHTML = '<div class="tab-content">' + renderSystemTab() + '</div>';
+                    container.innerHTML = renderSystemTab();
                     break;
             }
         }
@@ -3081,28 +2839,7 @@
             panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
         
-        // Initialize on DOM ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', init);
-        } else {
-            // DOM already loaded
-            init();
-        }
-        
-        // Force render after a short delay as fallback
-        setTimeout(() => {
-            if (!cognitionData) {
-                console.log('Fallback: Loading default data');
-                cognitionData = {
-                    now: { attention: [] },
-                    mind: { skill_network: { nodes: [] }, decisions: { autonomous: { count: 0 }, escalated: { count: 0 } } },
-                    memory: { long_term: { lessons: [] }, working: { loaded_files: [] } },
-                    training: { week: 11, progress: 65, blockers: [], milestones: [] },
-                    system: { gateway: [], files: {}, trading: {} }
-                };
-            }
-            renderTab(currentTab);
-        }, 1000);
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
