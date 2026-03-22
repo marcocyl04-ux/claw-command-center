@@ -629,7 +629,7 @@
                         <div class="milled-surface hairline-border rounded p-6 h-[500px]">
                             <div class="flex justify-between items-center mb-6">
                                 <h3 class="font-headline text-xl italic">Skill Network</h3>
-                                <span class="text-[10px] font-mono text-on-surface/40 uppercase tracking-widest">${mindSkillCount} Skills</span>
+                                <span class="text-[10px] font-mono text-on-surface/40 uppercase tracking-widest">${mind.skill_network?.totalCount || mindSkillCount} Skills Total</span>
                             </div>
                             <div id="skillNetworkViz" class="h-[340px] bg-surface-container-low rounded relative overflow-hidden"></div>
                             <div id="skillDetailPanel" class="hidden mt-4 p-4 bg-surface-container-low rounded border-l-2 border-primary-container"></div>
