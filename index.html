@@ -1085,6 +1085,14 @@
             renderTab(tab);
         }
         
+        // Toggle detail panels (expand/collapse)
+        function toggleDetailPanel(panelId) {
+            const panel = document.getElementById(panelId);
+            if (panel) {
+                panel.classList.toggle('hidden');
+            }
+        }
+        
         function renderTab(tab) {
             const container = document.getElementById('mainContent');
             
@@ -1261,43 +1269,109 @@
                     <!-- Right Sidebar: Metrics & Status (4 cols on desktop) -->
                     <div class="lg:col-span-4 flex flex-col gap-6">
                         <!-- System Health -->
-                        <div class="milled-surface hairline-border rounded p-6">
-                            <h3 class="font-headline text-xl italic mb-8">System Health</h3>
-                            <div class="space-y-8">
-                                <div>
-                                    <div class="flex justify-between items-end mb-2">
-                                        <span class="text-[10px] font-mono uppercase tracking-widest text-on-surface/40">Services Online</span>
-                                        <span class="text-sm font-mono ${systemIssues > 0 ? 'text-primary-container' : 'text-tertiary'}">${systemOnline}/${systemTotal}</span>
+                        <div class="milled-surface hairline-border rounded overflow-hidden">
+                            <div class="p-6 cursor-pointer hover:bg-surface-container-low/50 transition-colors" onclick="toggleDetailPanel('systemHealthDetail')">
+                                <div class="flex justify-between items-start mb-8">
+                                    <h3 class="font-headline text-xl italic">System Health</h3>
+                                    <span class="material-symbols-outlined text-on-surface/40">expand_more</span>
+                                </div>
+                                <div class="space-y-8">
+                                    <div>
+                                        <div class="flex justify-between items-end mb-2">
+                                            <span class="text-[10px] font-mono uppercase tracking-widest text-on-surface/40">Services Online</span>
+                                            <span class="text-sm font-mono ${systemIssues > 0 ? 'text-primary-container' : 'text-tertiary'}">${systemOnline}/${systemTotal}</span>
+                                        </div>
+                                        <div class="h-px w-full bg-outline-variant/20 relative">
+                                            <div class="absolute top-0 left-0 h-px bg-${systemIssues > 0 ? 'primary-container' : 'tertiary'}" style="width: ${(systemOnline/systemTotal)*100}%"></div>
+                                        </div>
                                     </div>
-                                    <div class="h-px w-full bg-outline-variant/20 relative">
-                                        <div class="absolute top-0 left-0 h-px bg-${systemIssues > 0 ? 'primary-container' : 'tertiary'}" style="width: ${(systemOnline/systemTotal)*100}%"></div>
+                                    <div>
+                                        <div class="flex justify-between items-end mb-2">
+                                            <span class="text-[10px] font-mono uppercase tracking-widest text-on-surface/40">Training Progress</span>
+                                            <span class="text-sm font-mono text-primary-container">${trainingProgress}%</span>
+                                        </div>
+                                        <div class="h-px w-full bg-outline-variant/20 relative">
+                                            <div class="absolute top-0 left-0 h-px bg-primary-container" style="width: ${trainingProgress}%"></div>
+                                            <div class="absolute top-[-2px]" style="left: ${trainingProgress}%"><div class="w-1 h-1 bg-primary-container rounded-full shadow-[0_0_8px_#FF5733]"></div></div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div>
-                                    <div class="flex justify-between items-end mb-2">
-                                        <span class="text-[10px] font-mono uppercase tracking-widest text-on-surface/40">Training Progress</span>
-                                        <span class="text-sm font-mono text-primary-container">${trainingProgress}%</span>
+                            </div>
+                            <div id="systemHealthDetail" class="hidden border-t border-outline-variant/10 p-6 bg-surface-container-low/30">
+                                <div class="space-y-3">
+                                    <div class="flex justify-between items-center p-3 bg-surface-container-low rounded">
+                                        <div class="flex items-center gap-3">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                                            <span class="text-xs font-mono">OpenRouter</span>
+                                        </div>
+                                        <span class="text-[10px] font-mono text-tertiary">ONLINE</span>
                                     </div>
-                                    <div class="h-px w-full bg-outline-variant/20 relative">
-                                        <div class="absolute top-0 left-0 h-px bg-primary-container" style="width: ${trainingProgress}%"></div>
-                                        <div class="absolute top-[-2px]" style="left: ${trainingProgress}%"><div class="w-1 h-1 bg-primary-container rounded-full shadow-[0_0_8px_#FF5733]"></div></div>
+                                    <div class="flex justify-between items-center p-3 bg-surface-container-low rounded">
+                                        <div class="flex items-center gap-3">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                                            <span class="text-xs font-mono">GitHub</span>
+                                        </div>
+                                        <span class="text-[10px] font-mono text-tertiary">ONLINE</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 bg-surface-container-low rounded">
+                                        <div class="flex items-center gap-3">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                                            <span class="text-xs font-mono">Telegram</span>
+                                        </div>
+                                        <span class="text-[10px] font-mono text-tertiary">ONLINE</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 bg-surface-container-low rounded">
+                                        <div class="flex items-center gap-3">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+                                            <span class="text-xs font-mono">Polymarket</span>
+                                        </div>
+                                        <span class="text-[10px] font-mono text-primary-container">DEGRADED</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         
                         <!-- Skill Velocity -->
-                        <div class="milled-surface hairline-border rounded p-6 bg-gradient-to-t from-primary-container/5 to-transparent">
-                            <h3 class="font-headline text-xl italic mb-2">Skill Network</h3>
-                            <p class="text-[10px] font-mono text-on-surface/40 uppercase tracking-widest mb-6">${mindDecisionCount} autonomous decisions</p>
-                            <div class="h-20 flex items-end gap-1 px-1">
-                                <div class="flex-1 bg-primary-container/10 h-[30%]"></div>
-                                <div class="flex-1 bg-primary-container/20 h-[45%]"></div>
-                                <div class="flex-1 bg-primary-container/10 h-[35%]"></div>
-                                <div class="flex-1 bg-primary-container/40 h-[60%]"></div>
-                                <div class="flex-1 bg-primary-container/20 h-[40%]"></div>
-                                <div class="flex-1 bg-primary-container/60 h-[80%]"></div>
-                                <div class="flex-1 bg-primary-container h-full"></div>
+                        <div class="milled-surface hairline-border rounded overflow-hidden bg-gradient-to-t from-primary-container/5 to-transparent">
+                            <div class="p-6 cursor-pointer hover:bg-surface-container-low/50 transition-colors" onclick="toggleDetailPanel('skillNetworkDetail')">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h3 class="font-headline text-xl italic">Skill Network</h3>
+                                    <span class="material-symbols-outlined text-on-surface/40">expand_more</span>
+                                </div>
+                                <p class="text-[10px] font-mono text-on-surface/40 uppercase tracking-widest mb-6">${mindDecisionCount} autonomous decisions</p>
+                                <div class="h-20 flex items-end gap-1 px-1">
+                                    <div class="flex-1 bg-primary-container/10 h-[30%]"></div>
+                                    <div class="flex-1 bg-primary-container/20 h-[45%]"></div>
+                                    <div class="flex-1 bg-primary-container/10 h-[35%]"></div>
+                                    <div class="flex-1 bg-primary-container/40 h-[60%]"></div>
+                                    <div class="flex-1 bg-primary-container/20 h-[40%]"></div>
+                                    <div class="flex-1 bg-primary-container/60 h-[80%]"></div>
+                                    <div class="flex-1 bg-primary-container h-full"></div>
+                                </div>
+                            </div>
+                            <div id="skillNetworkDetail" class="hidden border-t border-outline-variant/10 p-6 bg-surface-container-low/30">
+                                <div class="space-y-3">
+                                    <div class="flex justify-between items-center p-3 bg-surface-container-low rounded">
+                                        <span class="text-xs font-mono">Skill Chaining</span>
+                                        <span class="text-[10px] font-mono text-tertiary">ACTIVE</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 bg-surface-container-low rounded">
+                                        <span class="text-xs font-mono">Model Routing</span>
+                                        <span class="text-[10px] font-mono text-tertiary">ACTIVE</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 bg-surface-container-low rounded">
+                                        <span class="text-xs font-mono">Proactive Escalation</span>
+                                        <span class="text-[10px] font-mono text-tertiary">ACTIVE</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 bg-surface-container-low rounded">
+                                        <span class="text-xs font-mono">Edge Discovery</span>
+                                        <span class="text-[10px] font-mono text-primary-container/60">IN PROGRESS</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 bg-surface-container-low rounded">
+                                        <span class="text-xs font-mono">Autonomous Decisions</span>
+                                        <span class="text-[10px] font-mono text-primary-container/60">IN PROGRESS</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         
