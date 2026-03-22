@@ -484,9 +484,10 @@
             box-shadow: var(--elevation-5);
         }
         
-        /* Stagger animation for children */
+        /* Stagger animation for children - only animate once */
         .stagger-children > * {
-            animation: fadeSlideUp 0.4s ease-out backwards;
+            animation: fadeSlideUp 0.4s ease-out forwards;
+            opacity: 0;
         }
         
         .stagger-children > *:nth-child(1) { animation-delay: 0.05s; }
