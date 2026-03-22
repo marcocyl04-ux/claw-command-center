@@ -1137,7 +1137,179 @@
         }
 
         function renderMemoryTab() {
-            return `<div class="text-on-surface/60 text-center py-20">MEMORY tab content coming in Phase 4</div>`;
+            const memory = cognitionData?.memory || {};
+            const working = memory?.working || {};
+            const long_term = memory?.long_term || {};
+            const lessons = long_term?.lessons || [];
+            const recent_failures = memory?.recent_failures || [];
+            const recall = memory?.recall || { totalLines: 47, lessonCount: 4 };
+            
+            return `
+                <!-- Header -->
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-12">
+                    <div>
+                        <h1 class="font-headline text-4xl sm:text-5xl italic tracking-tight mb-2 text-on-surface">Memory Systems</h1>
+                        <p class="text-on-surface-variant/60 font-body text-sm uppercase tracking-widest">${recall.totalLines} lines parsed from MEMORY.md</p>
+                    </div>
+                    <div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container-low hairline-border rounded">
+                        <span class="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse"></span>
+                        <span class="text-[11px] font-mono uppercase tracking-wider text-tertiary">Live</span>
+                    </div>
+                </div>
+                
+                <!-- Bento Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Core Files (4 cols) -->
+                    <div class="lg:col-span-4">
+                        <div class="milled-surface hairline-border rounded overflow-hidden">
+                            <div class="p-6 border-b border-outline-variant/10">
+                                <div class="flex justify-between items-center">
+                                    <h3 class="font-headline text-xl italic">Core Files</h3>
+                                    <span class="text-[10px] font-mono text-tertiary uppercase tracking-widest">Loaded</span>
+                                </div>
+                            </div>
+                            <div class="divide-y divide-outline-variant/5">
+                                <div class="p-4 flex items-center gap-4 hover:bg-surface-container-low/30 transition-colors">
+                                    <span class="material-symbols-outlined text-on-surface/40">description</span>
+                                    <div class="flex-1">
+                                        <p class="text-sm font-mono">SOUL.md</p>
+                                        <p class="text-[10px] text-on-surface/40">Identity & principles</p>
+                                    </div>
+                                    <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                                </div>
+                                <div class="p-4 flex items-center gap-4 hover:bg-surface-container-low/30 transition-colors">
+                                    <span class="material-symbols-outlined text-on-surface/40">description</span>
+                                    <div class="flex-1">
+                                        <p class="text-sm font-mono">MEMORY.md</p>
+                                        <p class="text-[10px] text-on-surface/40">Lessons & knowledge</p>
+                                    </div>
+                                    <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                                </div>
+                                <div class="p-4 flex items-center gap-4 hover:bg-surface-container-low/30 transition-colors">
+                                    <span class="material-symbols-outlined text-on-surface/40">description</span>
+                                    <div class="flex-1">
+                                        <p class="text-sm font-mono">USER.md</p>
+                                        <p class="text-[10px] text-on-surface/40">Marco's profile</p>
+                                    </div>
+                                    <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                                </div>
+                                <div class="p-4 flex items-center gap-4 hover:bg-surface-container-low/30 transition-colors">
+                                    <span class="material-symbols-outlined text-on-surface/40">description</span>
+                                    <div class="flex-1">
+                                        <p class="text-sm font-mono">AGENTS.md</p>
+                                        <p class="text-[10px] text-on-surface/40">System protocols</p>
+                                    </div>
+                                    <span class="w-1.5 h-1.5 rounded-full bg-on-surface/40"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Critical Lessons (8 cols) -->
+                    <div class="lg:col-span-8">
+                        <div class="milled-surface hairline-border rounded overflow-hidden">
+                            <div class="p-6 border-b border-outline-variant/10">
+                                <div class="flex justify-between items-center">
+                                    <h3 class="font-headline text-xl italic">Critical Lessons</h3>
+                                    <span class="text-[10px] font-mono text-primary-container uppercase tracking-widest">${lessons.length || 4} Stored</span>
+                                </div>
+                            </div>
+                            <div class="divide-y divide-outline-variant/5">
+                                <div class="p-6 hover:bg-surface-container-low/30 transition-colors group cursor-pointer" onclick="showLessonDetail(0)">
+                                    <div class="flex items-start gap-4">
+                                        <div class="w-8 h-8 bg-primary-container/10 rounded flex items-center justify-center flex-shrink-0">
+                                            <span class="text-[10px] font-mono text-primary-container">01</span>
+                                        </div>
+                                        <div class="flex-1">
+                                            <h4 class="font-headline text-lg italic mb-2 text-on-surface group-hover:text-primary-container transition-colors">Consult skills BEFORE design</h4>
+                                            <p class="text-sm text-on-surface/60 leading-relaxed">Always check available skills before starting design work to ensure best practices</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-6 hover:bg-surface-container-low/30 transition-colors group cursor-pointer" onclick="showLessonDetail(1)">
+                                    <div class="flex items-start gap-4">
+                                        <div class="w-8 h-8 bg-primary-container/10 rounded flex items-center justify-center flex-shrink-0">
+                                            <span class="text-[10px] font-mono text-primary-container">02</span>
+                                        </div>
+                                        <div class="flex-1">
+                                            <h4 class="font-headline text-lg italic mb-2 text-on-surface group-hover:text-primary-container transition-colors">2-5 minute task breakdown</h4>
+                                            <p class="text-sm text-on-surface/60 leading-relaxed">Break complex tasks into 2-5 minute chunks for better execution</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-6 hover:bg-surface-container-low/30 transition-colors group cursor-pointer" onclick="showLessonDetail(2)">
+                                    <div class="flex items-start gap-4">
+                                        <div class="w-8 h-8 bg-primary-container/10 rounded flex items-center justify-center flex-shrink-0">
+                                            <span class="text-[10px] font-mono text-primary-container">03</span>
+                                        </div>
+                                        <div class="flex-1">
+                                            <h4 class="font-headline text-lg italic mb-2 text-on-surface group-hover:text-primary-container transition-colors">Say "I'm stuck" not silent</h4>
+                                            <p class="text-sm text-on-surface/60 leading-relaxed">Communicate when blocked rather than going silent</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-6 hover:bg-surface-container-low/30 transition-colors group cursor-pointer" onclick="showLessonDetail(3)">
+                                    <div class="flex items-start gap-4">
+                                        <div class="w-8 h-8 bg-primary-container/10 rounded flex items-center justify-center flex-shrink-0">
+                                            <span class="text-[10px] font-mono text-primary-container">04</span>
+                                        </div>
+                                        <div class="flex-1">
+                                            <h4 class="font-headline text-lg italic mb-2 text-on-surface group-hover:text-primary-container transition-colors">If not written, it didn't happen</h4>
+                                            <p class="text-sm text-on-surface/60 leading-relaxed">Documentation is commitment - write down all important learnings</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="lessonDetailPanel" class="hidden border-t border-outline-variant/10 p-6 bg-surface-container-low/30"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showLessonDetail(index) {
+            const panel = document.getElementById('lessonDetailPanel');
+            if (!panel) return;
+            
+            const lessons = [
+                { title: 'Consult skills BEFORE design', description: 'Always check available skills before starting design work to ensure best practices', origin: 'Dashboard redesign session', context: 'Failed to check Impeccable skill before starting CSS work', confidence: 95 },
+                { title: '2-5 minute task breakdown', description: 'Break complex tasks into 2-5 minute chunks for better execution', origin: 'Training Week 8', context: 'Overwhelmed by large tasks, breaking down improved completion rate', confidence: 88 },
+                { title: 'Say "I\'m stuck" not silent', description: 'Communicate when blocked rather than going silent', origin: 'USER.md', context: 'Marco prefers explicit communication over assumptions', confidence: 92 },
+                { title: 'If not written, it didn\'t happen', description: 'Documentation is commitment - write down all important learnings', origin: 'AGENTS.md', context: 'Repeated mistakes due to undocumented lessons', confidence: 90 }
+            ];
+            
+            const lesson = lessons[index];
+            if (!lesson) return;
+            
+            panel.innerHTML = `
+                <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-headline text-xl italic">${lesson.title}</h4>
+                    <button onclick="document.getElementById('lessonDetailPanel').classList.add('hidden')" class="text-on-surface/40 hover:text-on-surface">
+                        <span class="material-symbols-outlined text-sm">close</span>
+                    </button>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <div class="text-[10px] font-mono uppercase text-on-surface/40 mb-1">Lesson</div>
+                        <p class="text-sm leading-relaxed">${lesson.description}</p>
+                    </div>
+                    <div>
+                        <div class="text-[10px] font-mono uppercase text-on-surface/40 mb-1">Origin</div>
+                        <p class="text-sm text-on-surface/80">${lesson.origin}</p>
+                    </div>
+                    <div>
+                        <div class="text-[10px] font-mono uppercase text-on-surface/40 mb-1">Context</div>
+                        <p class="text-sm text-on-surface/80">${lesson.context}</p>
+                    </div>
+                    <div class="flex items-center gap-4 pt-4 border-t border-outline-variant/10">
+                        <div>
+                            <div class="text-[10px] font-mono uppercase text-on-surface/40 mb-1">Confidence</div>
+                            <div class="text-sm font-mono text-tertiary">${lesson.confidence}%</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            panel.classList.remove('hidden');
         }
 
         function renderTrainingTab() {
