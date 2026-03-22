@@ -149,6 +149,12 @@
             loadDashboardData();
             setInterval(updateHeaderTime, 1000);
             updateHeaderTime();
+            // Set initial active nav
+            const nowNav = document.querySelector('[data-tab="now"]');
+            if (nowNav) {
+                nowNav.classList.remove('text-on-surface/60');
+                nowNav.classList.add('text-primary-container', 'bg-surface-container-low');
+            }
         });
 
         function updateHeaderTime() {
@@ -199,6 +205,23 @@
             renderTab(tab);
         }
 
+        function toggleDetailPanel(panelId) {
+            const panel = document.getElementById(panelId);
+            if (panel) {
+                panel.classList.toggle('hidden');
+            }
+        }
+
+        function refreshDashboardData() {
+            loadDashboardData();
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('en-US', { hour12: false });
+            const refreshEl = document.getElementById('lastRefresh');
+            if (refreshEl) {
+                refreshEl.textContent = timeStr;
+            }
+        }
+
         function renderTab(tab) {
             const container = document.getElementById('mainContent');
             switch(tab) {
@@ -227,20 +250,328 @@
 
         // Tab render functions will be added here
         function renderNowTab() {
+            const now = cognitionData?.now || {};
+            const training = cognitionData?.training || { week: 11, progress: 50 };
+            const memory = cognitionData?.memory || {};
+            const system = cognitionData?.system || {};
+            const mind = cognitionData?.mind || {};
+            
+            const mindSkillCount = mind?.skill_network?.nodes?.length || 22;
+            const mindDecisionCount = mind?.decisions?.autonomous?.count || 0;
+            const systemOnline = system?.gateway?.filter(s => s?.status === 'online')?.length || 4;
+            const systemTotal = system?.gateway?.length || 4;
+            const systemIssues = system?.gateway?.filter(s => s?.status === 'degraded')?.length || 0;
+            const trainingWeek = training?.week || 11;
+            const trainingProgress = training?.progress || 50;
+            const predictions = system?.trading?.total_predictions || 0;
+            const edges = system?.trading?.edge_discovery_rate || 0;
+            
             return `
+                <!-- Header -->
                 <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-12">
                     <div>
                         <h1 class="font-headline text-4xl sm:text-5xl italic tracking-tight mb-2 text-on-surface">Command Center</h1>
-                        <p class="text-on-surface-variant/60 font-body text-sm uppercase tracking-widest">Active Session</p>
+                        <p class="text-on-surface-variant/60 font-body text-sm uppercase tracking-widest">Active Session: Week ${trainingWeek}/16</p>
                     </div>
                     <div class="flex flex-row gap-2">
                         <div class="px-3 py-2 bg-surface-container-low hairline-border rounded flex items-center justify-center gap-2 whitespace-nowrap">
                             <span class="w-1.5 h-1.5 rounded-full bg-primary-container animate-pulse"></span>
                             <span class="text-[11px] font-mono uppercase tracking-wide text-primary-container">Live</span>
                         </div>
+                        <div class="px-3 py-2 bg-surface-container-low hairline-border rounded flex items-center justify-center gap-2 whitespace-nowrap">
+                            <span class="text-[11px] font-mono uppercase tracking-wide text-on-surface/40">Progress</span>
+                            <span class="text-[11px] font-mono text-tertiary">${trainingProgress}%</span>
+                        </div>
                     </div>
                 </div>
-                <div class="text-on-surface/60 text-center py-20">NOW tab content coming in Phase 2</div>
+                
+                <!-- Bento Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Main Module: Activity Stream (8 cols) -->
+                    <div class="lg:col-span-8 flex flex-col gap-6">
+                        <!-- Thought Stream / Activity -->
+                        <div class="milled-surface hairline-border rounded p-6 flex flex-col h-[400px]">
+                            <div class="flex justify-between items-center mb-6">
+                                <h3 class="font-headline text-xl italic">Activity Stream</h3>
+                                <div class="flex gap-2">
+                                    <span class="px-2 py-0.5 text-[10px] font-mono border border-outline-variant/30 text-outline-variant uppercase">Live Logs</span>
+                                </div>
+                            </div>
+                            <div class="flex-1 flex flex-col sm:flex-row gap-4 sm:gap-6 overflow-hidden">
+                                <!-- Heuristic Visualization -->
+                                <div class="w-full sm:w-1/2 h-1/2 sm:h-auto relative bg-surface-container-low rounded overflow-hidden">
+                                    <div class="absolute inset-0 opacity-20 pointer-events-none">
+                                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 border border-primary-container/40 rounded-full"></div>
+                                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 border border-tertiary/20 rounded-full"></div>
+                                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[1px] bg-outline-variant/20"></div>
+                                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1px] h-full bg-outline-variant/20"></div>
+                                    </div>
+                                    <div class="p-4 relative h-full flex flex-col justify-between">
+                                        <div class="text-[10px] font-mono text-tertiary/60 uppercase tracking-widest">System Health</div>
+                                        <div class="space-y-3">
+                                            <div class="flex items-center gap-2">
+                                                <div class="w-1.5 h-1.5 bg-primary-container rounded-full"></div>
+                                                <div class="h-[1px] flex-1 bg-gradient-to-r from-primary-container/40 to-transparent"></div>
+                                                <span class="text-[10px] font-mono">MIND_ACTIVE</span>
+                                            </div>
+                                            <div class="flex items-center gap-2 opacity-40">
+                                                <div class="w-1.5 h-1.5 bg-on-surface rounded-full"></div>
+                                                <div class="h-[1px] flex-1 bg-gradient-to-r from-on-surface/40 to-transparent"></div>
+                                                <span class="text-[10px] font-mono">TRADING_IDLE</span>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <div class="text-[32px] font-headline italic leading-none text-primary-container">${trainingProgress}%</div>
+                                            <div class="text-[9px] font-mono uppercase tracking-widest text-on-surface/40">To Autonomous</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Live Logs -->
+                                <div class="w-full sm:w-1/2 h-1/2 sm:h-auto font-mono text-[11px] space-y-3 overflow-y-auto custom-scrollbar pr-2">
+                                    <div class="flex gap-3">
+                                        <span class="text-on-surface/30">14:20:11</span>
+                                        <span class="text-tertiary">[INF]</span>
+                                        <p class="text-on-surface/80">Skill network synchronized: ${mindSkillCount} active</p>
+                                    </div>
+                                    <div class="flex gap-3">
+                                        <span class="text-on-surface/30">14:20:15</span>
+                                        <span class="text-primary-container">[EVT]</span>
+                                        <p class="text-on-surface/80">Training milestone: Week ${trainingWeek} complete</p>
+                                    </div>
+                                    <div class="flex gap-3">
+                                        <span class="text-on-surface/30">14:20:22</span>
+                                        <span class="text-tertiary">[INF]</span>
+                                        <p class="text-on-surface/80">Memory recall: 4 lessons indexed</p>
+                                    </div>
+                                    <div class="flex gap-3">
+                                        <span class="text-on-surface/30">14:20:28</span>
+                                        <span class="text-on-surface/40">[SYS]</span>
+                                        <p class="text-on-surface/80">Gateway status: ${systemOnline}/${systemTotal} online</p>
+                                    </div>
+                                    <div class="flex gap-3">
+                                        <span class="text-on-surface/30">14:20:35</span>
+                                        <span class="text-primary-container">[EVT]</span>
+                                        <p class="text-on-surface/80">Prediction batch: ${predictions} total, ${edges} edges</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Module Status Cards -->
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div class="milled-surface hairline-border rounded p-5 cursor-pointer hover:border-outline-variant/40 transition-colors" onclick="switchTab('mind')">
+                                <div class="flex justify-between items-start mb-4">
+                                    <span class="material-symbols-outlined text-on-surface/40">neurology</span>
+                                    <span class="text-[10px] font-mono text-tertiary">ACTIVE</span>
+                                </div>
+                                <h4 class="font-headline text-lg italic mb-1">Mind</h4>
+                                <div class="font-mono text-2xl text-primary-container mb-1">${mindSkillCount}</div>
+                                <p class="text-[10px] font-mono text-on-surface/40">skills loaded</p>
+                            </div>
+                            <div class="milled-surface hairline-border rounded p-5 cursor-pointer hover:border-outline-variant/40 transition-colors" onclick="switchTab('trading')">
+                                <div class="flex justify-between items-start mb-4">
+                                    <span class="material-symbols-outlined text-on-surface/40">trending_up</span>
+                                    <span class="text-[10px] font-mono text-on-surface/40">PAPER</span>
+                                </div>
+                                <h4 class="font-headline text-lg italic mb-1">Trading</h4>
+                                <div class="font-mono text-2xl text-on-surface mb-1">${predictions}</div>
+                                <p class="text-[10px] font-mono text-on-surface/40">predictions • ${edges} edges</p>
+                            </div>
+                            <div class="milled-surface hairline-border rounded p-5 cursor-pointer hover:border-outline-variant/40 transition-colors" onclick="switchTab('memory')">
+                                <div class="flex justify-between items-start mb-4">
+                                    <span class="material-symbols-outlined text-on-surface/40">database</span>
+                                    <span class="text-[10px] font-mono text-tertiary">INDEXED</span>
+                                </div>
+                                <h4 class="font-headline text-lg italic mb-1">Memory</h4>
+                                <div class="font-mono text-2xl text-tertiary mb-1">4</div>
+                                <p class="text-[10px] font-mono text-on-surface/40">lessons stored</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right Sidebar: Metrics & Status (4 cols) -->
+                    <div class="lg:col-span-4 flex flex-col gap-6">
+                        <!-- System Health -->
+                        <div class="milled-surface hairline-border rounded overflow-hidden">
+                            <div class="p-6 cursor-pointer hover:bg-surface-container-low/50 transition-colors" onclick="toggleDetailPanel('systemHealthDetail')">
+                                <div class="flex justify-between items-start mb-8">
+                                    <h3 class="font-headline text-xl italic">System Health</h3>
+                                    <span class="material-symbols-outlined text-on-surface/40">expand_more</span>
+                                </div>
+                                <div class="space-y-8">
+                                    <div>
+                                        <div class="flex justify-between items-end mb-2">
+                                            <span class="text-[10px] font-mono uppercase tracking-widest text-on-surface/40">Services Online</span>
+                                            <span class="text-sm font-mono ${systemIssues > 0 ? 'text-primary-container' : 'text-tertiary'}">${systemOnline}/${systemTotal}</span>
+                                        </div>
+                                        <div class="h-px w-full bg-outline-variant/20 relative">
+                                            <div class="absolute top-0 left-0 h-px ${systemIssues > 0 ? 'bg-primary-container' : 'bg-tertiary'}" style="width: ${(systemOnline/systemTotal)*100}%"></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="flex justify-between items-end mb-2">
+                                            <span class="text-[10px] font-mono uppercase tracking-widest text-on-surface/40">Training Progress</span>
+                                            <span class="text-sm font-mono text-primary-container">${trainingProgress}%</span>
+                                        </div>
+                                        <div class="h-px w-full bg-outline-variant/20 relative">
+                                            <div class="absolute top-0 left-0 h-px bg-primary-container" style="width: ${trainingProgress}%"></div>
+                                            <div class="absolute top-[-2px]" style="left: ${trainingProgress}%"><div class="w-1 h-1 bg-primary-container rounded-full shadow-[0_0_8px_#FF5733]"></div></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="systemHealthDetail" class="hidden border-t border-outline-variant/10 p-6 bg-surface-container-low/30">
+                                <div class="space-y-3">
+                                    <div class="flex justify-between items-center p-3 bg-surface-container-low rounded">
+                                        <div class="flex items-center gap-3">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                                            <span class="text-xs font-mono">OpenRouter</span>
+                                        </div>
+                                        <span class="text-[10px] font-mono text-tertiary">ONLINE</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 bg-surface-container-low rounded">
+                                        <div class="flex items-center gap-3">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                                            <span class="text-xs font-mono">GitHub</span>
+                                        </div>
+                                        <span class="text-[10px] font-mono text-tertiary">ONLINE</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 bg-surface-container-low rounded">
+                                        <div class="flex items-center gap-3">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                                            <span class="text-xs font-mono">Telegram</span>
+                                        </div>
+                                        <span class="text-[10px] font-mono text-tertiary">ONLINE</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 bg-surface-container-low rounded">
+                                        <div class="flex items-center gap-3">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+                                            <span class="text-xs font-mono">Polymarket</span>
+                                        </div>
+                                        <span class="text-[10px] font-mono text-primary-container">DEGRADED</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Skill Velocity -->
+                        <div class="milled-surface hairline-border rounded overflow-hidden bg-gradient-to-t from-primary-container/5 to-transparent">
+                            <div class="p-6 cursor-pointer hover:bg-surface-container-low/50 transition-colors" onclick="toggleDetailPanel('skillNetworkDetail')">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h3 class="font-headline text-xl italic">Skill Network</h3>
+                                    <span class="material-symbols-outlined text-on-surface/40">expand_more</span>
+                                </div>
+                                <p class="text-[10px] font-mono text-on-surface/40 uppercase tracking-widest mb-6">${mindDecisionCount} autonomous decisions</p>
+                                <div class="h-20 flex items-end gap-1 px-1">
+                                    <div class="flex-1 bg-primary-container/10 h-[30%]"></div>
+                                    <div class="flex-1 bg-primary-container/20 h-[45%]"></div>
+                                    <div class="flex-1 bg-primary-container/10 h-[35%]"></div>
+                                    <div class="flex-1 bg-primary-container/40 h-[60%]"></div>
+                                    <div class="flex-1 bg-primary-container/20 h-[40%]"></div>
+                                    <div class="flex-1 bg-primary-container/60 h-[80%]"></div>
+                                    <div class="flex-1 bg-primary-container h-full"></div>
+                                </div>
+                            </div>
+                            <div id="skillNetworkDetail" class="hidden border-t border-outline-variant/10 p-6 bg-surface-container-low/30">
+                                <div class="space-y-3">
+                                    <div class="flex justify-between items-center p-3 bg-surface-container-low rounded">
+                                        <span class="text-xs font-mono">Skill Chaining</span>
+                                        <span class="text-[10px] font-mono text-tertiary">ACTIVE</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 bg-surface-container-low rounded">
+                                        <span class="text-xs font-mono">Model Routing</span>
+                                        <span class="text-[10px] font-mono text-tertiary">ACTIVE</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 bg-surface-container-low rounded">
+                                        <span class="text-xs font-mono">Proactive Escalation</span>
+                                        <span class="text-[10px] font-mono text-tertiary">ACTIVE</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 bg-surface-container-low rounded">
+                                        <span class="text-xs font-mono">Edge Discovery</span>
+                                        <span class="text-[10px] font-mono text-primary-container/60">IN PROGRESS</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 bg-surface-container-low rounded">
+                                        <span class="text-xs font-mono">Autonomous Decisions</span>
+                                        <span class="text-[10px] font-mono text-primary-container/60">IN PROGRESS</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Active Modules -->
+                        <div class="milled-surface hairline-border rounded overflow-hidden flex flex-col flex-1">
+                            <div class="p-6 border-b border-outline-variant/10">
+                                <h3 class="font-headline text-xl italic">Modules</h3>
+                            </div>
+                            <div class="flex-1 overflow-y-auto custom-scrollbar">
+                                <div class="divide-y divide-outline-variant/5">
+                                    <div class="p-4 flex items-center justify-between hover:bg-surface-container-low transition-colors cursor-pointer" onclick="switchTab('mind')">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-1.5 h-1.5 rounded-full bg-primary-container"></div>
+                                            <div>
+                                                <p class="text-xs font-mono">Mind</p>
+                                                <p class="text-[9px] uppercase text-on-surface/40">Cognitive Stack</p>
+                                            </div>
+                                        </div>
+                                        <span class="material-symbols-outlined text-xs text-on-surface/20">chevron_right</span>
+                                    </div>
+                                    <div class="p-4 flex items-center justify-between hover:bg-surface-container-low transition-colors cursor-pointer" onclick="switchTab('training')">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-1.5 h-1.5 rounded-full bg-primary-container"></div>
+                                            <div>
+                                                <p class="text-xs font-mono">Training</p>
+                                                <p class="text-[9px] uppercase text-on-surface/40">Week ${trainingWeek}/16</p>
+                                            </div>
+                                        </div>
+                                        <span class="material-symbols-outlined text-xs text-on-surface/20">chevron_right</span>
+                                    </div>
+                                    <div class="p-4 flex items-center justify-between hover:bg-surface-container-low transition-colors cursor-pointer" onclick="switchTab('system')">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-1.5 h-1.5 rounded-full bg-tertiary/40"></div>
+                                            <div>
+                                                <p class="text-xs font-mono">System</p>
+                                                <p class="text-[9px] uppercase text-on-surface/40">${systemIssues > 0 ? systemIssues + ' issues' : 'Operational'}</p>
+                                            </div>
+                                        </div>
+                                        <span class="material-symbols-outlined text-xs text-on-surface/20">chevron_right</span>
+                                    </div>
+                                    <div class="p-4 flex items-center justify-between hover:bg-surface-container-low transition-colors cursor-pointer" onclick="switchTab('trading')">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-1.5 h-1.5 rounded-full bg-on-surface/20"></div>
+                                            <div>
+                                                <p class="text-xs font-mono">Trading</p>
+                                                <p class="text-[9px] uppercase text-on-surface/40">Paper Mode</p>
+                                            </div>
+                                        </div>
+                                        <span class="material-symbols-outlined text-xs text-on-surface/20">chevron_right</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Control Panel -->
+                <div class="milled-surface hairline-border rounded p-6 mt-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-headline text-xl italic">Control Panel</h3>
+                        <span class="text-[10px] font-mono text-on-surface/40 uppercase tracking-widest" id="lastRefresh">--:--:--</span>
+                    </div>
+                    <div class="flex gap-4">
+                        <button onclick="refreshDashboardData()" class="px-4 py-2 bg-surface-container-low hairline-border rounded text-xs font-mono uppercase tracking-wider text-on-surface/80 hover:text-primary-container hover:border-primary-container/40 transition-colors flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">refresh</span>
+                            Refresh Data
+                        </button>
+                        <button onclick="switchTab('system')" class="px-4 py-2 bg-surface-container-low hairline-border rounded text-xs font-mono uppercase tracking-wider text-on-surface/80 hover:text-tertiary hover:border-tertiary/40 transition-colors flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">stethoscope</span>
+                            Diagnostics
+                        </button>
+                        <button onclick="window.open('https://github.com/marcocyl04-ux/claw-command-center', '_blank')" class="px-4 py-2 bg-surface-container-low hairline-border rounded text-xs font-mono uppercase tracking-wider text-on-surface/80 hover:text-on-surface hover:border-on-surface/40 transition-colors flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">folder_open</span>
+                            Workspace
+                        </button>
+                    </div>
+                </div>
             `;
         }
 
