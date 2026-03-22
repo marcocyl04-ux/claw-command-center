@@ -695,18 +695,22 @@
                                 <h3 class="font-headline text-xl italic">Recent Decisions</h3>
                                 <span class="text-[10px] font-mono text-on-surface/40 uppercase tracking-widest">${mind.decisions?.examples?.length || 0} Tracked</span>
                             </div>
-                            <div class="space-y-4">
-                                ${(mind.decisions?.examples || []).slice(0, 3).map(ex => `
-                                    <div class="p-4 bg-surface-container-low rounded border-l-2 ${ex.type === 'autonomous' ? 'border-tertiary' : 'border-primary-container'}">
+                            <div class="space-y-3">
+                                ${(mind.decisions?.examples || []).slice(0, 3).map((ex, i) => `
+                                    <div onclick="showDecisionDetail(${i})" class="p-4 bg-surface-container-low rounded hairline-border cursor-pointer hover:bg-surface-container transition-colors">
                                         <div class="flex justify-between items-start mb-2">
                                             <span class="text-sm font-medium">${ex.context}</span>
-                                            <span class="text-[10px] font-mono ${ex.type === 'autonomous' ? 'text-tertiary' : 'text-primary-container'}">${ex.type?.toUpperCase()}</span>
+                                            <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded ${ex.type === 'autonomous' ? 'bg-tertiary/10 text-tertiary' : 'bg-primary-container/10 text-primary-container'}">${ex.type}</span>
                                         </div>
-                                        <div class="text-xs text-on-surface/60 mb-1">${ex.decision}</div>
-                                        <div class="text-[10px] text-on-surface/40">Outcome: ${ex.outcome}</div>
+                                        <div class="text-xs text-on-surface/60 mb-2">${ex.decision}</div>
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-[10px] text-on-surface/40">Outcome: <span class="${ex.outcome === 'excellent' ? 'text-tertiary' : ex.outcome === 'good' ? 'text-on-surface/60' : 'text-primary-container'}">${ex.outcome}</span></span>
+                                            <span class="text-[10px] font-mono text-on-surface/30">${ex.timestamp}</span>
+                                        </div>
                                     </div>
                                 `).join('')}
                             </div>
+                            <div id="decisionDetailPanel" class="hidden mt-4 p-4 bg-surface-container-low rounded hairline-border"></div>
                         </div>
                     </div>
                     
@@ -750,22 +754,41 @@
                                 <span class="text-[10px] font-mono text-on-surface/40 uppercase tracking-widest">3 Active</span>
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div class="p-4 bg-surface-container-low rounded border-l-2 border-tertiary">
-                                    <div class="text-sm font-medium mb-1">90-minute sprint pattern</div>
-                                    <div class="text-xs text-on-surface/60 mb-2">High output in focused blocks</div>
-                                    <div class="text-[10px] font-mono text-tertiary">2 days ago</div>
+                                <div onclick="showPatternDetail('sprint')" class="p-4 bg-surface-container-low rounded hairline-border cursor-pointer hover:bg-surface-container transition-colors">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <div class="w-1.5 h-1.5 rounded-full bg-tertiary"></div>
+                                        <div class="text-sm font-medium">90-minute sprint pattern</div>
+                                    </div>
+                                    <div class="text-xs text-on-surface/60 mb-3">High output in focused blocks</div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-[10px] font-mono text-tertiary">Active</span>
+                                        <span class="text-[10px] text-on-surface/30">2 days ago</span>
+                                    </div>
                                 </div>
-                                <div class="p-4 bg-surface-container-low rounded border-l-2 border-primary-container/60">
-                                    <div class="text-sm font-medium mb-1">Skill drops after 6pm</div>
-                                    <div class="text-xs text-on-surface/60 mb-2">40% less evening usage</div>
-                                    <div class="text-[10px] font-mono text-primary-container/60">1 week ago</div>
+                                <div onclick="showPatternDetail('evening')" class="p-4 bg-surface-container-low rounded hairline-border cursor-pointer hover:bg-surface-container transition-colors">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <div class="w-1.5 h-1.5 rounded-full bg-primary-container/60"></div>
+                                        <div class="text-sm font-medium">Skill drops after 6pm</div>
+                                    </div>
+                                    <div class="text-xs text-on-surface/60 mb-3">40% less evening usage</div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-[10px] font-mono text-primary-container/60">Warning</span>
+                                        <span class="text-[10px] text-on-surface/30">1 week ago</span>
+                                    </div>
                                 </div>
-                                <div class="p-4 bg-surface-container-low rounded border-l-2 border-primary-container/60">
-                                    <div class="text-sm font-medium mb-1">AGENTS.md improves routing</div>
-                                    <div class="text-xs text-on-surface/60 mb-2">85% quality with protocol</div>
-                                    <div class="text-[10px] font-mono text-primary-container/60">Today</div>
+                                <div onclick="showPatternDetail('agents')" class="p-4 bg-surface-container-low rounded hairline-border cursor-pointer hover:bg-surface-container transition-colors">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <div class="w-1.5 h-1.5 rounded-full bg-primary-container/60"></div>
+                                        <div class="text-sm font-medium">AGENTS.md improves routing</div>
+                                    </div>
+                                    <div class="text-xs text-on-surface/60 mb-3">85% quality with protocol</div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-[10px] font-mono text-primary-container/60">Active</span>
+                                        <span class="text-[10px] text-on-surface/30">Today</span>
+                                    </div>
                                 </div>
                             </div>
+                            <div id="patternDetailPanel" class="hidden mt-4 p-4 bg-surface-container-low rounded hairline-border"></div>
                         </div>
                     </div>
                 </div>
@@ -972,6 +995,91 @@
                     </div>
                 </div>
             `;
+        }
+
+        function showDecisionDetail(index) {
+            const panel = document.getElementById('decisionDetailPanel');
+            if (!panel) return;
+            
+            const mind = cognitionData?.mind || {};
+            const examples = mind.decisions?.examples || [];
+            const ex = examples[index];
+            if (!ex) return;
+            
+            panel.innerHTML = `
+                <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-headline text-lg italic">${ex.context}</h4>
+                    <button onclick="document.getElementById('decisionDetailPanel').classList.add('hidden')" class="text-on-surface/40 hover:text-on-surface">
+                        <span class="material-symbols-outlined text-sm">close</span>
+                    </button>
+                </div>
+                <div class="space-y-3">
+                    <div>
+                        <div class="text-[10px] font-mono uppercase text-on-surface/40 mb-1">Decision</div>
+                        <div class="text-sm">${ex.decision}</div>
+                    </div>
+                    <div>
+                        <div class="text-[10px] font-mono uppercase text-on-surface/40 mb-1">Reasoning</div>
+                        <div class="text-sm text-on-surface/80">${ex.reasoning || 'No reasoning recorded'}</div>
+                    </div>
+                    <div class="flex gap-6">
+                        <div>
+                            <div class="text-[10px] font-mono uppercase text-on-surface/40 mb-1">Type</div>
+                            <span class="text-xs px-2 py-1 rounded ${ex.type === 'autonomous' ? 'bg-tertiary/10 text-tertiary' : 'bg-primary-container/10 text-primary-container'}">${ex.type}</span>
+                        </div>
+                        <div>
+                            <div class="text-[10px] font-mono uppercase text-on-surface/40 mb-1">Outcome</div>
+                            <span class="text-xs ${ex.outcome === 'excellent' ? 'text-tertiary' : ex.outcome === 'good' ? 'text-on-surface/80' : 'text-primary-container'}">${ex.outcome}</span>
+                        </div>
+                        <div>
+                            <div class="text-[10px] font-mono uppercase text-on-surface/40 mb-1">Date</div>
+                            <span class="text-xs text-on-surface/60">${ex.timestamp}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            panel.classList.remove('hidden');
+        }
+
+        function showPatternDetail(patternId) {
+            const panel = document.getElementById('patternDetailPanel');
+            if (!panel) return;
+            
+            const patterns = {
+                'sprint': { name: '90-minute sprint pattern', description: 'High output in focused 90-minute blocks, then need break', impact: 'Used in dashboard rebuild — effective', recommendation: 'Continue using for complex tasks', confidence: 92 },
+                'evening': { name: 'Skill drops after 6pm', description: 'Evening work shows 40% less skill usage and quality', impact: 'Reduced effectiveness after 6pm', recommendation: 'Consider stopping at 6pm', confidence: 78 },
+                'agents': { name: 'AGENTS.md improves routing', description: '85% quality when protocol checked first', impact: 'Applied in current session', recommendation: 'Always check AGENTS.md before design', confidence: 88 }
+            };
+            
+            const p = patterns[patternId] || { name: patternId, description: '-', impact: '-', recommendation: '-', confidence: 0 };
+            
+            panel.innerHTML = `
+                <div class="flex justify-between items-start mb-4">
+                    <h4 class="font-headline text-lg italic">${p.name}</h4>
+                    <button onclick="document.getElementById('patternDetailPanel').classList.add('hidden')" class="text-on-surface/40 hover:text-on-surface">
+                        <span class="material-symbols-outlined text-sm">close</span>
+                    </button>
+                </div>
+                <div class="space-y-3">
+                    <div>
+                        <div class="text-[10px] font-mono uppercase text-on-surface/40 mb-1">Description</div>
+                        <div class="text-sm">${p.description}</div>
+                    </div>
+                    <div>
+                        <div class="text-[10px] font-mono uppercase text-on-surface/40 mb-1">Impact</div>
+                        <div class="text-sm text-on-surface/80">${p.impact}</div>
+                    </div>
+                    <div>
+                        <div class="text-[10px] font-mono uppercase text-on-surface/40 mb-1">Recommendation</div>
+                        <div class="text-sm text-primary-container">${p.recommendation}</div>
+                    </div>
+                    <div>
+                        <div class="text-[10px] font-mono uppercase text-on-surface/40 mb-1">Confidence</div>
+                        <div class="text-sm font-mono">${p.confidence}%</div>
+                    </div>
+                </div>
+            `;
+            panel.classList.remove('hidden');
         }
 
         function showModelDetail(modelId) {
