@@ -2469,64 +2469,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="cards-grid">
-                    <div class="card">
-                        <div class="section-header">
-                            <span class="section-title">Core Files</span>
-                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">${insights.overall_health || 85}% health</span>
-                        </div>
-                        ${Object.entries(insights.files || {}).map(([name, file]) => `
-                            <div class="file-item" style="cursor: pointer;" onclick="showFileDetail('${name.toLowerCase().replace('.md', '')}')">
-                                <div class="file-status-dot ${file.status || 'active'}"></div>
-                                <div style="flex: 1;">
-                                    <div class="file-name">${name}</div>
-                                    <div style="font-size: var(--text-xs); color: var(--text-tertiary);">${file.lines || 0} lines • ${file.last_modified || 'unknown'}</div>
-                                </div>
-                                <span class="file-health">${file.health || 80}%</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                    <!-- Chunk 1: Tool Capabilities -->
-                    <div class="card card-full">
-                        <div class="section-header">
-                            <span class="section-title">Tool Capabilities</span>
-                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">Tools available in environment</span>
-                        </div>
-                        
-                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3);">
-                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4);">
-                                <div style="font-weight: 600; margin-bottom: var(--space-2);">Git CLI</div>
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">Version control operations</div>
-                            </div>
-                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4);">
-                                <div style="font-weight: 600; margin-bottom: var(--space-2);">File Operations</div>
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">Read, write, edit files</div>
-                            </div>
-                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4);">
-                                <div style="font-weight: 600; margin-bottom: var(--space-2);">Process Management</div>
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">Execute commands, shells</div>
-                            </div>
-                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4);">
-                                <div style="font-weight: 600; margin-bottom: var(--space-2);">Network Diagnostics</div>
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">HTTP requests, API calls</div>
-                            </div>
-                        </div>
-                                <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3);">
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-1);">
-                                        <span style="font-size: var(--text-sm);">Cross-Platform</span>
-                                        <span style="font-size: var(--text-xs); color: var(--amber-400);">65%</span>
-                                    </div>
-                                    <div style="height: 4px; background: var(--bg-0); border-radius: 2px; overflow: hidden;">
-                                        <div style="width: 65%; height: 100%; background: var(--amber-500); border-radius: 2px;"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Integration Capabilities -->
-                        <div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
-                                <span style="font-weight: 600;">Integration Capabilities</span>
+            `;
+        }
                                 <span style="font-family: var(--font-mono); color: var(--amber-400);">70%</span>
                             </div>
                             <div style="height: 8px; background: var(--bg-1); border-radius: var(--radius-full); overflow: hidden; margin-bottom: var(--space-3);">
