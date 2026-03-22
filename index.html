@@ -1483,35 +1483,35 @@
                                 <span class="text-[10px] font-mono text-on-surface/40 uppercase tracking-widest">${capabilities.length} Mastered</span>
                             </div>
                             <div class="grid grid-cols-3 gap-4">
-                                <div class="p-5 bg-surface-container-low rounded hairline-border hover:bg-surface-container transition-colors group cursor-pointer">
+                                <div onclick="showCapabilityDetail('skill-chaining')" class="p-5 bg-surface-container-low rounded hairline-border hover:bg-surface-container transition-colors group cursor-pointer">
                                     <div class="flex items-center gap-2 mb-3">
                                         <div class="w-2 h-2 rounded-full bg-tertiary shadow-[0_0_8px_rgba(96,213,245,0.4)]"></div>
                                         <span class="text-[10px] font-mono uppercase tracking-wider text-tertiary">Mastered</span>
                                     </div>
                                     <h4 class="font-headline text-lg italic text-on-surface group-hover:text-tertiary transition-colors">Skill Chaining</h4>
                                 </div>
-                                <div class="p-5 bg-surface-container-low rounded hairline-border hover:bg-surface-container transition-colors group cursor-pointer">
+                                <div onclick="showCapabilityDetail('model-routing')" class="p-5 bg-surface-container-low rounded hairline-border hover:bg-surface-container transition-colors group cursor-pointer">
                                     <div class="flex items-center gap-2 mb-3">
                                         <div class="w-2 h-2 rounded-full bg-tertiary shadow-[0_0_8px_rgba(96,213,245,0.4)]"></div>
                                         <span class="text-[10px] font-mono uppercase tracking-wider text-tertiary">Mastered</span>
                                     </div>
                                     <h4 class="font-headline text-lg italic text-on-surface group-hover:text-tertiary transition-colors">Model Routing</h4>
                                 </div>
-                                <div class="p-5 bg-surface-container-low rounded hairline-border hover:bg-surface-container transition-colors group cursor-pointer">
+                                <div onclick="showCapabilityDetail('proactive-escalation')" class="p-5 bg-surface-container-low rounded hairline-border hover:bg-surface-container transition-colors group cursor-pointer">
                                     <div class="flex items-center gap-2 mb-3">
                                         <div class="w-2 h-2 rounded-full bg-tertiary shadow-[0_0_8px_rgba(96,213,245,0.4)]"></div>
                                         <span class="text-[10px] font-mono uppercase tracking-wider text-tertiary">Mastered</span>
                                     </div>
                                     <h4 class="font-headline text-lg italic text-on-surface group-hover:text-tertiary transition-colors">Proactive Escalation</h4>
                                 </div>
-                                <div class="p-5 bg-surface-container-low rounded hairline-border hover:bg-surface-container transition-colors group cursor-pointer">
+                                <div onclick="showCapabilityDetail('edge-discovery')" class="p-5 bg-surface-container-low rounded hairline-border hover:bg-surface-container transition-colors group cursor-pointer">
                                     <div class="flex items-center gap-2 mb-3">
                                         <div class="w-2 h-2 rounded-full bg-primary-container/60"></div>
                                         <span class="text-[10px] font-mono uppercase tracking-wider text-primary-container/60">In Progress</span>
                                     </div>
                                     <h4 class="font-headline text-lg italic text-on-surface group-hover:text-primary-container/80 transition-colors">Edge Discovery</h4>
                                 </div>
-                                <div class="p-5 bg-surface-container-low rounded hairline-border hover:bg-surface-container transition-colors group cursor-pointer">
+                                <div onclick="showCapabilityDetail('autonomous-decisions')" class="p-5 bg-surface-container-low rounded hairline-border hover:bg-surface-container transition-colors group cursor-pointer">
                                     <div class="flex items-center gap-2 mb-3">
                                         <div class="w-2 h-2 rounded-full bg-primary-container/60"></div>
                                         <span class="text-[10px] font-mono uppercase tracking-wider text-primary-container/60">In Progress</span>
@@ -1524,8 +1524,12 @@
                                         <span class="text-[10px] font-mono uppercase tracking-wider text-on-surface/40">Locked</span>
                                     </div>
                                     <h4 class="font-headline text-lg italic text-on-surface/40">Live Trading</h4>
+                                    <div class="mt-3 pt-3 border-t border-outline-variant/10">
+                                        <span class="text-[10px] font-mono text-on-surface/30">Unlocks Week 16</span>
+                                    </div>
                                 </div>
                             </div>
+                            <div id="capabilityDetailPanel" class="hidden mt-6 p-6 bg-surface-container-low rounded hairline-border"></div>
                         </div>
                     </div>
 
@@ -1554,6 +1558,100 @@
                 <!-- Blocker Detail Panel -->
                 <div id="blockerDetailPanel" class="hidden milled-surface hairline-border rounded p-6 mt-6"></div>
             `;
+        }
+
+        function showCapabilityDetail(capabilityId) {
+            const panel = document.getElementById('capabilityDetailPanel');
+            if (!panel) return;
+            
+            const capabilities = {
+                'skill-chaining': { 
+                    name: 'Skill Chaining', 
+                    status: 'Mastered', 
+                    description: 'Ability to combine multiple skills in sequence to accomplish complex tasks',
+                    masteredDate: 'Week 8',
+                    usage: 'Used in 45 sessions',
+                    impact: 'Reduced task completion time by 40%'
+                },
+                'model-routing': { 
+                    name: 'Model Routing', 
+                    status: 'Mastered', 
+                    description: 'Intelligent selection of AI models based on task requirements and cost efficiency',
+                    masteredDate: 'Week 6',
+                    usage: '2,340 routing decisions',
+                    impact: 'Saved 60% on API costs'
+                },
+                'proactive-escalation': { 
+                    name: 'Proactive Escalation', 
+                    status: 'Mastered', 
+                    description: 'Knowing when to ask for help vs making autonomous decisions',
+                    masteredDate: 'Week 10',
+                    usage: '89 escalations handled',
+                    impact: 'Improved decision quality by 35%'
+                },
+                'edge-discovery': { 
+                    name: 'Edge Discovery', 
+                    status: 'In Progress', 
+                    description: 'Finding profitable trading opportunities in prediction markets',
+                    masteredDate: null,
+                    usage: '0 independent edges found',
+                    impact: 'Blocked by pattern recognition gap',
+                    blocker: 'Need training on pattern identification'
+                },
+                'autonomous-decisions': { 
+                    name: 'Autonomous Decisions', 
+                    status: 'In Progress', 
+                    description: 'Making decisions without escalation when confidence is sufficient',
+                    masteredDate: null,
+                    usage: '45% autonomy rate',
+                    impact: 'Plateaued at 45% for 3 weeks',
+                    blocker: 'Fear of wrong decisions'
+                }
+            };
+            
+            const c = capabilities[capabilityId];
+            if (!c) return;
+            
+            const isMastered = c.status === 'Mastered';
+            
+            panel.innerHTML = `
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h4 class="font-headline text-xl italic">${c.name}</h4>
+                        <span class="text-[10px] font-mono uppercase tracking-wider ${isMastered ? 'text-tertiary' : 'text-primary-container'}">${c.status}</span>
+                    </div>
+                    <button onclick="document.getElementById('capabilityDetailPanel').classList.add('hidden')" class="text-on-surface/40 hover:text-on-surface">
+                        <span class="material-symbols-outlined text-sm">close</span>
+                    </button>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <div class="text-[10px] font-mono uppercase text-on-surface/40 mb-1">Description</div>
+                        <p class="text-sm leading-relaxed">${c.description}</p>
+                    </div>
+                    ${c.masteredDate ? `
+                    <div>
+                        <div class="text-[10px] font-mono uppercase text-on-surface/40 mb-1">Mastered</div>
+                        <p class="text-sm text-on-surface/80">${c.masteredDate}</p>
+                    </div>
+                    ` : ''}
+                    <div>
+                        <div class="text-[10px] font-mono uppercase text-on-surface/40 mb-1">Usage</div>
+                        <p class="text-sm font-mono">${c.usage}</p>
+                    </div>
+                    <div>
+                        <div class="text-[10px] font-mono uppercase text-on-surface/40 mb-1">Impact</div>
+                        <p class="text-sm ${isMastered ? 'text-tertiary' : 'text-primary-container'}">${c.impact}</p>
+                    </div>
+                    ${c.blocker ? `
+                    <div class="pt-4 border-t border-outline-variant/10">
+                        <div class="text-[10px] font-mono uppercase text-on-surface/40 mb-1">Blocker</div>
+                        <p class="text-sm text-primary-container">${c.blocker}</p>
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+            panel.classList.remove('hidden');
         }
 
         function showBlockerDetail(index) {
