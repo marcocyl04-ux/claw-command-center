@@ -690,27 +690,32 @@
                     
                     <!-- Decision Examples -->
                     <div class="lg:col-span-6">
-                        <div class="milled-surface hairline-border rounded p-6">
-                            <div class="flex justify-between items-center mb-6">
-                                <h3 class="font-headline text-xl italic">Recent Decisions</h3>
-                                <span class="text-[10px] font-mono text-on-surface/40 uppercase tracking-widest">${mind.decisions?.examples?.length || 0} Tracked</span>
+                        <div class="milled-surface hairline-border rounded overflow-hidden">
+                            <div class="p-6 border-b border-outline-variant/10">
+                                <div class="flex justify-between items-center">
+                                    <h3 class="font-headline text-xl italic">Recent Decisions</h3>
+                                    <span class="text-[10px] font-mono text-on-surface/40 uppercase tracking-widest">${mind.decisions?.examples?.length || 0} Tracked</span>
+                                </div>
                             </div>
-                            <div class="space-y-3">
+                            <div class="divide-y divide-outline-variant/5">
                                 ${(mind.decisions?.examples || []).slice(0, 3).map((ex, i) => `
-                                    <div onclick="showDecisionDetail(${i})" class="p-4 bg-surface-container-low rounded hairline-border cursor-pointer hover:bg-surface-container transition-colors">
-                                        <div class="flex justify-between items-start mb-2">
-                                            <span class="text-sm font-medium">${ex.context}</span>
-                                            <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded ${ex.type === 'autonomous' ? 'bg-tertiary/10 text-tertiary' : 'bg-primary-container/10 text-primary-container'}">${ex.type}</span>
+                                    <div onclick="showDecisionDetail(${i})" class="p-5 cursor-pointer hover:bg-surface-container-low/50 transition-colors group">
+                                        <div class="flex justify-between items-start mb-3">
+                                            <span class="font-headline text-lg italic text-on-surface group-hover:text-primary-container transition-colors">${ex.context}</span>
+                                            <span class="text-[10px] font-mono uppercase tracking-wider ${ex.type === 'autonomous' ? 'text-tertiary' : 'text-primary-container'}">${ex.type}</span>
                                         </div>
-                                        <div class="text-xs text-on-surface/60 mb-2">${ex.decision}</div>
+                                        <p class="text-sm text-on-surface/60 mb-3 leading-relaxed">${ex.decision}</p>
                                         <div class="flex justify-between items-center">
-                                            <span class="text-[10px] text-on-surface/40">Outcome: <span class="${ex.outcome === 'excellent' ? 'text-tertiary' : ex.outcome === 'good' ? 'text-on-surface/60' : 'text-primary-container'}">${ex.outcome}</span></span>
-                                            <span class="text-[10px] font-mono text-on-surface/30">${ex.timestamp}</span>
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-[10px] font-mono uppercase text-on-surface/30">Outcome</span>
+                                                <span class="text-[10px] font-mono ${ex.outcome === 'excellent' ? 'text-tertiary' : ex.outcome === 'good' ? 'text-on-surface/60' : 'text-primary-container'}">${ex.outcome}</span>
+                                            </div>
+                                            <span class="text-[10px] font-mono text-on-surface/20">${ex.timestamp}</span>
                                         </div>
                                     </div>
                                 `).join('')}
                             </div>
-                            <div id="decisionDetailPanel" class="hidden mt-4 p-4 bg-surface-container-low rounded hairline-border"></div>
+                            <div id="decisionDetailPanel" class="hidden border-t border-outline-variant/10 p-6 bg-surface-container-low/30"></div>
                         </div>
                     </div>
                     
@@ -748,47 +753,49 @@
                     
                     <!-- Patterns -->
                     <div class="lg:col-span-12">
-                        <div class="milled-surface hairline-border rounded p-6">
-                            <div class="flex justify-between items-center mb-6">
-                                <h3 class="font-headline text-xl italic">Patterns Detected</h3>
-                                <span class="text-[10px] font-mono text-on-surface/40 uppercase tracking-widest">3 Active</span>
-                            </div>
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div onclick="showPatternDetail('sprint')" class="p-4 bg-surface-container-low rounded hairline-border cursor-pointer hover:bg-surface-container transition-colors">
-                                    <div class="flex items-center gap-2 mb-2">
-                                        <div class="w-1.5 h-1.5 rounded-full bg-tertiary"></div>
-                                        <div class="text-sm font-medium">90-minute sprint pattern</div>
-                                    </div>
-                                    <div class="text-xs text-on-surface/60 mb-3">High output in focused blocks</div>
-                                    <div class="flex justify-between items-center">
-                                        <span class="text-[10px] font-mono text-tertiary">Active</span>
-                                        <span class="text-[10px] text-on-surface/30">2 days ago</span>
-                                    </div>
-                                </div>
-                                <div onclick="showPatternDetail('evening')" class="p-4 bg-surface-container-low rounded hairline-border cursor-pointer hover:bg-surface-container transition-colors">
-                                    <div class="flex items-center gap-2 mb-2">
-                                        <div class="w-1.5 h-1.5 rounded-full bg-primary-container/60"></div>
-                                        <div class="text-sm font-medium">Skill drops after 6pm</div>
-                                    </div>
-                                    <div class="text-xs text-on-surface/60 mb-3">40% less evening usage</div>
-                                    <div class="flex justify-between items-center">
-                                        <span class="text-[10px] font-mono text-primary-container/60">Warning</span>
-                                        <span class="text-[10px] text-on-surface/30">1 week ago</span>
-                                    </div>
-                                </div>
-                                <div onclick="showPatternDetail('agents')" class="p-4 bg-surface-container-low rounded hairline-border cursor-pointer hover:bg-surface-container transition-colors">
-                                    <div class="flex items-center gap-2 mb-2">
-                                        <div class="w-1.5 h-1.5 rounded-full bg-primary-container/60"></div>
-                                        <div class="text-sm font-medium">AGENTS.md improves routing</div>
-                                    </div>
-                                    <div class="text-xs text-on-surface/60 mb-3">85% quality with protocol</div>
-                                    <div class="flex justify-between items-center">
-                                        <span class="text-[10px] font-mono text-primary-container/60">Active</span>
-                                        <span class="text-[10px] text-on-surface/30">Today</span>
-                                    </div>
+                        <div class="milled-surface hairline-border rounded overflow-hidden">
+                            <div class="p-6 border-b border-outline-variant/10">
+                                <div class="flex justify-between items-center">
+                                    <h3 class="font-headline text-xl italic">Patterns Detected</h3>
+                                    <span class="text-[10px] font-mono text-on-surface/40 uppercase tracking-widest">3 Active</span>
                                 </div>
                             </div>
-                            <div id="patternDetailPanel" class="hidden mt-4 p-4 bg-surface-container-low rounded hairline-border"></div>
+                            <div class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-outline-variant/5">
+                                <div onclick="showPatternDetail('sprint')" class="p-6 cursor-pointer hover:bg-surface-container-low/30 transition-colors group">
+                                    <div class="flex items-center gap-3 mb-4">
+                                        <div class="w-2 h-2 rounded-full bg-tertiary shadow-[0_0_8px_rgba(96,213,245,0.4)]"></div>
+                                        <span class="text-[10px] font-mono uppercase tracking-wider text-tertiary">Active</span>
+                                    </div>
+                                    <h4 class="font-headline text-lg italic mb-3 text-on-surface group-hover:text-tertiary transition-colors">90-minute sprint pattern</h4>
+                                    <p class="text-sm text-on-surface/60 leading-relaxed">High output in focused blocks with strategic breaks</p>
+                                    <div class="mt-4 pt-4 border-t border-outline-variant/10">
+                                        <span class="text-[10px] font-mono text-on-surface/30">Detected 2 days ago</span>
+                                    </div>
+                                </div>
+                                <div onclick="showPatternDetail('evening')" class="p-6 cursor-pointer hover:bg-surface-container-low/30 transition-colors group">
+                                    <div class="flex items-center gap-3 mb-4">
+                                        <div class="w-2 h-2 rounded-full bg-primary-container/60"></div>
+                                        <span class="text-[10px] font-mono uppercase tracking-wider text-primary-container/60">Warning</span>
+                                    </div>
+                                    <h4 class="font-headline text-lg italic mb-3 text-on-surface group-hover:text-primary-container/80 transition-colors">Skill drops after 6pm</h4>
+                                    <p class="text-sm text-on-surface/60 leading-relaxed">40% less skill usage and quality in evening hours</p>
+                                    <div class="mt-4 pt-4 border-t border-outline-variant/10">
+                                        <span class="text-[10px] font-mono text-on-surface/30">Detected 1 week ago</span>
+                                    </div>
+                                </div>
+                                <div onclick="showPatternDetail('agents')" class="p-6 cursor-pointer hover:bg-surface-container-low/30 transition-colors group">
+                                    <div class="flex items-center gap-3 mb-4">
+                                        <div class="w-2 h-2 rounded-full bg-primary-container/60"></div>
+                                        <span class="text-[10px] font-mono uppercase tracking-wider text-primary-container/60">Active</span>
+                                    </div>
+                                    <h4 class="font-headline text-lg italic mb-3 text-on-surface group-hover:text-primary-container/80 transition-colors">AGENTS.md improves routing</h4>
+                                    <p class="text-sm text-on-surface/60 leading-relaxed">85% quality when protocol checked first</p>
+                                    <div class="mt-4 pt-4 border-t border-outline-variant/10">
+                                        <span class="text-[10px] font-mono text-on-surface/30">Detected today</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="patternDetailPanel" class="hidden border-t border-outline-variant/10 p-6 bg-surface-container-low/30"></div>
                         </div>
                     </div>
                 </div>
