@@ -684,6 +684,7 @@
                                 ${getModelCardHTML('DeepSeek R1', '~$0.001-0.005', 90, [{ task: 'Reasoning', pct: 50 }, { task: 'Review', pct: 30 }, { task: 'Meta', pct: 20 }])}
                                 ${getModelCardHTML('Gemini 2.5', '~$0.01-0.05', 84, [{ task: 'Multi', pct: 40 }, { task: 'Context', pct: 35 }, { task: 'Research', pct: 25 }])}
                             </div>
+                            <div id="modelDetailPanel" class="hidden mt-6 p-6 bg-surface-container-low rounded border border-outline-variant/20"></div>
                         </div>
                     </div>
                     
@@ -951,8 +952,9 @@
         }
 
         function getModelCardHTML(model, avgCost, quality, tasks) {
+            const modelId = model.replace(/\s+/g, '-').replace(/\./g, '').toLowerCase();
             return `
-                <div class="bg-surface-container-low rounded p-4 cursor-pointer hover:bg-surface-container transition-colors">
+                <div onclick="showModelDetail('${modelId}')" class="bg-surface-container-low rounded p-4 cursor-pointer hover:bg-surface-container transition-colors">
                     <div class="flex justify-between items-center mb-3">
                         <span class="font-medium text-sm">${model}</span>
                         <span class="text-[10px] font-mono text-tertiary">${quality}%</span>
@@ -970,6 +972,53 @@
                     </div>
                 </div>
             `;
+        }
+
+        function showModelDetail(modelId) {
+            const panel = document.getElementById('modelDetailPanel');
+            if (!panel) return;
+            
+            const modelData = {
+                'opus-46': { name: 'Opus 4.6', provider: 'Anthropic', context: '200K', strengths: 'Design systems, complex reasoning, architecture', latency: 'High', bestFor: 'High-stakes decisions' },
+                'sonnet-46': { name: 'Sonnet 4.6', provider: 'Anthropic', context: '200K', strengths: 'Content generation, analysis, review', latency: 'Medium', bestFor: 'Balanced quality/speed' },
+                'kimi-k25': { name: 'Kimi K2.5', provider: 'Moonshot', context: '128K', strengths: 'Implementation, refactoring, debugging', latency: 'Low', bestFor: 'Fast coding tasks' },
+                'qwen3-235b': { name: 'Qwen3 235B', provider: 'Alibaba', context: '64K', strengths: 'Analysis, bulk processing, market assessment', latency: 'Medium', bestFor: 'Large context tasks' },
+                'deepseek-r1': { name: 'DeepSeek R1', provider: 'DeepSeek', context: '64K', strengths: 'Reasoning, self-review, meta-cognition', latency: 'Medium', bestFor: 'Complex reasoning' },
+                'gemini-25': { name: 'Gemini 2.5', provider: 'Google', context: '1M', strengths: 'Multimodal, long context, research', latency: 'Medium', bestFor: 'Research tasks' }
+            };
+            
+            const data = modelData[modelId] || { name: modelId, provider: 'Unknown', context: '-', strengths: '-', latency: '-', bestFor: '-' };
+            
+            panel.innerHTML = `
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h4 class="font-headline text-xl italic">${data.name}</h4>
+                        <p class="text-sm text-on-surface/60">${data.provider}</p>
+                    </div>
+                    <button onclick="document.getElementById('modelDetailPanel').classList.add('hidden')" class="text-on-surface/40 hover:text-on-surface">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <div class="text-[10px] font-mono uppercase text-on-surface/40 mb-1">Context Window</div>
+                        <div class="text-sm">${data.context}</div>
+                    </div>
+                    <div>
+                        <div class="text-[10px] font-mono uppercase text-on-surface/40 mb-1">Latency</div>
+                        <div class="text-sm">${data.latency}</div>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <div class="text-[10px] font-mono uppercase text-on-surface/40 mb-1">Strengths</div>
+                    <div class="text-sm text-on-surface/80">${data.strengths}</div>
+                </div>
+                <div>
+                    <div class="text-[10px] font-mono uppercase text-on-surface/40 mb-1">Best For</div>
+                    <div class="text-sm text-primary-container">${data.bestFor}</div>
+                </div>
+            `;
+            panel.classList.remove('hidden');
         }
 
         function renderMemoryTab() {
