@@ -1137,12 +1137,12 @@
             
             return `
                 <!-- Header Section -->
-                <div class="flex justify-between items-end mb-12">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-12">
                     <div>
-                        <h1 class="font-headline text-5xl italic tracking-tight mb-2 text-on-surface">Command Center</h1>
+                        <h1 class="font-headline text-4xl sm:text-5xl italic tracking-tight mb-2 text-on-surface">Command Center</h1>
                         <p class="text-on-surface-variant/60 font-body text-sm uppercase tracking-widest">Active Session: Week ${trainingWeek}/16</p>
                     </div>
-                    <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
+                    <div class="flex flex-row gap-2 sm:gap-3">
                         <div class="px-3 py-2 bg-surface-container-low hairline-border rounded flex items-center justify-center gap-2 whitespace-nowrap">
                             <span class="w-1.5 h-1.5 rounded-full bg-primary-container animate-pulse"></span>
                             <span class="text-[11px] font-mono uppercase tracking-wide text-primary-container">Live</span>
@@ -1155,9 +1155,9 @@
                 </div>
                 
                 <!-- Bento Grid Layout -->
-                <div class="grid grid-cols-12 gap-6">
-                    <!-- Main Module: Intelligence Status (8 cols) -->
-                    <div class="col-span-12 lg:col-span-8 flex flex-col gap-6">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Main Module: Intelligence Status (8 cols on desktop) -->
+                    <div class="lg:col-span-8 flex flex-col gap-6">
                         <!-- Thought Stream / Activity -->
                         <div class="milled-surface hairline-border rounded p-6 flex flex-col h-[400px]">
                             <div class="flex justify-between items-center mb-6">
@@ -1166,9 +1166,9 @@
                                     <span class="px-2 py-0.5 text-[10px] font-mono border border-outline-variant/30 text-outline-variant uppercase">Live Logs</span>
                                 </div>
                             </div>
-                            <div class="flex-1 flex gap-6 overflow-hidden">
+                            <div class="flex-1 flex flex-col sm:flex-row gap-4 sm:gap-6 overflow-hidden">
                                 <!-- Heuristic Visualization -->
-                                <div class="w-1/2 relative bg-surface-container-low rounded overflow-hidden">
+                                <div class="w-full sm:w-1/2 h-1/2 sm:h-auto relative bg-surface-container-low rounded overflow-hidden">
                                     <div class="absolute inset-0 opacity-20 pointer-events-none">
                                         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 border border-primary-container/40 rounded-full"></div>
                                         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 border border-tertiary/20 rounded-full"></div>
@@ -1196,7 +1196,7 @@
                                     </div>
                                 </div>
                                 <!-- Live Logs -->
-                                <div class="w-1/2 font-mono text-[11px] space-y-3 overflow-y-auto custom-scrollbar pr-2">
+                                <div class="w-full sm:w-1/2 h-1/2 sm:h-auto font-mono text-[11px] space-y-3 overflow-y-auto custom-scrollbar pr-2">
                                     <div class="flex gap-3">
                                         <span class="text-on-surface/30">14:20:11</span>
                                         <span class="text-tertiary">[INF]</span>
@@ -1226,8 +1226,8 @@
                             </div>
                         </div>
                         
-                        <!-- Module Status Cards (3-up) -->
-                        <div class="grid grid-cols-3 gap-4">
+                        <!-- Module Status Cards (3-up on desktop, 1-up on mobile) -->
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                             <div class="milled-surface hairline-border rounded p-5 cursor-pointer hover:border-outline-variant/40 transition-colors" onclick="switchTab('mind')">
                                 <div class="flex justify-between items-start mb-4">
                                     <span class="material-symbols-outlined text-on-surface/40">neurology</span>
@@ -1258,8 +1258,8 @@
                         </div>
                     </div>
                     
-                    <!-- Right Sidebar: Metrics & Status (4 cols) -->
-                    <div class="col-span-12 lg:col-span-4 flex flex-col gap-6">
+                    <!-- Right Sidebar: Metrics & Status (4 cols on desktop) -->
+                    <div class="lg:col-span-4 flex flex-col gap-6">
                         <!-- System Health -->
                         <div class="milled-surface hairline-border rounded p-6">
                             <h3 class="font-headline text-xl italic mb-8">System Health</h3>
