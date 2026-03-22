@@ -130,7 +130,7 @@
             background: rgba(255, 255, 255, 0.02);
         }
 
-        .nav-item.active { 
+        .nav-item.active {
             color: var(--amber-400);
             background: transparent;
             border-left: 1px solid var(--amber-400);
@@ -1100,46 +1100,46 @@
                     </div>
                 </div>
 
-                <div class="now-cards-grid">
+                <div class="now-cards-grid" style="padding: 64px 48px;">
                     <!-- 🧠 MIND Card -->
-                    <div class="card" style="cursor: pointer; padding: 48px;" onclick="switchTab('mind')">
-                        <div class="text-micro" style="color: var(--text-tertiary); margin-bottom: 24px;">COGNITIVE</div>
-                        <div class="text-display" style="color: var(--text-primary); margin-bottom: 8px;">${mindSkillCount}</div>
+                    <div class="card" style="cursor: pointer; padding: 64px 48px;" onclick="switchTab('mind')">
+                        <div class="text-micro" style="color: var(--text-tertiary); margin-bottom: 32px;">COGNITIVE</div>
+                        <div class="text-display" style="color: var(--text-primary); margin-bottom: 16px; font-size: 96px;">${mindSkillCount}</div>
                         <div class="text-label" style="color: var(--text-secondary);">SKILLS ACTIVE</div>
                     </div>
-
+                    
                     <!-- 📊 SYSTEM Card -->
-                    <div class="card" style="cursor: pointer; padding: 48px;" onclick="switchTab('system')">
-                        <div class="text-micro" style="color: var(--text-tertiary); margin-bottom: 24px;">INFRASTRUCTURE</div>
-                        <div class="text-display" style="color: var(--text-primary); margin-bottom: 8px;">${systemOnline}</div>
+                    <div class="card" style="cursor: pointer; padding: 64px 48px;" onclick="switchTab('system')">
+                        <div class="text-micro" style="color: var(--text-tertiary); margin-bottom: 32px;">INFRASTRUCTURE</div>
+                        <div class="text-display" style="color: var(--text-primary); margin-bottom: 16px; font-size: 96px;">${systemOnline}</div>
                         <div class="text-label" style="color: var(--text-secondary);">SERVICES ONLINE</div>
                     </div>
-
+                    
                     <!-- 💰 TRADING Card -->
-                    <div class="card" style="cursor: pointer; padding: 48px;" onclick="switchTab('trading')">
-                        <div class="text-micro" style="color: var(--text-tertiary); margin-bottom: 24px;">PERFORMANCE</div>
-                        <div class="text-display" style="color: var(--text-primary); margin-bottom: 8px;">${system.trading?.total_predictions || 0}</div>
+                    <div class="card" style="cursor: pointer; padding: 64px 48px;" onclick="switchTab('trading')">
+                        <div class="text-micro" style="color: var(--text-tertiary); margin-bottom: 32px;">PERFORMANCE</div>
+                        <div class="text-display" style="color: var(--text-primary); margin-bottom: 16px; font-size: 96px;">${system.trading?.total_predictions || 0}</div>
                         <div class="text-label" style="color: var(--text-secondary);">PREDICTIONS</div>
                     </div>
-
+                    
                     <!-- 🎯 TRAINING Card -->
-                    <div class="card" style="cursor: pointer; padding: 48px;" onclick="switchTab('training')">
-                        <div class="text-micro" style="color: var(--text-tertiary); margin-bottom: 24px;">PROGRESS</div>
-                        <div class="text-display" style="color: var(--text-primary); margin-bottom: 8px;">${trainingWeek}</div>
+                    <div class="card" style="cursor: pointer; padding: 64px 48px;" onclick="switchTab('training')">
+                        <div class="text-micro" style="color: var(--text-tertiary); margin-bottom: 32px;">PROGRESS</div>
+                        <div class="text-display" style="color: var(--text-primary); margin-bottom: 16px; font-size: 96px;">${trainingWeek}</div>
                         <div class="text-label" style="color: var(--text-secondary);">WEEK ${trainingWeek}/16</div>
                     </div>
-
+                    
                     <!-- 📝 MEMORY Card -->
-                    <div class="card" style="cursor: pointer; padding: 48px;" onclick="switchTab('memory')">
-                        <div class="text-micro" style="color: var(--text-tertiary); margin-bottom: 24px;">KNOWLEDGE</div>
-                        <div class="text-display" style="color: var(--text-primary); margin-bottom: 8px;">${memoryLessons}</div>
+                    <div class="card" style="cursor: pointer; padding: 64px 48px;" onclick="switchTab('memory')">
+                        <div class="text-micro" style="color: var(--text-tertiary); margin-bottom: 32px;">KNOWLEDGE</div>
+                        <div class="text-display" style="color: var(--text-primary); margin-bottom: 16px; font-size: 96px;">${memoryLessons}</div>
                         <div class="text-label" style="color: var(--text-secondary);">CRITICAL LESSONS</div>
                     </div>
-
+                    
                     <!-- ⚡ ACTIONS Card -->
-                    <div class="card" style="cursor: pointer; padding: 48px;" onclick="document.getElementById('attentionSection').scrollIntoView({behavior: 'smooth'})">
-                        <div class="text-micro" style="color: var(--text-tertiary); margin-bottom: 24px;">ATTENTION</div>
-                        <div class="text-display" style="color: var(--danger); margin-bottom: 8px;">${attentionCount}</div>
+                    <div class="card" style="cursor: pointer; padding: 64px 48px; border-color: ${attentionCount > 0 ? 'rgba(248,113,113,0.3)' : 'rgba(255,255,255,0.06)'};" onclick="switchTab('system')">
+                        <div class="text-micro" style="color: var(--text-tertiary); margin-bottom: 32px;">ATTENTION</div>
+                        <div class="text-display" style="color: ${attentionCount > 0 ? 'var(--danger)' : 'var(--text-primary)'}; margin-bottom: 16px; font-size: 96px;">${attentionCount}</div>
                         <div class="text-label" style="color: var(--text-secondary);">ITEMS NEED ACTION</div>
                     </div>
                 </div>
