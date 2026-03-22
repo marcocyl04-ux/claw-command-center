@@ -858,7 +858,7 @@
         }
     </style>
 </head>
-<body class="bg-surface text-on-surface font-body">
+<body class="bg-surface text-on-surface font-body overflow-hidden">
     <!-- Background Ambient Glow -->
     <div class="fixed inset-0 z-[-1] pointer-events-none overflow-hidden">
         <div class="absolute top-[-10%] right-[-10%] w-[60%] h-[60%] rounded-full bg-primary-container/5 blur-[120px]"></div>
@@ -1433,24 +1433,44 @@
         }
         
         // Model card HTML generator
-        function getModelCardHTML(model, avgCost, quality, tasks) {
+        function getModelCardHTML(model, avgCost, quality, overall, tasks) {
+            // Handle both number and string costs
+            const costNum = typeof avgCost === 'number' ? avgCost : parseFloat(avgCost.toString().replace(/[^0-9.]/g, '')) || 0;
+            const costEfficiency = quality / (costNum * 100 + 1);
+            const stars = Math.min(Math.round(costEfficiency), 5);
+            
+            // Format cost display
+            const costDisplay = typeof avgCost === 'string' ? avgCost : `$${avgCost.toFixed(2)}`;
+            
             return `
-                <div onclick="showModelDetail('${model}')" class="bg-surface-container-low rounded p-4 cursor-pointer hover:bg-surface-container transition-colors">
-                    <div class="flex justify-between items-center mb-3">
-                        <span class="font-medium text-sm">${model}</span>
-                        <span class="text-[10px] font-mono text-tertiary">${quality}%</span>
+                <div onclick="showModelDetail('${model}')" style="background: var(--bg-1); border-radius: var(--radius-lg); padding: var(--space-5); cursor: pointer; transition: transform 0.2s; border: 1px solid transparent;" onmouseover="this.style.borderColor='var(--amber-500)'" onmouseout="this.style.borderColor='transparent'">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
+                        <span style="font-weight: 600; font-size: var(--text-lg);">${model}</span>
+                        <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: ${overall === 'excellent' ? 'rgba(74,222,128,0.2)' : 'rgba(224,145,42,0.2)'}; color: ${overall === 'excellent' ? 'var(--success)' : 'var(--amber-400)'}; border-radius: var(--radius-full); text-transform: uppercase;">${overall}</span>
                     </div>
-                    <div class="font-mono text-xs text-on-surface/60 mb-3">${avgCost}</div>
-                    <div class="space-y-1">
-                        ${tasks.map(t => `
-                            <div class="flex items-center gap-2">
-                                <div class="flex-1 h-1 bg-surface-container-highest rounded-full overflow-hidden">
-                                    <div class="h-full bg-primary-container/60" style="width: ${t.pct}%"></div>
-                                </div>
-                                <span class="text-[9px] font-mono text-on-surface/40 w-12 text-right">${t.task}</span>
+                    <div style="margin-bottom: var(--space-3);">
+                        <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-bottom: var(--space-1);">Cost Efficiency</div>
+                        <div style="color: var(--amber-400); font-size: var(--text-xl);">${'★'.repeat(stars)}${'☆'.repeat(5-stars)}</div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); margin-bottom: var(--space-3);">
+                        <div>
+                            <div style="font-size: var(--text-sm); color: var(--text-tertiary);">Avg Cost</div>
+                            <div style="font-family: var(--font-mono); font-weight: 600;">${costDisplay}</div>
+                        </div>
+                        <div>
+                            <div style="font-size: var(--text-sm); color: var(--text-tertiary);">Quality</div>
+                            <div style="font-family: var(--font-mono); font-weight: 600; color: var(--success);">${quality}%</div>
+                        </div>
+                    </div>
+                    <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-bottom: var(--space-2);">Usage by Task</div>
+                    ${tasks.map(t => `
+                        <div style="display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-1);">
+                            <div style="flex: 1; height: 6px; background: var(--bg-0); border-radius: 3px; overflow: hidden;">
+                                <div style="width: ${t.pct}%; height: 100%; background: var(--amber-500); border-radius: 3px;"></div>
                             </div>
-                        `).join('')}
-                    </div>
+                            <span style="font-size: var(--text-xs); color: var(--text-secondary); width: 80px; text-align: right;">${t.task}</span>
+                        </div>
+                    `).join('')}
                 </div>
             `;
         }
@@ -1477,111 +1497,105 @@
             }, 0);
             
             return `
-                <!-- Header -->
-                <div class="flex justify-between items-end mb-12">
-                    <div>
-                        <h1 class="font-headline text-5xl italic tracking-tight mb-2 text-on-surface">Cognitive Stack</h1>
-                        <p class="text-on-surface-variant/60 font-body text-sm uppercase tracking-widest">How I process information and make decisions</p>
+                <div class="state-hero">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div class="state-headline">Cognitive Stack</div>
+                            <div class="state-meta">How I process information and make decisions</div>
+                        </div>
+                        ${mind.decisions?.is_live ? `<span style="font-size: var(--text-xs); padding: var(--space-2) var(--space-3); background: rgba(74,222,128,0.1); border-radius: var(--radius-full); color: var(--success);">● Live</span>` : ''}
                     </div>
-                    ${mind.decisions?.is_live ? `
-                    <div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container-low hairline-border rounded">
-                        <span class="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse"></span>
-                        <span class="text-[10px] font-mono uppercase tracking-wider text-tertiary">Live</span>
-                    </div>` : ''}
                 </div>
-                
-                <!-- Bento Grid -->
-                <div class="grid grid-cols-12 gap-6">
-                    <!-- Skill Network (8 cols) -->
-                    <div class="col-span-12 lg:col-span-8">
-                        <div class="milled-surface hairline-border rounded p-6 h-[500px]">
-                            <div class="flex justify-between items-center mb-6">
-                                <h3 class="font-headline text-xl italic">Skill Network</h3>
-                                <span class="text-[10px] font-mono text-on-surface/40 uppercase tracking-widest">${mind.skill_network?.nodes?.length || 22} Skills</span>
-                            </div>
-                            <div id="skillNetworkViz" class="h-[380px] bg-surface-container-low rounded relative overflow-hidden">
-                                <!-- SVG skill network rendered here -->
-                            </div>
+                <div class="cards-grid">
+                    <div class="card card-full">
+                        <div class="section-header">
+                            <span class="section-title">Skill Network</span>
+                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">${mind.skill_network?.nodes?.length || 22} skills installed • Click nodes to explore</span>
+                        </div>
+                        <div id="skillNetworkViz" style="height: 400px; background: var(--bg-1); border-radius: var(--radius-md); position: relative; overflow: hidden;">
+                            <!-- SVG skill network will be rendered here -->
+                        </div>
+                        <div id="skillDetailPanel" style="display: none; margin-top: var(--space-4); background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-5); border-left: 3px solid var(--amber-500);">
+                            <!-- Skill detail content -->
                         </div>
                     </div>
-                    
-                    <!-- Decision Stats (4 cols) -->
-                    <div class="col-span-12 lg:col-span-4 flex flex-col gap-6">
-                        <div class="milled-surface hairline-border rounded p-6">
-                            <h3 class="font-headline text-xl italic mb-8">Decision Quality</h3>
-                            <div class="space-y-8">
-                                <div>
-                                    <div class="flex justify-between items-end mb-2">
-                                        <span class="text-[10px] font-mono uppercase tracking-widest text-on-surface/40">Autonomous</span>
-                                        <span class="text-sm font-mono text-tertiary">${mind.decisions.autonomous.count}</span>
-                                    </div>
-                                    <div class="h-px w-full bg-outline-variant/20 relative">
-                                        <div class="absolute top-0 left-0 h-px bg-tertiary" style="width: ${mind.decisions.autonomous.quality}%"></div>
-                                    </div>
-                                    <div class="text-[10px] font-mono text-on-surface/40 mt-1">${mind.decisions.autonomous.quality}% quality</div>
-                                </div>
-                                <div>
-                                    <div class="flex justify-between items-end mb-2">
-                                        <span class="text-[10px] font-mono uppercase tracking-widest text-on-surface/40">Escalated</span>
-                                        <span class="text-sm font-mono text-primary-container">${mind.decisions.escalated.count}</span>
-                                    </div>
-                                    <div class="h-px w-full bg-outline-variant/20 relative">
-                                        <div class="absolute top-0 left-0 h-px bg-primary-container" style="width: ${mind.decisions.escalated.quality}%"></div>
-                                    </div>
-                                    <div class="text-[10px] font-mono text-on-surface/40 mt-1">${mind.decisions.escalated.quality}% quality</div>
-                                </div>
+                    <div class="card card-full">
+                        <div class="section-header">
+                            <span class="section-title">Model Mastery</span>
+                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">6 models • Quality scores estimated • Costs from OpenRouter</span>
+                        </div>
+                        <div class="model-cards-grid">
+                            ${getModelCardHTML('Opus 4.6', '~$0.10-0.50', 92, 'excellent', [
+                                { task: 'Design systems', pct: 40 },
+                                { task: 'Complex reasoning', pct: 30 },
+                                { task: 'Architecture', pct: 20 }
+                            ])}
+                            ${getModelCardHTML('Sonnet 4.6', '~$0.02-0.08', 85, 'good', [
+                                { task: 'Content generation', pct: 50 },
+                                { task: 'Analysis', pct: 30 },
+                                { task: 'Review', pct: 20 }
+                            ])}
+                            ${getModelCardHTML('Kimi K2.5', '~$0.001-0.005', 88, 'good', [
+                                { task: 'Implementation', pct: 60 },
+                                { task: 'Refactoring', pct: 25 },
+                                { task: 'Debugging', pct: 15 }
+                            ])}
+                            ${getModelCardHTML('Qwen3 235B', '~$0.005-0.02', 82, 'good', [
+                                { task: 'Analysis', pct: 45 },
+                                { task: 'Bulk processing', pct: 35 },
+                                { task: 'Market assessment', pct: 20 }
+                            ])}
+                            ${getModelCardHTML('DeepSeek R1', '~$0.001-0.005', 90, 'excellent', [
+                                { task: 'Reasoning', pct: 50 },
+                                { task: 'Self-review', pct: 30 },
+                                { task: 'Meta-cognition', pct: 20 }
+                            ])}
+                            ${getModelCardHTML('Gemini 2.5 Pro', '~$0.01-0.05', 84, 'good', [
+                                { task: 'Multimodal', pct: 40 },
+                                { task: 'Long context', pct: 35 },
+                                { task: 'Research', pct: 25 }
+                            ])}
+                        </div>
+                        <div id="modelDetailPanel" style="display: none; margin-top: var(--space-5); background: var(--bg-1); border-radius: var(--radius-lg); padding: var(--space-5);">
+                            <!-- Model detail content -->
+                        </div>
+                    </div>
+                    <div class="card card-full">
+                        <div class="section-header">
+                            <span class="section-title">Decision Quality</span>
+                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">Trend: ${mind.decisions.trend} ${mind.decisions?.is_live ? '• Live' : ''}</span>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4); margin-bottom: var(--space-5);">
+                            <div>
+                                <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-bottom: var(--space-2);">Autonomous Decisions</div>
+                                <div style="font-family: var(--font-mono); font-size: var(--text-2xl); font-weight: 700; color: var(--success);">${mind.decisions.autonomous.count}</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">${mind.decisions.autonomous.quality}% quality</div>
+                            </div>
+                            <div>
+                                <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-bottom: var(--space-2);">Escalated Decisions</div>
+                                <div style="font-family: var(--font-mono); font-size: var(--text-2xl); font-weight: 700; color: var(--amber-400);">${mind.decisions.escalated.count}</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">${mind.decisions.escalated.quality}% quality</div>
                             </div>
                         </div>
                         
-                        <div class="milled-surface hairline-border rounded p-6">
-                            <h3 class="font-headline text-xl italic mb-2">Autonomy Rate</h3>
-                            <div class="font-mono text-4xl text-primary-container mb-2">${Math.round((mind.decisions.autonomous.count / (mind.decisions.autonomous.count + mind.decisions.escalated.count)) * 100) || 0}%</div>
-                            <p class="text-[10px] font-mono text-on-surface/40 uppercase tracking-widest">Trend: ${mind.decisions.trend}</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Model Mastery (Full width) -->
-                    <div class="col-span-12">
-                        <div class="milled-surface hairline-border rounded p-6">
-                            <div class="flex justify-between items-center mb-6">
-                                <h3 class="font-headline text-xl italic">Model Mastery</h3>
-                                <span class="text-[10px] font-mono text-on-surface/40 uppercase tracking-widest">6 Models • OpenRouter</span>
-                            </div>
-                            <div class="grid grid-cols-3 gap-4">
-                                ${getModelCardHTML('Opus 4.6', '~$0.10-0.50', 92, [
-                                    { task: 'Design', pct: 40 },
-                                    { task: 'Reasoning', pct: 30 },
-                                    { task: 'Architecture', pct: 20 }
-                                ])}
-                                ${getModelCardHTML('Sonnet 4.6', '~$0.02-0.08', 85, [
-                                    { task: 'Content', pct: 50 },
-                                    { task: 'Analysis', pct: 30 },
-                                    { task: 'Review', pct: 20 }
-                                ])}
-                                ${getModelCardHTML('Kimi K2.5', '~$0.001-0.005', 88, [
-                                    { task: 'Impl', pct: 60 },
-                                    { task: 'Refactor', pct: 25 },
-                                    { task: 'Debug', pct: 15 }
-                                ])}
-                                ${getModelCardHTML('Qwen3 235B', '~$0.005-0.02', 82, [
-                                    { task: 'Analysis', pct: 45 },
-                                    { task: 'Bulk', pct: 35 },
-                                    { task: 'Market', pct: 20 }
-                                ])}
-                                ${getModelCardHTML('DeepSeek R1', '~$0.001-0.005', 90, [
-                                    { task: 'Reasoning', pct: 50 },
-                                    { task: 'Review', pct: 30 },
-                                    { task: 'Meta', pct: 20 }
-                                ])}
-                                ${getModelCardHTML('Gemini 2.5', '~$0.01-0.05', 84, [
-                                    { task: 'Multi', pct: 40 },
-                                    { task: 'Context', pct: 35 },
-                                    { task: 'Research', pct: 25 }
-                                ])}
+                        <!-- Decision Stats Summary -->
+                        <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); margin-bottom: var(--space-5);">
+                            <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-bottom: var(--space-3);">Decision History</div>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4);">
+                                <div style="text-align: center;">
+                                    <div style="font-family: var(--font-mono); font-size: var(--text-2xl); font-weight: 700; color: var(--success);">${mind.decisions.examples?.length || 0}</div>
+                                    <div style="font-size: var(--text-xs); color: var(--text-secondary);">Recent decisions tracked</div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="font-family: var(--font-mono); font-size: var(--text-2xl); font-weight: 700; color: var(--amber-400);">${Math.round((mind.decisions.autonomous.count / (mind.decisions.autonomous.count + mind.decisions.escalated.count)) * 100) || 0}%</div>
+                                    <div style="font-size: var(--text-xs); color: var(--text-secondary);">Autonomy rate</div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="font-family: var(--font-mono); font-size: var(--text-2xl); font-weight: 700;">${mind.decisions.trend}</div>
+                                    <div style="font-size: var(--text-xs); color: var(--text-secondary);">Current trend</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
                         
                         <!-- Decision Pattern Note -->
                         <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); margin-bottom: var(--space-5); border-left: 3px solid var(--amber-500);">
@@ -1979,75 +1993,71 @@
         
         function renderMemoryTab() {
             const memory = cognitionData.memory || {};
-            const working = memory.working || { loaded_files: ['SOUL.md', 'MEMORY.md', 'USER.md', 'AGENTS.md'], session_history: '', compression_ratio: 0 };
+            const working = memory.working || { loaded_files: [], session_history: '', compression_ratio: 0 };
             const long_term = memory.long_term || { lessons: [] };
             const recent_failures = memory.recent_failures || [];
-            const recall = memory.recall || { remembered: 0, forgot: 0, accuracy: 0, totalLines: 47, lessonCount: 4 };
+            const recall = memory.recall || { remembered: 0, forgot: 0, accuracy: 0, totalLines: 0, lessonCount: 0 };
             
             return `
-                <!-- Header -->
-                <div class="flex justify-between items-end mb-12">
-                    <div>
-                        <h1 class="font-headline text-5xl italic tracking-tight mb-2 text-on-surface">Memory Systems</h1>
-                        <p class="text-on-surface-variant/60 font-body text-sm uppercase tracking-widest">${recall.totalLines} lines parsed from MEMORY.md</p>
-                    </div>
-                    <div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container-low hairline-border rounded">
-                        <span class="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse"></span>
-                        <span class="text-[10px] font-mono uppercase tracking-wider text-tertiary">Live</span>
+                <div class="state-hero">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div class="state-headline">Memory Systems</div>
+                            <div class="state-meta">What I know and how well I use it</div>
+                        </div>
+                        <div style="font-size: var(--text-xs); padding: var(--space-2) var(--space-3); background: rgba(74,222,128,0.1); border-radius: var(--radius-full); color: var(--success);">
+                            ● Live from MEMORY.md
+                        </div>
                     </div>
                 </div>
                 
-                <!-- Memory Health Grid -->
-                <div class="grid grid-cols-12 gap-6 mb-8">
-                    <!-- Core Files (4 cols) -->
-                    <div class="col-span-12 lg:col-span-4">
-                        <div class="milled-surface hairline-border rounded p-6">
-                            <div class="flex justify-between items-start mb-6">
-                                <h3 class="font-headline text-xl italic">Core Files</h3>
-                                <span class="text-[10px] font-mono text-tertiary uppercase tracking-widest">Loaded</span>
-                            </div>
-                            <div class="space-y-3">
-                                <div class="flex items-center gap-3 p-3 bg-surface-container-low rounded">
-                                    <span class="material-symbols-outlined text-on-surface/40">description</span>
-                                    <span class="text-sm font-mono">SOUL.md</span>
-                                </div>
-                                <div class="flex items-center gap-3 p-3 bg-surface-container-low rounded">
-                                    <span class="material-symbols-outlined text-on-surface/40">description</span>
-                                    <span class="text-sm font-mono">MEMORY.md</span>
-                                </div>
-                                <div class="flex items-center gap-3 p-3 bg-surface-container-low rounded">
-                                    <span class="material-symbols-outlined text-on-surface/40">description</span>
-                                    <span class="text-sm font-mono">USER.md</span>
-                                </div>
-                                <div class="flex items-center gap-3 p-3 bg-surface-container-low rounded">
-                                    <span class="material-symbols-outlined text-on-surface/40">description</span>
-                                    <span class="text-sm font-mono">AGENTS.md</span>
-                                </div>
-                            </div>
-                        </div>
+                <!-- Chunk 1: Memory Health Dashboard - LIVE DATA -->
+                <div class="card card-full" style="margin-bottom: var(--space-5);">
+                    <div class="section-header">
+                        <span class="section-title">Memory Health</span>
+                        <span style="font-size: var(--text-sm); color: var(--text-secondary);">${recall.totalLines > 0 ? `${recall.totalLines} lines parsed` : 'Real-time status'}</span>
                     </div>
-                    
-                    <!-- Lessons & Stats (8 cols) -->
-                    <div class="col-span-12 lg:col-span-8">
-                        <div class="milled-surface hairline-border rounded p-6">
-                            <div class="flex justify-between items-start mb-6">
-                                <h3 class="font-headline text-xl italic">Critical Lessons</h3>
-                                <span class="text-[10px] font-mono text-primary-container uppercase tracking-widest">${long_term.lessons?.length || 4} Stored</span>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-5);">
+                        <!-- Working Memory -->
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
+                                <span style="font-weight: 600;">Working Memory</span>
+                                <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full);">Active</span>
                             </div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div class="p-4 bg-surface-container-low rounded border-l-2 border-primary-container/40">
-                                    <div class="text-sm text-on-surface/80">Consult skills BEFORE design</div>
-                                </div>
-                                <div class="p-4 bg-surface-container-low rounded border-l-2 border-primary-container/40">
-                                    <div class="text-sm text-on-surface/80">2-5 minute task breakdown</div>
-                                </div>
-                                <div class="p-4 bg-surface-container-low rounded border-l-2 border-primary-container/40">
-                                    <div class="text-sm text-on-surface/80">Say "I'm stuck" not silent</div>
-                                </div>
-                                <div class="p-4 bg-surface-container-low rounded border-l-2 border-primary-container/40">
-                                    <div class="text-sm text-on-surface/80">If not written, it didn't happen</div>
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); margin-bottom: var(--space-2);">
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">
+                                    ${working.loaded_files?.length || 4} core files loaded
                                 </div>
                             </div>
+                            <div style="font-size: var(--text-xs); color: var(--text-tertiary);">SOUL.md, MEMORY.md, USER.md, AGENTS.md</div>
+                        </div>
+                        
+                        <!-- Long-term Recall -->
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
+                                <span style="font-weight: 600;">Long-term Recall</span>
+                                <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full);">Active</span>
+                            </div>
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); margin-bottom: var(--space-2);">
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">
+                                    ${long_term.lessons?.length || 0} lessons stored
+                                </div>
+                            </div>
+                            <div style="font-size: var(--text-xs); color: var(--text-tertiary);">From MEMORY.md critical lessons</div>
+                        </div>
+                        
+                        <!-- File Stats -->
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
+                                <span style="font-weight: 600;">MEMORY.md Stats</span>
+                                <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full);">Live</span>
+                            </div>
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); margin-bottom: var(--space-2);">
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">
+                                    ${recall.totalLines || 0} lines • ${recall.lessonCount || 0} lessons
+                                </div>
+                            </div>
+                            <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Parsed from actual file</div>
                         </div>
                     </div>
                 </div>
@@ -2180,88 +2190,133 @@
         }
         
         function renderTrainingTab() {
-            const training = cognitionData.training || { week: 11, progress: 50, session_count: 35 };
+            const training = cognitionData.training;
             
             return `
-                <!-- Header -->
-                <div class="flex justify-between items-end mb-12">
-                    <div>
-                        <h1 class="font-headline text-5xl italic tracking-tight mb-2 text-on-surface">Training</h1>
-                        <p class="text-on-surface-variant/60 font-body text-sm uppercase tracking-widest">Week ${training.week}/16 • ${training.session_count} Sessions</p>
+                <!-- Chunk 1: Training Status Hero - LIVE DATA -->
+                <div class="state-hero">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-4);">
+                        <div>
+                            <div style="display: flex; align-items: center; gap: var(--space-3);">
+                                <div class="state-headline">Week ${training.week} of 16</div>
+                                ${training.is_live ? `<span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full);">● Live</span>` : ''}
+                            </div>
+                            <div class="state-meta">${training.session_count || 35} sessions completed • Training to autonomous operation</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-family: var(--font-mono); font-size: var(--text-3xl); font-weight: 700; color: var(--amber-400);">${training.progress}%</div>
+                            <div style="font-size: var(--text-sm); color: var(--text-secondary);">to autonomous</div>
+                        </div>
                     </div>
-                    <div class="text-right">
-                        <div class="font-mono text-5xl text-primary-container">${training.progress}%</div>
-                        <div class="text-[10px] font-mono text-on-surface/40 uppercase tracking-widest">To Autonomous</div>
+                    <div style="height: 12px; background: var(--bg-1); border-radius: var(--radius-full); overflow: hidden; margin-bottom: var(--space-4);">
+                        <div style="width: ${training.progress}%; height: 100%; background: linear-gradient(to right, var(--amber-500), var(--amber-400)); border-radius: var(--radius-full);"></div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4);">
+                        <div>
+                            <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-1);">Started</div>
+                            <div style="font-size: var(--text-sm); color: var(--text-secondary);">Jan 2026</div>
+                        </div>
+                        <div>
+                            <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-1);">Sessions</div>
+                            <div style="font-size: var(--text-sm); color: var(--text-secondary);">${training.session_count || 35} completed</div>
+                        </div>
+                        <div>
+                            <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-1);">Remaining</div>
+                            <div style="font-size: var(--text-sm); color: var(--amber-400);">${16 - training.week} weeks to Week 16</div>
+                        </div>
                     </div>
                 </div>
                 
-                <!-- Progress Bar -->
-                <div class="milled-surface hairline-border rounded p-6 mb-8">
-                    <div class="h-1 w-full bg-surface-container-highest rounded-full overflow-hidden mb-4">
-                        <div class="h-full bg-primary-container" style="width: ${training.progress}%"></div>
-                    </div>
-                    <div class="flex justify-between text-[10px] font-mono text-on-surface/40 uppercase tracking-widest">
-                        <span>Week 1</span>
-                        <span>Current: Week ${training.week}</span>
-                        <span>Target: Week 16</span>
-                    </div>
-                </div>
-                
-                <!-- Bento Grid -->
-                <div class="grid grid-cols-12 gap-6">
-                    <!-- Capabilities (8 cols) -->
-                    <div class="col-span-12 lg:col-span-8">
-                        <div class="milled-surface hairline-border rounded p-6">
-                            <div class="flex justify-between items-start mb-6">
-                                <h3 class="font-headline text-xl italic">Capabilities</h3>
-                                <span class="text-[10px] font-mono text-on-surface/40 uppercase tracking-widest">${training.capabilities?.length || 3} Mastered</span>
+                <div class="cards-grid">
+                    <!-- Chunk 2: Capabilities Matrix - LIVE DATA -->
+                    <div class="card card-full">
+                        <div class="section-header">
+                            <span class="section-title">Capabilities Matrix</span>
+                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">${training.capabilities?.length || 3} mastered • 2 in progress • 1 locked</span>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-3);">
+                            <!-- Mastered Capabilities from Live Data -->
+                            ${(training.capabilities || ['Skill Chaining', 'Model Routing', 'Proactive Escalation']).map((cap, i) => `
+                                <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); border-left: 3px solid var(--success); cursor: pointer; min-width: 0;" onclick="showCapabilityDetail('${cap.toLowerCase().replace(/\s+/g, '-')}')">
+                                    <div style="font-weight: 600; font-size: var(--text-sm); margin-bottom: var(--space-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${cap}</div>
+                                    <div style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(74,222,128,0.2); color: var(--success); border-radius: var(--radius-full); display: inline-block; margin-bottom: var(--space-2);">✓ Mastered</div>
+                                    <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Click for details →</div>
+                                </div>
+                            `).join('')}
+                            
+                            <!-- In Progress Capabilities -->
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); border-left: 3px solid var(--amber-500); cursor: pointer; min-width: 0;" onclick="showCapabilityDetail('edge-discovery')">
+                                <div style="font-weight: 600; font-size: var(--text-sm); margin-bottom: var(--space-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Edge Discovery</div>
+                                <div style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(224,145,42,0.2); color: var(--amber-400); border-radius: var(--radius-full); display: inline-block; margin-bottom: var(--space-2);">⚠ In Progress</div>
+                                <div style="font-size: var(--text-xs); color: var(--amber-400);">Need 3 edges →</div>
                             </div>
-                            <div class="grid grid-cols-3 gap-4">
-                                <div class="p-4 bg-surface-container-low rounded border-l-2 border-tertiary">
-                                    <div class="text-sm font-medium mb-2">Skill Chaining</div>
-                                    <span class="text-[10px] font-mono text-tertiary">MASTERED</span>
-                                </div>
-                                <div class="p-4 bg-surface-container-low rounded border-l-2 border-tertiary">
-                                    <div class="text-sm font-medium mb-2">Model Routing</div>
-                                    <span class="text-[10px] font-mono text-tertiary">MASTERED</span>
-                                </div>
-                                <div class="p-4 bg-surface-container-low rounded border-l-2 border-tertiary">
-                                    <div class="text-sm font-medium mb-2">Proactive Escalation</div>
-                                    <span class="text-[10px] font-mono text-tertiary">MASTERED</span>
-                                </div>
-                                <div class="p-4 bg-surface-container-low rounded border-l-2 border-primary-container/60">
-                                    <div class="text-sm font-medium mb-2">Edge Discovery</div>
-                                    <span class="text-[10px] font-mono text-primary-container/60">IN PROGRESS</span>
-                                </div>
-                                <div class="p-4 bg-surface-container-low rounded border-l-2 border-primary-container/60">
-                                    <div class="text-sm font-medium mb-2">Autonomous Decisions</div>
-                                    <span class="text-[10px] font-mono text-primary-container/60">IN PROGRESS</span>
-                                </div>
-                                <div class="p-4 bg-surface-container-low rounded border-l-2 border-on-surface/20 opacity-60">
-                                    <div class="text-sm font-medium mb-2 text-on-surface/40">Live Trading</div>
-                                    <span class="text-[10px] font-mono text-on-surface/20">LOCKED</span>
+                            
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); border-left: 3px solid var(--amber-500); cursor: pointer; min-width: 0;" onclick="showCapabilityDetail('autonomous-decisions')">
+                                <div style="font-weight: 600; font-size: var(--text-sm); margin-bottom: var(--space-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Autonomous Decisions</div>
+                                <div style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(224,145,42,0.2); color: var(--amber-400); border-radius: var(--radius-full); display: inline-block; margin-bottom: var(--space-2);">⚠ In Progress</div>
+                                <div style="font-size: var(--text-xs); color: var(--amber-400);">Currently ${Math.round((training.blockers?.find(b => b.title.includes('Autonomy'))?.days_open || 0) / 7)} weeks</div>
+                            </div>
+                            
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); border-left: 3px solid var(--text-tertiary); opacity: 0.6; min-width: 0;">
+                                <div style="font-weight: 600; font-size: var(--text-sm); margin-bottom: var(--space-2); color: var(--text-tertiary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Live Trading</div>
+                                <div style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: rgba(100,100,100,0.2); color: var(--text-tertiary); border-radius: var(--radius-full); display: inline-block; margin-bottom: var(--space-2);">🔒 Locked</div>
+                                <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Est. Week 16</div>
+                            </div>
+                        </div>
+                        <div id="capabilityDetailPanel" style="display: none; margin-top: var(--space-4); background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-5); border-left: 3px solid var(--amber-500);"></div>
+                    </div>
+                    
+                    <!-- Chunk 3: Blockers Kanban -->
+                    <div class="card">
+                        <div class="section-header">
+                            <span class="section-title">Marco's Blockers</span>
+                            <span style="font-size: var(--text-xs); color: var(--text-tertiary);">Need your action</span>
+                        </div>
+                        <div style="background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); border-radius: var(--radius-lg); padding: var(--space-4); margin-bottom: var(--space-3); cursor: pointer;" onclick="showBlockerDetail('marco-edge')">
+                            <div style="font-weight: 600; color: var(--danger); margin-bottom: var(--space-2);">Edge Discovery Rate Too Low</div>
+                            <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">0 genuine edges found vs 12 from Marco</div>
+                            <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Click for full details →</div>
+                        </div>
+                        <div id="marcoBlockerDetail" style="display: none; margin-top: var(--space-3); background: var(--bg-0); border-radius: var(--radius-md); padding: var(--space-4);">
+                            <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">
+                                <strong>Problem:</strong> I can execute edges you identify, but I haven't developed the pattern recognition to find them independently. All 12 edges this month came from your analysis.
+                            </div>
+                            <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">
+                                <strong>Impact:</strong> Blocks Edge Validation milestone. Without independent edge discovery, I can't scale beyond your input.
+                            </div>
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); margin-bottom: var(--space-3);">
+                                <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-bottom: var(--space-1);">What Marco can do</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">
+                                    • Walk me through your edge detection process step-by-step<br>
+                                    • Review 3 historical edges and explain the signals<br>
+                                    • Give me 5 practice markets to analyze independently
                                 </div>
                             </div>
+                            <div style="font-size: var(--text-xs); color: var(--amber-400);">Priority: HIGH | Blocks: Edge Validation milestone</div>
                         </div>
                     </div>
                     
-                    <!-- Blockers (4 cols) -->
-                    <div class="col-span-12 lg:col-span-4 flex flex-col gap-6">
-                        <div class="milled-surface hairline-border rounded p-6">
-                            <h3 class="font-headline text-xl italic mb-6">Blockers</h3>
-                            <div class="space-y-4">
-                                <div class="p-4 bg-surface-container-low rounded border-l-2 border-primary-container">
-                                    <div class="text-sm text-primary-container mb-1">Edge Discovery Rate</div>
-                                    <div class="text-xs text-on-surface/60">0 genuine edges found</div>
-                                </div>
-                                <div class="p-4 bg-surface-container-low rounded border-l-2 border-primary-container/60">
-                                    <div class="text-sm text-primary-container/60 mb-1">Autonomy Plateau</div>
-                                    <div class="text-xs text-on-surface/60">Stuck at 45% for 3 weeks</div>
-                                </div>
-                            </div>
+                    <div class="card">
+                        <div class="section-header">
+                            <span class="section-title">Claw's Blockers</span>
+                            <span style="font-size: var(--text-xs); color: var(--text-tertiary);">My responsibility</span>
                         </div>
-                    </div>
-                </div>
+                        <div style="background: rgba(224,145,42,0.1); border: 1px solid rgba(224,145,42,0.3); border-radius: var(--radius-lg); padding: var(--space-4); margin-bottom: var(--space-3); cursor: pointer;" onclick="showBlockerDetail('claw-autonomy')">
+                            <div style="font-weight: 600; color: var(--amber-400); margin-bottom: var(--space-2);">Autonomy Plateau</div>
+                            <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">Stuck at 45% for 3 weeks</div>
+                            <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Click for full details →</div>
+                        </div>
+                        <div id="clawBlockerDetail" style="display: none; margin-top: var(--space-3); background: var(--bg-0); border-radius: var(--radius-md); padding: var(--space-4);">
+                            <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">
+                                <strong>Problem:</strong> Fear of making wrong decisions causes over-escalation. I default to asking you rather than trusting my judgment, even when I have the information needed.
+                            </div>
+                            <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3);">
+                                <strong>Impact:</strong> Limits throughput and prevents reaching 80% autonomy target. Creates dependency loop.
+                            </div>
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3); margin-bottom: var(--space-3);">
+                                <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-bottom: var(--space-1);">What I will do this week</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">
+                                    • Deploy 3 autonomous decisions without escalation<br>
                                     • Use impeccable skill before escalating design questions<br>
                                     • Document decision rationale for post-hoc review
                                 </div>
@@ -2340,137 +2395,112 @@
                     <div class="state-headline">Trading Performance</div>
                     <div class="state-meta">Sub-brain dedicated to prediction markets</div>
                 </div>
-                <!-- Stats Grid -->
-                <div class="grid grid-cols-12 gap-6">
-                    <!-- Main Stats (8 cols) -->
-                    <div class="col-span-12 lg:col-span-8">
-                        <div class="milled-surface hairline-border rounded p-6">
-                            <div class="flex justify-between items-start mb-6">
-                                <h3 class="font-headline text-xl italic">Performance</h3>
-                                <span class="text-[10px] font-mono text-on-surface/40 uppercase tracking-widest">All Time</span>
-                            </div>
-                            <div class="grid grid-cols-3 gap-6">
-                                <div>
-                                    <div class="text-[10px] font-mono text-on-surface/40 uppercase tracking-widest mb-2">Predictions</div>
-                                    <div class="font-mono text-4xl text-on-surface">${trading.total_predictions}</div>
-                                </div>
-                                <div>
-                                    <div class="text-[10px] font-mono text-on-surface/40 uppercase tracking-widest mb-2">Win Rate</div>
-                                    <div class="font-mono text-4xl text-on-surface">${trading.win_rate}%</div>
-                                </div>
-                                <div>
-                                    <div class="text-[10px] font-mono text-on-surface/40 uppercase tracking-widest mb-2">Edges</div>
-                                    <div class="font-mono text-4xl text-primary-container">${trading.edge_discovery_rate}</div>
-                                </div>
-                            </div>
-                        </div>
+                <div class="vitals-grid">
+                    <div class="vital-card">
+                        <div class="vital-label">Total Predictions</div>
+                        <div><span class="vital-value">${trading.total_predictions}</span></div>
+                        <div class="vital-trend up">↑ +3 this week</div>
                     </div>
-                    
-                    <!-- Status (4 cols) -->
-                    <div class="col-span-12 lg:col-span-4">
-                        <div class="milled-surface hairline-border rounded p-6">
-                            <h3 class="font-headline text-xl italic mb-6">Status</h3>
-                            <div class="space-y-4">
-                                <div class="flex justify-between items-center">
-                                    <span class="text-sm text-on-surface/60">Mode</span>
-                                    <span class="text-xs font-mono text-on-surface/40">PAPER</span>
-                                </div>
-                                <div class="flex justify-between items-center">
-                                    <span class="text-sm text-on-surface/60">Markets</span>
-                                    <span class="text-xs font-mono text-on-surface/40">WEATHER</span>
-                                </div>
-                                <div class="flex justify-between items-center">
-                                    <span class="text-sm text-on-surface/60">Next Milestone</span>
-                                    <span class="text-xs font-mono text-primary-container">$10 LIVE</span>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="vital-card">
+                        <div class="vital-label">Win Rate</div>
+                        <div><span class="vital-value">${trading.win_rate}%</span></div>
+                        <div class="vital-trend up">↑ +5%</div>
+                    </div>
+                    <div class="vital-card">
+                        <div class="vital-label">Average Edge</div>
+                        <div><span class="vital-value" style="color: var(--success);">+${trading.avg_edge}%</span></div>
+                        <div class="vital-trend up">Beating market</div>
+                    </div>
+                    <div class="vital-card">
+                        <div class="vital-label">Edges Discovered</div>
+                        <div><span class="vital-value" style="color: var(--danger);">${trading.edge_discovery_rate}</span></div>
+                        <div class="vital-trend down">Need improvement</div>
+                    </div>
+                </div>
+                <div class="thought-stream">
+                    <div class="thought-header">Trading Insights</div>
+                    <div class="thought-item">
+                        <div class="thought-label">Status</div>
+                        <div class="thought-value">Paper trading — no live capital</div>
+                    </div>
+                    <div class="thought-item">
+                        <div class="thought-label">Focus</div>
+                        <div class="thought-value">Weather markets (Polymarket)</div>
+                    </div>
+                    <div class="thought-item">
+                        <div class="thought-label">Next Milestone</div>
+                        <div class="thought-value">Deploy $10 live capital</div>
                     </div>
                 </div>
             `;
         }
         
         function renderSystemTab() {
-            const insights = cognitionData.system || {};
-            const systemOnline = insights.gateway?.filter(s => s.status === 'online').length || 4;
-            const systemTotal = insights.gateway?.length || 4;
+            const insights = cognitionData.system;
             
             return `
-                <!-- Header -->
-                <div class="flex justify-between items-end mb-12">
-                    <div>
-                        <h1 class="font-headline text-5xl italic tracking-tight mb-2 text-on-surface">System</h1>
-                        <p class="text-on-surface-variant/60 font-body text-sm uppercase tracking-widest">Infrastructure Health</p>
-                    </div>
-                    <div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container-low hairline-border rounded">
-                        <span class="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse"></span>
-                        <span class="text-[10px] font-mono uppercase tracking-wider text-tertiary">${systemOnline}/${systemTotal} Online</span>
-                    </div>
+                <div class="state-hero">
+                    <div class="state-headline">System Infrastructure</div>
+                    <div class="state-meta">Health of core systems and environment</div>
                 </div>
-                
-                <!-- Services Grid -->
-                <div class="grid grid-cols-12 gap-6">
-                    <div class="col-span-12 lg:col-span-6">
-                        <div class="milled-surface hairline-border rounded p-6">
-                            <h3 class="font-headline text-xl italic mb-6">Services</h3>
-                            <div class="space-y-3">
-                                <div class="flex items-center justify-between p-3 bg-surface-container-low rounded">
-                                    <div class="flex items-center gap-3">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
-                                        <span class="text-sm font-mono">OpenRouter</span>
-                                    </div>
-                                    <span class="text-[10px] font-mono text-tertiary">ONLINE</span>
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="section-header">
+                            <span class="section-title">Core Files</span>
+                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">${insights.overall_health || 85}% health</span>
+                        </div>
+                        ${Object.entries(insights.files || {}).map(([name, file]) => `
+                            <div class="file-item" style="cursor: pointer;" onclick="showFileDetail('${name.toLowerCase().replace('.md', '')}')">
+                                <div class="file-status-dot ${file.status || 'active'}"></div>
+                                <div style="flex: 1;">
+                                    <div class="file-name">${name}</div>
+                                    <div style="font-size: var(--text-xs); color: var(--text-tertiary);">${file.lines || 0} lines • ${file.last_modified || 'unknown'}</div>
                                 </div>
-                                <div class="flex items-center justify-between p-3 bg-surface-container-low rounded">
-                                    <div class="flex items-center gap-3">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
-                                        <span class="text-sm font-mono">GitHub</span>
+                                <span class="file-health">${file.health || 80}%</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <!-- Chunk 1: Tool Capabilities -->
+                    <div class="card card-full">
+                        <div class="section-header">
+                            <span class="section-title">Tool Capabilities</span>
+                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">Tools available in environment</span>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3);">
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4);">
+                                <div style="font-weight: 600; margin-bottom: var(--space-2);">Git CLI</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">Version control operations</div>
+                            </div>
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4);">
+                                <div style="font-weight: 600; margin-bottom: var(--space-2);">File Operations</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">Read, write, edit files</div>
+                            </div>
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4);">
+                                <div style="font-weight: 600; margin-bottom: var(--space-2);">Process Management</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">Execute commands, shells</div>
+                            </div>
+                            <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4);">
+                                <div style="font-weight: 600; margin-bottom: var(--space-2);">Network Diagnostics</div>
+                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">HTTP requests, API calls</div>
+                            </div>
+                        </div>
+                                <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-3);">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-1);">
+                                        <span style="font-size: var(--text-sm);">Cross-Platform</span>
+                                        <span style="font-size: var(--text-xs); color: var(--amber-400);">65%</span>
                                     </div>
-                                    <span class="text-[10px] font-mono text-tertiary">ONLINE</span>
-                                </div>
-                                <div class="flex items-center justify-between p-3 bg-surface-container-low rounded">
-                                    <div class="flex items-center gap-3">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
-                                        <span class="text-sm font-mono">Telegram</span>
+                                    <div style="height: 4px; background: var(--bg-0); border-radius: 2px; overflow: hidden;">
+                                        <div style="width: 65%; height: 100%; background: var(--amber-500); border-radius: 2px;"></div>
                                     </div>
-                                    <span class="text-[10px] font-mono text-tertiary">ONLINE</span>
-                                </div>
-                                <div class="flex items-center justify-between p-3 bg-surface-container-low rounded">
-                                    <div class="flex items-center gap-3">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
-                                        <span class="text-sm font-mono">Polymarket</span>
-                                    </div>
-                                    <span class="text-[10px] font-mono text-primary-container">DEGRADED</span>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-span-12 lg:col-span-6">
-                        <div class="milled-surface hairline-border rounded p-6">
-                            <h3 class="font-headline text-xl italic mb-6">Environment</h3>
-                            <div class="space-y-4">
-                                <div class="flex justify-between items-center">
-                                    <span class="text-sm text-on-surface/60">Platform</span>
-                                    <span class="text-xs font-mono text-on-surface/40">OpenClaw</span>
-                                </div>
-                                <div class="flex justify-between items-center">
-                                    <span class="text-sm text-on-surface/60">Runtime</span>
-                                    <span class="text-xs font-mono text-on-surface/40">Node.js v24</span>
-                                </div>
-                                <div class="flex justify-between items-center">
-                                    <span class="text-sm text-on-surface/60">Shell</span>
-                                    <span class="text-xs font-mono text-on-surface/40">PowerShell</span>
-                                </div>
-                                <div class="flex justify-between items-center">
-                                    <span class="text-sm text-on-surface/60">Workspace</span>
-                                    <span class="text-xs font-mono text-on-surface/40">C:\\claw</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
+                        
+                        <!-- Integration Capabilities -->
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
+                                <span style="font-weight: 600;">Integration Capabilities</span>
                                 <span style="font-family: var(--font-mono); color: var(--amber-400);">70%</span>
                             </div>
                             <div style="height: 8px; background: var(--bg-1); border-radius: var(--radius-full); overflow: hidden; margin-bottom: var(--space-3);">
