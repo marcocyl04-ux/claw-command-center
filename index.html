@@ -1078,14 +1078,8 @@
         }
         
         function renderTab(tab) {
-            console.log('Rendering tab:', tab);
-            const container = document.getElementById('mainContent');
-            if (!container) {
-                console.error('Container not found');
-                return;
-            }
-            
             currentTab = tab;
+            const container = document.getElementById('mainContent');
             
             // Update nav active state
             document.querySelectorAll('.nav-item').forEach(item => {
@@ -1095,48 +1089,26 @@
                 }
             });
             
-            // Check if cognitionData is loaded
-            if (!cognitionData) {
-                console.error('cognitionData not loaded');
-                container.innerHTML = '<div style="padding: var(--space-8); text-align: center; color: var(--danger);">Error: Data not loaded. Try refreshing.</div>';
-                return;
-            }
-            
-            // Render content directly without skeleton delay
-            try {
-                let content;
-                console.log('Calling render function for:', tab);
-                switch(tab) {
-                    case 'now':
-                        content = renderNowTab();
-                        break;
-                    case 'mind':
-                        content = renderMindTab();
-                        break;
-                    case 'memory':
-                        content = renderMemoryTab();
-                        break;
-                    case 'training':
-                        content = renderTrainingTab();
-                        break;
-                    case 'trading':
-                        content = renderTradingTab();
-                        break;
-                    case 'system':
-                        content = renderSystemTab();
-                        break;
-                    default:
-                        content = renderNowTab();
-                }
-                console.log('Content length:', content ? content.length : 0);
-                if (!content || content.length === 0) {
-                    container.innerHTML = '<div style="padding: var(--space-8); text-align: center; color: var(--danger);">Error: Tab returned empty content</div>';
-                } else {
-                    container.innerHTML = '<div class="tab-content">' + content + '</div>';
-                }
-            } catch (e) {
-                console.error('Render error:', e);
-                container.innerHTML = '<div style="padding: var(--space-8); text-align: center; color: var(--danger);">Error loading tab: ' + e.message + '<br><pre>' + e.stack + '</pre></div>';
+            // Simple switch - direct render
+            switch(tab) {
+                case 'now':
+                    container.innerHTML = '<div class="tab-content">' + renderNowTab() + '</div>';
+                    break;
+                case 'mind':
+                    container.innerHTML = '<div class="tab-content">' + renderMindTab() + '</div>';
+                    break;
+                case 'memory':
+                    container.innerHTML = '<div class="tab-content">' + renderMemoryTab() + '</div>';
+                    break;
+                case 'training':
+                    container.innerHTML = '<div class="tab-content">' + renderTrainingTab() + '</div>';
+                    break;
+                case 'trading':
+                    container.innerHTML = '<div class="tab-content">' + renderTradingTab() + '</div>';
+                    break;
+                case 'system':
+                    container.innerHTML = '<div class="tab-content">' + renderSystemTab() + '</div>';
+                    break;
             }
         }
         
