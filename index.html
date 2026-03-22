@@ -1353,6 +1353,28 @@
                         </div>
                     </div>
                 </div>
+                
+                <!-- Control Panel -->
+                <div class="milled-surface hairline-border rounded p-6 mt-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-headline text-xl italic">Control Panel</h3>
+                        <span class="text-[10px] font-mono text-on-surface/40 uppercase tracking-widest" id="lastRefresh">--:--:--</span>
+                    </div>
+                    <div class="flex gap-4">
+                        <button onclick="refreshDashboardData()" class="px-4 py-2 bg-surface-container-low hairline-border rounded text-xs font-mono uppercase tracking-wider text-on-surface/80 hover:text-primary-container hover:border-primary-container/40 transition-colors flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">refresh</span>
+                            Refresh Data
+                        </button>
+                        <button onclick="switchTab('system')" class="px-4 py-2 bg-surface-container-low hairline-border rounded text-xs font-mono uppercase tracking-wider text-on-surface/80 hover:text-tertiary hover:border-tertiary/40 transition-colors flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">stethoscope</span>
+                            Diagnostics
+                        </button>
+                        <button onclick="window.open('https://github.com/marcocyl04-ux/claw-command-center', '_blank')" class="px-4 py-2 bg-surface-container-low hairline-border rounded text-xs font-mono uppercase tracking-wider text-on-surface/80 hover:text-on-surface hover:border-on-surface/40 transition-colors flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">folder_open</span>
+                            Workspace
+                        </button>
+                    </div>
+                </div>
             `;
         }
         
