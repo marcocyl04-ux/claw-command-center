@@ -3109,7 +3109,13 @@
             panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
         
-        document.addEventListener('DOMContentLoaded', init);
+        // Initialize on DOM ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            // DOM already loaded
+            init();
+        }
     </script>
 </body>
 </html>
