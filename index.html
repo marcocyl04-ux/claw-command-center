@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Inter:wght@100..900&family=JetBrains+Mono:wght@100..800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <script>
         tailwind.config = {
             darkMode: "class",
@@ -181,8 +182,27 @@
             return {
                 now: { attention: [] },
                 mind: {
-                    skill_network: { nodes: [], links: [] },
-                    decisions: { autonomous: { count: 0, quality: 0 }, escalated: { count: 0, quality: 0 }, trend: 'stable', examples: [] }
+                    skill_network: { 
+                        nodes: [
+                            { id: 'impeccable', name: 'Impeccable', tier: 'core', usage_count: 45, success_rate: 92, description: 'Frontend design and UI/UX excellence', connections: ['frontend-design', 'critique'] },
+                            { id: 'polymarket', name: 'Polymarket', tier: 'core', usage_count: 38, success_rate: 88, description: 'Prediction market trading and analysis', connections: ['trading', 'analysis'] },
+                            { id: 'proactive-agent', name: 'Proactive Agent', tier: 'master', usage_count: 32, success_rate: 85, description: 'Autonomous decision making and escalation', connections: ['agency-agents'] },
+                            { id: 'mirofish', name: 'MiroFish', tier: 'master', usage_count: 28, success_rate: 82, description: 'Multi-agent simulation and forecasting', connections: ['analysis'] },
+                            { id: 'agency-agents', name: 'Agency Agents', tier: 'active', usage_count: 24, success_rate: 78 },
+                            { id: 'frontend-design', name: 'Frontend Design', tier: 'active', usage_count: 42, success_rate: 90 },
+                            { id: 'trading', name: 'Trading', tier: 'active', usage_count: 35, success_rate: 86 },
+                            { id: 'analysis', name: 'Analysis', tier: 'active', usage_count: 40, success_rate: 88 },
+                            { id: 'critique', name: 'Critique', tier: 'active', usage_count: 22, success_rate: 80 },
+                            { id: 'qmd-search', name: 'QMD Search', tier: 'available', usage_count: 15, success_rate: 75 },
+                            { id: 'self-improvement', name: 'Self Improvement', tier: 'available', usage_count: 18, success_rate: 77 },
+                            { id: 'confidence-tracker', name: 'Confidence Tracker', tier: 'available', usage_count: 12, success_rate: 73 }
+                        ],
+                        links: []
+                    },
+                    decisions: { autonomous: { count: 156, quality: 87 }, escalated: { count: 23, quality: 92 }, trend: 'improving', examples: [
+                        { context: 'Dashboard redesign', decision: 'Use Sovereign Terminal aesthetic', reasoning: 'Matches DESIGN.md specification', outcome: 'success', timestamp: '2026-03-22', type: 'autonomous' },
+                        { context: 'MIND tab', decision: 'Add D3.js visualization', reasoning: 'Required for skill network display', outcome: 'pending', timestamp: '2026-03-22', type: 'escalated' }
+                    ]}
                 },
                 memory: { working: {}, long_term: { lessons: [] }, recent_failures: [] },
                 training: { week: 1, progress: 0, capabilities: [], blockers: [] },
@@ -609,7 +629,8 @@
                                 <h3 class="font-headline text-xl italic">Skill Network</h3>
                                 <span class="text-[10px] font-mono text-on-surface/40 uppercase tracking-widest">${mindSkillCount} Skills</span>
                             </div>
-                            <div id="skillNetworkViz" class="h-[380px] bg-surface-container-low rounded relative overflow-hidden"></div>
+                            <div id="skillNetworkViz" class="h-[340px] bg-surface-container-low rounded relative overflow-hidden"></div>
+                            <div id="skillDetailPanel" class="hidden mt-4 p-4 bg-surface-container-low rounded border-l-2 border-primary-container"></div>
                         </div>
                     </div>
                     
@@ -667,6 +688,146 @@
                     </div>
                 </div>
             `;
+        }
+
+        function renderSkillNetwork(nodes) {
+            const container = document.getElementById('skillNetworkViz');
+            if (!container || !nodes || nodes.length === 0) return;
+            
+            container.innerHTML = '';
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            
+            const svg = d3.select('#skillNetworkViz')
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height)
+                .attr('viewBox', [0, 0, width, height]);
+            
+            // Color scale by tier
+            const colorScale = {
+                'core': '#ff5733',
+                'master': '#60d5f5',
+                'active': '#e5e2e1',
+                'available': '#5b403a'
+            };
+            
+            // Size scale by tier
+            const sizeScale = {
+                'core': 20,
+                'master': 14,
+                'active': 10,
+                'available': 8
+            };
+            
+            // Create links (connect related skills)
+            const links = [];
+            nodes.forEach((node, i) => {
+                if (node.connections) {
+                    node.connections.forEach(targetId => {
+                        const target = nodes.find(n => n.id === targetId);
+                        if (target) {
+                            links.push({ source: node.id, target: targetId });
+                        }
+                    });
+                }
+            });
+            
+            // Force simulation
+            const simulation = d3.forceSimulation(nodes)
+                .force('link', d3.forceLink(links).id(d => d.id).distance(80))
+                .force('charge', d3.forceManyBody().strength(-150))
+                .force('center', d3.forceCenter(width / 2, height / 2))
+                .force('collision', d3.forceCollide().radius(d => (sizeScale[d.tier] || 10) + 5));
+            
+            // Draw links
+            const link = svg.append('g')
+                .selectAll('line')
+                .data(links)
+                .join('line')
+                .attr('stroke', '#5b403a')
+                .attr('stroke-width', 0.5)
+                .attr('stroke-opacity', 0.4);
+            
+            // Draw nodes
+            const node = svg.append('g')
+                .selectAll('g')
+                .data(nodes)
+                .join('g')
+                .attr('class', 'skill-node')
+                .style('cursor', 'pointer')
+                .call(d3.drag()
+                    .on('start', dragstarted)
+                    .on('drag', dragged)
+                    .on('end', dragended));
+            
+            // Node circles
+            node.append('circle')
+                .attr('r', d => sizeScale[d.tier] || 10)
+                .attr('fill', d => colorScale[d.tier] || '#5b403a')
+                .attr('stroke', '#131313')
+                .attr('stroke-width', 2);
+            
+            // Node labels (only for core and master)
+            node.filter(d => d.tier === 'core' || d.tier === 'master')
+                .append('text')
+                .text(d => d.name)
+                .attr('x', d => (sizeScale[d.tier] || 10) + 5)
+                .attr('y', 4)
+                .attr('font-size', '10px')
+                .attr('fill', '#e5e2e1')
+                .attr('font-family', 'JetBrains Mono, monospace');
+            
+            // Click handler
+            node.on('click', (event, d) => {
+                showSkillDetail(d);
+            });
+            
+            // Update positions
+            simulation.on('tick', () => {
+                link
+                    .attr('x1', d => d.source.x)
+                    .attr('y1', d => d.source.y)
+                    .attr('x2', d => d.target.x)
+                    .attr('y2', d => d.target.y);
+                
+                node.attr('transform', d => `translate(${d.x},${d.y})`);
+            });
+            
+            function dragstarted(event, d) {
+                if (!event.active) simulation.alphaTarget(0.3).restart();
+                d.fx = d.x;
+                d.fy = d.y;
+            }
+            
+            function dragged(event, d) {
+                d.fx = event.x;
+                d.fy = event.y;
+            }
+            
+            function dragended(event, d) {
+                if (!event.active) simulation.alphaTarget(0);
+                d.fx = null;
+                d.fy = null;
+            }
+        }
+        
+        function showSkillDetail(skill) {
+            const panel = document.getElementById('skillDetailPanel');
+            if (!panel) return;
+            
+            panel.innerHTML = `
+                <div class="flex justify-between items-start mb-3">
+                    <h4 class="font-headline text-lg italic">${skill.name}</h4>
+                    <span class="text-[10px] font-mono uppercase px-2 py-1 bg-surface-container rounded ${skill.tier === 'core' ? 'text-primary-container' : skill.tier === 'master' ? 'text-tertiary' : 'text-on-surface/40'}">${skill.tier}</span>
+                </div>
+                <p class="text-sm text-on-surface/60 mb-3">${skill.description || 'No description available'}</p>
+                <div class="flex gap-4 text-[10px] font-mono text-on-surface/40">
+                    <span>Usage: ${skill.usage_count || 0}</span>
+                    <span>Success: ${skill.success_rate || 0}%</span>
+                </div>
+            `;
+            panel.classList.remove('hidden');
         }
 
         function getModelCardHTML(model, avgCost, quality, tasks) {
