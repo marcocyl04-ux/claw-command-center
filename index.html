@@ -188,14 +188,14 @@
                             { id: 'polymarket', name: 'Polymarket', tier: 'core', usage_count: 38, success_rate: 88, description: 'Prediction market trading and analysis', connections: ['trading', 'analysis'] },
                             { id: 'proactive-agent', name: 'Proactive Agent', tier: 'master', usage_count: 32, success_rate: 85, description: 'Autonomous decision making and escalation', connections: ['agency-agents'] },
                             { id: 'mirofish', name: 'MiroFish', tier: 'master', usage_count: 28, success_rate: 82, description: 'Multi-agent simulation and forecasting', connections: ['analysis'] },
-                            { id: 'agency-agents', name: 'Agency Agents', tier: 'active', usage_count: 24, success_rate: 78 },
-                            { id: 'frontend-design', name: 'Frontend Design', tier: 'active', usage_count: 42, success_rate: 90 },
-                            { id: 'trading', name: 'Trading', tier: 'active', usage_count: 35, success_rate: 86 },
-                            { id: 'analysis', name: 'Analysis', tier: 'active', usage_count: 40, success_rate: 88 },
-                            { id: 'critique', name: 'Critique', tier: 'active', usage_count: 22, success_rate: 80 },
-                            { id: 'qmd-search', name: 'QMD Search', tier: 'available', usage_count: 15, success_rate: 75 },
-                            { id: 'self-improvement', name: 'Self Improvement', tier: 'available', usage_count: 18, success_rate: 77 },
-                            { id: 'confidence-tracker', name: 'Confidence Tracker', tier: 'available', usage_count: 12, success_rate: 73 }
+                            { id: 'agency-agents', name: 'Agency Agents', tier: 'active', usage_count: 24, success_rate: 78, description: 'Collection of specialized AI agents' },
+                            { id: 'frontend-design', name: 'Frontend Design', tier: 'active', usage_count: 42, success_rate: 90, description: 'UI/UX design and implementation' },
+                            { id: 'trading', name: 'Trading', tier: 'active', usage_count: 35, success_rate: 86, description: 'Financial market analysis and execution' },
+                            { id: 'analysis', name: 'Analysis', tier: 'active', usage_count: 40, success_rate: 88, description: 'Data analysis and insights' },
+                            { id: 'critique', name: 'Critique', tier: 'active', usage_count: 22, success_rate: 80, description: 'Design and code review' },
+                            { id: 'qmd-search', name: 'QMD Search', tier: 'available', usage_count: 15, success_rate: 75, description: 'Semantic search for markdown' },
+                            { id: 'self-improvement', name: 'Self Improvement', tier: 'available', usage_count: 18, success_rate: 77, description: 'Continuous learning and adaptation' },
+                            { id: 'confidence-tracker', name: 'Confidence Tracker', tier: 'available', usage_count: 12, success_rate: 73, description: 'Track validation of learnings' }
                         ],
                         links: []
                     },
@@ -692,11 +692,21 @@
 
         function renderSkillNetwork(nodes) {
             const container = document.getElementById('skillNetworkViz');
-            if (!container || !nodes || nodes.length === 0) return;
+            if (!container || !nodes || nodes.length === 0) {
+                console.log('Skill network: no container or nodes', container, nodes);
+                return;
+            }
+            
+            // Wait for container to have size
+            if (container.clientWidth === 0 || container.clientHeight === 0) {
+                setTimeout(() => renderSkillNetwork(nodes), 100);
+                return;
+            }
             
             container.innerHTML = '';
             const width = container.clientWidth;
             const height = container.clientHeight;
+            console.log('Rendering skill network:', nodes.length, 'nodes, size:', width, 'x', height);
             
             const svg = d3.select('#skillNetworkViz')
                 .append('svg')
