@@ -804,17 +804,21 @@
 
         function renderSkillNetwork(nodes) {
             const container = document.getElementById('skillNetworkViz');
+            console.log('renderSkillNetwork called:', { container: !!container, nodesCount: nodes?.length });
+            
             if (!container || !nodes || nodes.length === 0) {
-                console.log('Skill network: no container or nodes', container, nodes);
+                console.log('Skill network: missing container or nodes');
                 return;
             }
             
             // Wait for container to have size
             if (container.clientWidth === 0 || container.clientHeight === 0) {
-                setTimeout(() => renderSkillNetwork(nodes), 100);
+                console.log('Skill network: waiting for container size');
+                setTimeout(() => renderSkillNetwork(nodes), 200);
                 return;
             }
             
+            console.log('Rendering skill network with', nodes.length, 'nodes');
             container.innerHTML = '';
             const width = container.clientWidth;
             const height = container.clientHeight;
