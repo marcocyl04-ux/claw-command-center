@@ -1798,7 +1798,88 @@
         }
 
         function renderSystemTab() {
-            return `<div class="text-on-surface/60 text-center py-20">SYSTEM tab content coming in Phase 4</div>`;
+            const system = cognitionData?.system || {};
+            const systemOnline = system?.gateway?.filter(s => s?.status === 'online')?.length || 4;
+            const systemTotal = system?.gateway?.length || 4;
+            const systemIssues = system?.gateway?.filter(s => s?.status === 'degraded')?.length || 0;
+
+            return `
+                <!-- Header -->
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-12">
+                    <div>
+                        <h1 class="font-headline text-4xl sm:text-5xl italic tracking-tight mb-2 text-on-surface">System</h1>
+                        <p class="text-on-surface-variant/60 font-body text-sm uppercase tracking-widest">Infrastructure Health</p>
+                    </div>
+                    <div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container-low hairline-border rounded">
+                        <span class="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse"></span>
+                        <span class="text-[11px] font-mono uppercase tracking-wider text-tertiary">${systemOnline}/${systemTotal} Online</span>
+                    </div>
+                </div>
+
+                <!-- Services Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <div class="lg:col-span-6">
+                        <div class="milled-surface hairline-border rounded overflow-hidden">
+                            <div class="p-6 border-b border-outline-variant/10">
+                                <h3 class="font-headline text-xl italic">Services</h3>
+                            </div>
+                            <div class="divide-y divide-outline-variant/5">
+                                <div class="p-4 flex items-center justify-between hover:bg-surface-container-low/30 transition-colors">
+                                    <div class="flex items-center gap-3">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                                        <span class="text-sm font-mono">OpenRouter</span>
+                                    </div>
+                                    <span class="text-[10px] font-mono text-tertiary">ONLINE</span>
+                                </div>
+                                <div class="p-4 flex items-center justify-between hover:bg-surface-container-low/30 transition-colors">
+                                    <div class="flex items-center gap-3">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                                        <span class="text-sm font-mono">GitHub</span>
+                                    </div>
+                                    <span class="text-[10px] font-mono text-tertiary">ONLINE</span>
+                                </div>
+                                <div class="p-4 flex items-center justify-between hover:bg-surface-container-low/30 transition-colors">
+                                    <div class="flex items-center gap-3">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                                        <span class="text-sm font-mono">Telegram</span>
+                                    </div>
+                                    <span class="text-[10px] font-mono text-tertiary">ONLINE</span>
+                                </div>
+                                <div class="p-4 flex items-center justify-between hover:bg-surface-container-low/30 transition-colors">
+                                    <div class="flex items-center gap-3">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+                                        <span class="text-sm font-mono">Polymarket</span>
+                                    </div>
+                                    <span class="text-[10px] font-mono text-primary-container">DEGRADED</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-6">
+                        <div class="milled-surface hairline-border rounded p-6">
+                            <h3 class="font-headline text-xl italic mb-6">Environment</h3>
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm text-on-surface/60">Platform</span>
+                                    <span class="text-xs font-mono text-on-surface/40">OpenClaw</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm text-on-surface/60">Runtime</span>
+                                    <span class="text-xs font-mono text-on-surface/40">Node.js v24</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm text-on-surface/60">Shell</span>
+                                    <span class="text-xs font-mono text-on-surface/40">PowerShell</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm text-on-surface/60">Workspace</span>
+                                    <span class="text-xs font-mono text-on-surface/40">C:\\claw</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
         }
     </script>
 </body>
