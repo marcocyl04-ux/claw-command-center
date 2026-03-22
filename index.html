@@ -1433,44 +1433,24 @@
         }
         
         // Model card HTML generator
-        function getModelCardHTML(model, avgCost, quality, overall, tasks) {
-            // Handle both number and string costs
-            const costNum = typeof avgCost === 'number' ? avgCost : parseFloat(avgCost.toString().replace(/[^0-9.]/g, '')) || 0;
-            const costEfficiency = quality / (costNum * 100 + 1);
-            const stars = Math.min(Math.round(costEfficiency), 5);
-            
-            // Format cost display
-            const costDisplay = typeof avgCost === 'string' ? avgCost : `$${avgCost.toFixed(2)}`;
-            
+        function getModelCardHTML(model, avgCost, quality, tasks) {
             return `
-                <div onclick="showModelDetail('${model}')" style="background: var(--bg-1); border-radius: var(--radius-lg); padding: var(--space-5); cursor: pointer; transition: transform 0.2s; border: 1px solid transparent;" onmouseover="this.style.borderColor='var(--amber-500)'" onmouseout="this.style.borderColor='transparent'">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
-                        <span style="font-weight: 600; font-size: var(--text-lg);">${model}</span>
-                        <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: ${overall === 'excellent' ? 'rgba(74,222,128,0.2)' : 'rgba(224,145,42,0.2)'}; color: ${overall === 'excellent' ? 'var(--success)' : 'var(--amber-400)'}; border-radius: var(--radius-full); text-transform: uppercase;">${overall}</span>
+                <div onclick="showModelDetail('${model}')" class="bg-surface-container-low rounded p-4 cursor-pointer hover:bg-surface-container transition-colors">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="font-medium text-sm">${model}</span>
+                        <span class="text-[10px] font-mono text-tertiary">${quality}%</span>
                     </div>
-                    <div style="margin-bottom: var(--space-3);">
-                        <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-bottom: var(--space-1);">Cost Efficiency</div>
-                        <div style="color: var(--amber-400); font-size: var(--text-xl);">${'★'.repeat(stars)}${'☆'.repeat(5-stars)}</div>
-                    </div>
-                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); margin-bottom: var(--space-3);">
-                        <div>
-                            <div style="font-size: var(--text-sm); color: var(--text-tertiary);">Avg Cost</div>
-                            <div style="font-family: var(--font-mono); font-weight: 600;">${costDisplay}</div>
-                        </div>
-                        <div>
-                            <div style="font-size: var(--text-sm); color: var(--text-tertiary);">Quality</div>
-                            <div style="font-family: var(--font-mono); font-weight: 600; color: var(--success);">${quality}%</div>
-                        </div>
-                    </div>
-                    <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-bottom: var(--space-2);">Usage by Task</div>
-                    ${tasks.map(t => `
-                        <div style="display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-1);">
-                            <div style="flex: 1; height: 6px; background: var(--bg-0); border-radius: 3px; overflow: hidden;">
-                                <div style="width: ${t.pct}%; height: 100%; background: var(--amber-500); border-radius: 3px;"></div>
+                    <div class="font-mono text-xs text-on-surface/60 mb-3">${avgCost}</div>
+                    <div class="space-y-1">
+                        ${tasks.map(t => `
+                            <div class="flex items-center gap-2">
+                                <div class="flex-1 h-1 bg-surface-container-highest rounded-full overflow-hidden">
+                                    <div class="h-full bg-primary-container/60" style="width: ${t.pct}%"></div>
+                                </div>
+                                <span class="text-[9px] font-mono text-on-surface/40 w-12 text-right">${t.task}</span>
                             </div>
-                            <span style="font-size: var(--text-xs); color: var(--text-secondary); width: 80px; text-align: right;">${t.task}</span>
-                        </div>
-                    `).join('')}
+                        `).join('')}
+                    </div>
                 </div>
             `;
         }
@@ -1497,105 +1477,111 @@
             }, 0);
             
             return `
-                <div class="state-hero">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <div class="state-headline">Cognitive Stack</div>
-                            <div class="state-meta">How I process information and make decisions</div>
-                        </div>
-                        ${mind.decisions?.is_live ? `<span style="font-size: var(--text-xs); padding: var(--space-2) var(--space-3); background: rgba(74,222,128,0.1); border-radius: var(--radius-full); color: var(--success);">● Live</span>` : ''}
+                <!-- Header -->
+                <div class="flex justify-between items-end mb-12">
+                    <div>
+                        <h1 class="font-headline text-5xl italic tracking-tight mb-2 text-on-surface">Cognitive Stack</h1>
+                        <p class="text-on-surface-variant/60 font-body text-sm uppercase tracking-widest">How I process information and make decisions</p>
                     </div>
+                    ${mind.decisions?.is_live ? `
+                    <div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container-low hairline-border rounded">
+                        <span class="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse"></span>
+                        <span class="text-[10px] font-mono uppercase tracking-wider text-tertiary">Live</span>
+                    </div>` : ''}
                 </div>
-                <div class="cards-grid">
-                    <div class="card card-full">
-                        <div class="section-header">
-                            <span class="section-title">Skill Network</span>
-                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">${mind.skill_network?.nodes?.length || 22} skills installed • Click nodes to explore</span>
-                        </div>
-                        <div id="skillNetworkViz" style="height: 400px; background: var(--bg-1); border-radius: var(--radius-md); position: relative; overflow: hidden;">
-                            <!-- SVG skill network will be rendered here -->
-                        </div>
-                        <div id="skillDetailPanel" style="display: none; margin-top: var(--space-4); background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-5); border-left: 3px solid var(--amber-500);">
-                            <!-- Skill detail content -->
-                        </div>
-                    </div>
-                    <div class="card card-full">
-                        <div class="section-header">
-                            <span class="section-title">Model Mastery</span>
-                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">6 models • Quality scores estimated • Costs from OpenRouter</span>
-                        </div>
-                        <div class="model-cards-grid">
-                            ${getModelCardHTML('Opus 4.6', '~$0.10-0.50', 92, 'excellent', [
-                                { task: 'Design systems', pct: 40 },
-                                { task: 'Complex reasoning', pct: 30 },
-                                { task: 'Architecture', pct: 20 }
-                            ])}
-                            ${getModelCardHTML('Sonnet 4.6', '~$0.02-0.08', 85, 'good', [
-                                { task: 'Content generation', pct: 50 },
-                                { task: 'Analysis', pct: 30 },
-                                { task: 'Review', pct: 20 }
-                            ])}
-                            ${getModelCardHTML('Kimi K2.5', '~$0.001-0.005', 88, 'good', [
-                                { task: 'Implementation', pct: 60 },
-                                { task: 'Refactoring', pct: 25 },
-                                { task: 'Debugging', pct: 15 }
-                            ])}
-                            ${getModelCardHTML('Qwen3 235B', '~$0.005-0.02', 82, 'good', [
-                                { task: 'Analysis', pct: 45 },
-                                { task: 'Bulk processing', pct: 35 },
-                                { task: 'Market assessment', pct: 20 }
-                            ])}
-                            ${getModelCardHTML('DeepSeek R1', '~$0.001-0.005', 90, 'excellent', [
-                                { task: 'Reasoning', pct: 50 },
-                                { task: 'Self-review', pct: 30 },
-                                { task: 'Meta-cognition', pct: 20 }
-                            ])}
-                            ${getModelCardHTML('Gemini 2.5 Pro', '~$0.01-0.05', 84, 'good', [
-                                { task: 'Multimodal', pct: 40 },
-                                { task: 'Long context', pct: 35 },
-                                { task: 'Research', pct: 25 }
-                            ])}
-                        </div>
-                        <div id="modelDetailPanel" style="display: none; margin-top: var(--space-5); background: var(--bg-1); border-radius: var(--radius-lg); padding: var(--space-5);">
-                            <!-- Model detail content -->
-                        </div>
-                    </div>
-                    <div class="card card-full">
-                        <div class="section-header">
-                            <span class="section-title">Decision Quality</span>
-                            <span style="font-size: var(--text-sm); color: var(--text-secondary);">Trend: ${mind.decisions.trend} ${mind.decisions?.is_live ? '• Live' : ''}</span>
-                        </div>
-                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4); margin-bottom: var(--space-5);">
-                            <div>
-                                <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-bottom: var(--space-2);">Autonomous Decisions</div>
-                                <div style="font-family: var(--font-mono); font-size: var(--text-2xl); font-weight: 700; color: var(--success);">${mind.decisions.autonomous.count}</div>
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">${mind.decisions.autonomous.quality}% quality</div>
+                
+                <!-- Bento Grid -->
+                <div class="grid grid-cols-12 gap-6">
+                    <!-- Skill Network (8 cols) -->
+                    <div class="col-span-12 lg:col-span-8">
+                        <div class="milled-surface hairline-border rounded p-6 h-[500px]">
+                            <div class="flex justify-between items-center mb-6">
+                                <h3 class="font-headline text-xl italic">Skill Network</h3>
+                                <span class="text-[10px] font-mono text-on-surface/40 uppercase tracking-widest">${mind.skill_network?.nodes?.length || 22} Skills</span>
                             </div>
-                            <div>
-                                <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-bottom: var(--space-2);">Escalated Decisions</div>
-                                <div style="font-family: var(--font-mono); font-size: var(--text-2xl); font-weight: 700; color: var(--amber-400);">${mind.decisions.escalated.count}</div>
-                                <div style="font-size: var(--text-sm); color: var(--text-secondary);">${mind.decisions.escalated.quality}% quality</div>
+                            <div id="skillNetworkViz" class="h-[380px] bg-surface-container-low rounded relative overflow-hidden">
+                                <!-- SVG skill network rendered here -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Decision Stats (4 cols) -->
+                    <div class="col-span-12 lg:col-span-4 flex flex-col gap-6">
+                        <div class="milled-surface hairline-border rounded p-6">
+                            <h3 class="font-headline text-xl italic mb-8">Decision Quality</h3>
+                            <div class="space-y-8">
+                                <div>
+                                    <div class="flex justify-between items-end mb-2">
+                                        <span class="text-[10px] font-mono uppercase tracking-widest text-on-surface/40">Autonomous</span>
+                                        <span class="text-sm font-mono text-tertiary">${mind.decisions.autonomous.count}</span>
+                                    </div>
+                                    <div class="h-px w-full bg-outline-variant/20 relative">
+                                        <div class="absolute top-0 left-0 h-px bg-tertiary" style="width: ${mind.decisions.autonomous.quality}%"></div>
+                                    </div>
+                                    <div class="text-[10px] font-mono text-on-surface/40 mt-1">${mind.decisions.autonomous.quality}% quality</div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between items-end mb-2">
+                                        <span class="text-[10px] font-mono uppercase tracking-widest text-on-surface/40">Escalated</span>
+                                        <span class="text-sm font-mono text-primary-container">${mind.decisions.escalated.count}</span>
+                                    </div>
+                                    <div class="h-px w-full bg-outline-variant/20 relative">
+                                        <div class="absolute top-0 left-0 h-px bg-primary-container" style="width: ${mind.decisions.escalated.quality}%"></div>
+                                    </div>
+                                    <div class="text-[10px] font-mono text-on-surface/40 mt-1">${mind.decisions.escalated.quality}% quality</div>
+                                </div>
                             </div>
                         </div>
                         
-                        <!-- Decision Stats Summary -->
-                        <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); margin-bottom: var(--space-5);">
-                            <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-bottom: var(--space-3);">Decision History</div>
-                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4);">
-                                <div style="text-align: center;">
-                                    <div style="font-family: var(--font-mono); font-size: var(--text-2xl); font-weight: 700; color: var(--success);">${mind.decisions.examples?.length || 0}</div>
-                                    <div style="font-size: var(--text-xs); color: var(--text-secondary);">Recent decisions tracked</div>
-                                </div>
-                                <div style="text-align: center;">
-                                    <div style="font-family: var(--font-mono); font-size: var(--text-2xl); font-weight: 700; color: var(--amber-400);">${Math.round((mind.decisions.autonomous.count / (mind.decisions.autonomous.count + mind.decisions.escalated.count)) * 100) || 0}%</div>
-                                    <div style="font-size: var(--text-xs); color: var(--text-secondary);">Autonomy rate</div>
-                                </div>
-                                <div style="text-align: center;">
-                                    <div style="font-family: var(--font-mono); font-size: var(--text-2xl); font-weight: 700;">${mind.decisions.trend}</div>
-                                    <div style="font-size: var(--text-xs); color: var(--text-secondary);">Current trend</div>
-                                </div>
+                        <div class="milled-surface hairline-border rounded p-6">
+                            <h3 class="font-headline text-xl italic mb-2">Autonomy Rate</h3>
+                            <div class="font-mono text-4xl text-primary-container mb-2">${Math.round((mind.decisions.autonomous.count / (mind.decisions.autonomous.count + mind.decisions.escalated.count)) * 100) || 0}%</div>
+                            <p class="text-[10px] font-mono text-on-surface/40 uppercase tracking-widest">Trend: ${mind.decisions.trend}</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Model Mastery (Full width) -->
+                    <div class="col-span-12">
+                        <div class="milled-surface hairline-border rounded p-6">
+                            <div class="flex justify-between items-center mb-6">
+                                <h3 class="font-headline text-xl italic">Model Mastery</h3>
+                                <span class="text-[10px] font-mono text-on-surface/40 uppercase tracking-widest">6 Models • OpenRouter</span>
+                            </div>
+                            <div class="grid grid-cols-3 gap-4">
+                                ${getModelCardHTML('Opus 4.6', '~$0.10-0.50', 92, [
+                                    { task: 'Design', pct: 40 },
+                                    { task: 'Reasoning', pct: 30 },
+                                    { task: 'Architecture', pct: 20 }
+                                ])}
+                                ${getModelCardHTML('Sonnet 4.6', '~$0.02-0.08', 85, [
+                                    { task: 'Content', pct: 50 },
+                                    { task: 'Analysis', pct: 30 },
+                                    { task: 'Review', pct: 20 }
+                                ])}
+                                ${getModelCardHTML('Kimi K2.5', '~$0.001-0.005', 88, [
+                                    { task: 'Impl', pct: 60 },
+                                    { task: 'Refactor', pct: 25 },
+                                    { task: 'Debug', pct: 15 }
+                                ])}
+                                ${getModelCardHTML('Qwen3 235B', '~$0.005-0.02', 82, [
+                                    { task: 'Analysis', pct: 45 },
+                                    { task: 'Bulk', pct: 35 },
+                                    { task: 'Market', pct: 20 }
+                                ])}
+                                ${getModelCardHTML('DeepSeek R1', '~$0.001-0.005', 90, [
+                                    { task: 'Reasoning', pct: 50 },
+                                    { task: 'Review', pct: 30 },
+                                    { task: 'Meta', pct: 20 }
+                                ])}
+                                ${getModelCardHTML('Gemini 2.5', '~$0.01-0.05', 84, [
+                                    { task: 'Multi', pct: 40 },
+                                    { task: 'Context', pct: 35 },
+                                    { task: 'Research', pct: 25 }
+                                ])}
                             </div>
                         </div>
+                    </div>
+                </div>
                         
                         <!-- Decision Pattern Note -->
                         <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); margin-bottom: var(--space-5); border-left: 3px solid var(--amber-500);">
