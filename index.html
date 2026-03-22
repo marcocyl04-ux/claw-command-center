@@ -858,7 +858,7 @@
         }
     </style>
 </head>
-<body class="bg-surface text-on-surface font-body overflow-hidden">
+<body class="bg-surface text-on-surface font-body">
     <!-- Background Ambient Glow -->
     <div class="fixed inset-0 z-[-1] pointer-events-none overflow-hidden">
         <div class="absolute top-[-10%] right-[-10%] w-[60%] h-[60%] rounded-full bg-primary-container/5 blur-[120px]"></div>
@@ -2051,102 +2051,8 @@
                         </div>
                     </div>
                 </div>
-                
-                <!-- Chunk 2: Active Memories -->
-                <div class="card card-full" style="margin-bottom: var(--space-5);">
-                    <div class="section-header">
-                        <span class="section-title">Core Files</span>
-                        <span style="font-size: var(--text-sm); color: var(--text-secondary);">Loaded every session from workspace</span>
-                    </div>
-                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3);">
-                        <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--success);">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
-                                <span style="font-weight: 600;">SOUL.md</span>
-                                <span style="font-size: var(--text-xs); color: var(--success);">Loaded</span>
-                            </div>
-                            <div style="font-size: var(--text-sm); color: var(--text-secondary);">Identity & principles</div>
-                        </div>
-                        
-                        <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--success);">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
-                                <span style="font-weight: 600;">MEMORY.md</span>
-                                <span style="font-size: var(--text-xs); color: var(--success);">Loaded</span>
-                            </div>
-                            <div style="font-size: var(--text-sm); color: var(--text-secondary);">Lessons & knowledge</div>
-                        </div>
-                        
-                        <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--success);">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
-                                <span style="font-weight: 600;">USER.md</span>
-                                <span style="font-size: var(--text-xs); color: var(--success);">Loaded</span>
-                            </div>
-                            <div style="font-size: var(--text-sm); color: var(--text-secondary);">Marco's profile</div>
-                        </div>
-                        
-                        <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); border-left: 3px solid var(--amber-500);">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
-                                <span style="font-weight: 600;">AGENTS.md</span>
-                                <span style="font-size: var(--text-xs); color: var(--amber-400);">Stale</span>
-                            </div>
-                            <div style="font-size: var(--text-sm); color: var(--text-secondary);">System protocols</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Chunk 3: Critical Memories - LIVE DATA from MEMORY.md -->
-                <div class="card card-full" style="margin-bottom: var(--space-5);">
-                    <div class="section-header">
-                        <span class="section-title">Critical Memories</span>
-                        <span style="font-size: var(--text-sm); color: var(--text-secondary);">${long_term.lessons.length} lessons from MEMORY.md</span>
-                    </div>
-                    ${long_term.lessons.map((l, i) => `
-                        <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); margin-bottom: var(--space-3); border-left: 3px solid var(--success);">
-                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-2);">
-                                <span style="font-weight: 600; flex: 1; padding-right: var(--space-3);">${l.lesson}</span>
-                                <div style="text-align: right;">
-                                    <div style="font-family: var(--font-mono); font-size: var(--text-sm); color: var(--success); font-weight: 600;">#${i + 1}</div>
-                                </div>
-                            </div>
-                            <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-bottom: var(--space-2);">Source: ${l.origin}</div>
-                        </div>
-                    `).join('')}
-                    ${long_term.lessons.filter(l => l.confidence > 85).length === 0 ? `
-                        <div style="background: var(--bg-1); border-radius: var(--radius-md); padding: var(--space-4); text-align: center; color: var(--text-tertiary);">
-                            No high-confidence lessons found. Check MEMORY.md for lessons to add.
-                        </div>
-                    ` : ''}
-                </div>
-                
-                <!-- Chunk 4: Memory Gaps -->
-                <div class="card card-full" style="margin-bottom: var(--space-5);">
-                    <div class="section-header">
-                        <span class="section-title">Memory Gaps</span>
-                        <span style="font-size: var(--text-sm); color: var(--text-secondary);">Recent failures — honest assessment</span>
-                    </div>
-                    ${recent_failures.map(f => `
-                        <div style="background: rgba(248,113,113,0.05); border: 1px solid rgba(248,113,113,0.2); border-radius: var(--radius-md); padding: var(--space-4); margin-bottom: var(--space-3);">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
-                                <span style="font-weight: 600; color: var(--danger);">${f.what}</span>
-                                <span style="font-size: var(--text-xs); color: var(--text-tertiary);">${f.when}</span>
-                            </div>
-                            <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-2);">Impact: ${f.impact}</div>
-                            <div style="background: var(--bg-0); border-radius: var(--radius-md); padding: var(--space-3); font-size: var(--text-sm); color: var(--amber-400);">
-                                <strong>Lesson added:</strong> ${f.lesson_added}
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-                
-                <!-- Chunk 5 & 6: Search and Timeline (simplified) -->
-                <div class="cards-grid">
-                    <div class="card">
-                        <div class="section-header">
-                            <span class="section-title">Memory Search</span>
-                        </div>
-                        <input type="text" placeholder="Search memories..." style="width: 100%; padding: var(--space-3); background: var(--bg-1); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-md); color: var(--text-primary); margin-bottom: var(--space-3);">
-                        <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-bottom: var(--space-2);">Recent searches:</div>
-                        <div style="display: flex; flex-wrap: wrap; gap: var(--space-2);">
-                            <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: var(--bg-1); border-radius: var(--radius-full); color: var(--text-secondary);">dashboard design</span>
+            `;
+        }
                             <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: var(--bg-1); border-radius: var(--radius-full); color: var(--text-secondary);">skill chaining</span>
                             <span style="font-size: var(--text-xs); padding: var(--space-1) var(--space-2); background: var(--bg-1); border-radius: var(--radius-full); color: var(--text-secondary);">Marco preferences</span>
                         </div>
