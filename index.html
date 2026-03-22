@@ -743,22 +743,36 @@
                 }
             });
             
-            // Initialize node positions to center
-            nodes.forEach(node => {
-                if (!node.x) node.x = width / 2 + (Math.random() - 0.5) * 50;
-                if (!node.y) node.y = height / 2 + (Math.random() - 0.5) * 50;
+            // Simple radial layout - more stable
+            const centerX = width / 2;
+            const centerY = height / 2;
+            const radius = Math.min(width, height) * 0.35;
+            
+            // Position nodes in concentric circles by tier
+            const tierOrder = ['core', 'master', 'active', 'available'];
+            const tierRadius = { core: 0, master: radius * 0.3, active: radius * 0.6, available: radius * 0.9 };
+            
+            nodes.forEach((node, i) => {
+                const tierIndex = tierOrder.indexOf(node.tier);
+                const nodesInTier = nodes.filter(n => n.tier === node.tier);
+                const indexInTier = nodesInTier.indexOf(node);
+                const angle = (indexInTier / nodesInTier.length) * 2 * Math.PI;
+                const r = tierRadius[node.tier] || radius * 0.5;
+                
+                node.x = centerX + r * Math.cos(angle);
+                node.y = centerY + r * Math.sin(angle);
+                node.fx = node.x; // Fix position initially
+                node.fy = node.y;
             });
             
-            // Force simulation
+            // Light force simulation for subtle movement
             const simulation = d3.forceSimulation(nodes)
-                .force('link', d3.forceLink(links).id(d => d.id).distance(60))
-                .force('charge', d3.forceManyBody().strength(-200))
-                .force('center', d3.forceCenter(width / 2, height / 2))
-                .force('collision', d3.forceCollide().radius(d => (sizeScale[d.tier] || 10) + 10))
-                .force('x', d3.forceX(width / 2).strength(0.05))
-                .force('y', d3.forceY(height / 2).strength(0.05))
-                .alpha(1)
-                .alphaDecay(0.01);
+                .force('link', d3.forceLink(links).id(d => d.id).distance(80).strength(0.5))
+                .force('charge', d3.forceManyBody().strength(-50))
+                .force('center', d3.forceCenter(centerX, centerY).strength(0.1))
+                .force('collision', d3.forceCollide().radius(d => (sizeScale[d.tier] || 10) + 5))
+                .alpha(0.3)
+                .alphaDecay(0.05);
             
             // Draw links
             const link = svg.append('g')
@@ -816,19 +830,17 @@
             
             function dragstarted(event, d) {
                 if (!event.active) simulation.alphaTarget(0.3).restart();
-                d.fx = d.x;
-                d.fy = d.y;
+                d.fx = null; // Release fixed position on drag
+                d.fy = null;
             }
             
             function dragged(event, d) {
-                d.fx = event.x;
-                d.fy = event.y;
+                d.x = event.x;
+                d.y = event.y;
             }
             
             function dragended(event, d) {
                 if (!event.active) simulation.alphaTarget(0);
-                d.fx = null;
-                d.fy = null;
             }
         }
         
@@ -836,10 +848,17 @@
             const panel = document.getElementById('skillDetailPanel');
             if (!panel) return;
             
+            const tierColors = {
+                'core': 'text-primary-container',
+                'master': 'text-tertiary',
+                'active': 'text-on-surface/60',
+                'available': 'text-on-surface/40'
+            };
+            
             panel.innerHTML = `
                 <div class="flex justify-between items-start mb-3">
                     <h4 class="font-headline text-lg italic">${skill.name}</h4>
-                    <span class="text-[10px] font-mono uppercase px-2 py-1 bg-surface-container rounded ${skill.tier === 'core' ? 'text-primary-container' : skill.tier === 'master' ? 'text-tertiary' : 'text-on-surface/40'}">${skill.tier}</span>
+                    <span class="text-[10px] font-mono uppercase px-2 py-1 bg-surface-container rounded ${tierColors[skill.tier] || 'text-on-surface/40'}">${skill.tier || 'unknown'}</span>
                 </div>
                 <p class="text-sm text-on-surface/60 mb-3">${skill.description || 'No description available'}</p>
                 <div class="flex gap-4 text-[10px] font-mono text-on-surface/40">
