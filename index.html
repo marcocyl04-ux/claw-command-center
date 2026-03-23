@@ -272,8 +272,9 @@
             const systemIssues = system?.gateway?.filter(s => s?.status === 'degraded')?.length || 0;
             const trainingWeek = training?.week || 0;
             const trainingProgress = training?.progress || 0;
-            const predictions = system?.trading?.total_predictions || 0;
-            const edges = system?.trading?.edge_discovery_rate || 0;
+            const tradingData = cognitionData?.trading || { total_predictions: 0, edge_discovery_rate: 0 };
+            const predictions = tradingData?.total_predictions || 0;
+            const edges = tradingData?.edge_discovery_rate || 0;
             
             return `
                 <!-- Header -->
