@@ -1,0 +1,573 @@
+﻿{
+    "now":  {
+                "attention":  [
+
+                              ],
+                "lastUpdate":  "2026-03-22T20:29:33.788Z"
+            },
+    "mind":  {
+                 "decisions":  {
+                                   "escalated":  {
+                                                     "count":  23,
+                                                     "quality":  92
+                                                 },
+                                   "is_live":  true,
+                                   "examples":  [
+                                                    {
+                                                        "timestamp":  "2026-03-22",
+                                                        "outcome":  "success",
+                                                        "type":  "autonomous",
+                                                        "decision":  "Use Sovereign Terminal aesthetic",
+                                                        "context":  "Dashboard redesign",
+                                                        "reasoning":  "Matches DESIGN.md specification"
+                                                    },
+                                                    {
+                                                        "timestamp":  "2026-03-22",
+                                                        "outcome":  "pending",
+                                                        "type":  "escalated",
+                                                        "decision":  "Add D3.js visualization",
+                                                        "context":  "MIND tab",
+                                                        "reasoning":  "Required for skill network display"
+                                                    }
+                                                ],
+                                   "autonomous":  {
+                                                      "count":  156,
+                                                      "quality":  87
+                                                  },
+                                   "trend":  "improving"
+                               },
+                 "skill_network":  {
+                                       "links":  [
+
+                                                 ],
+                                       "totalCount":  23,
+                                       "nodes":  [
+                                                     {
+                                                         "id":  "impeccable",
+                                                         "name":  "Impeccable",
+                                                         "success_rate":  92,
+                                                         "description":  "Frontend design and UI/UX excellence",
+                                                         "tier":  "core",
+                                                         "connections":  [
+                                                                             "frontend-design",
+                                                                             "critique"
+                                                                         ],
+                                                         "usage_count":  45
+                                                     },
+                                                     {
+                                                         "id":  "polymarket",
+                                                         "name":  "Polymarket",
+                                                         "success_rate":  88,
+                                                         "description":  "Prediction market trading and analysis",
+                                                         "tier":  "core",
+                                                         "connections":  [
+                                                                             "trading",
+                                                                             "analysis"
+                                                                         ],
+                                                         "usage_count":  38
+                                                     },
+                                                     {
+                                                         "id":  "proactive-agent",
+                                                         "name":  "Proactive Agent",
+                                                         "success_rate":  85,
+                                                         "description":  "Autonomous decision making and escalation",
+                                                         "tier":  "master",
+                                                         "connections":  [
+                                                                             "agency-agents"
+                                                                         ],
+                                                         "usage_count":  32
+                                                     },
+                                                     {
+                                                         "id":  "mirofish",
+                                                         "name":  "MiroFish",
+                                                         "success_rate":  82,
+                                                         "description":  "Multi-agent simulation and forecasting",
+                                                         "tier":  "master",
+                                                         "connections":  [
+                                                                             "analysis"
+                                                                         ],
+                                                         "usage_count":  28
+                                                     },
+                                                     {
+                                                         "success_rate":  78,
+                                                         "name":  "Agency Agents",
+                                                         "id":  "agency-agents",
+                                                         "tier":  "active",
+                                                         "usage_count":  24
+                                                     },
+                                                     {
+                                                         "success_rate":  90,
+                                                         "name":  "Frontend Design",
+                                                         "id":  "frontend-design",
+                                                         "tier":  "active",
+                                                         "usage_count":  42
+                                                     },
+                                                     {
+                                                         "success_rate":  86,
+                                                         "name":  "Trading",
+                                                         "id":  "trading",
+                                                         "tier":  "active",
+                                                         "usage_count":  35
+                                                     },
+                                                     {
+                                                         "success_rate":  88,
+                                                         "name":  "Analysis",
+                                                         "id":  "analysis",
+                                                         "tier":  "active",
+                                                         "usage_count":  40
+                                                     },
+                                                     {
+                                                         "success_rate":  80,
+                                                         "name":  "Critique",
+                                                         "id":  "critique",
+                                                         "tier":  "active",
+                                                         "usage_count":  22
+                                                     },
+                                                     {
+                                                         "success_rate":  75,
+                                                         "name":  "QMD Search",
+                                                         "id":  "qmd-search",
+                                                         "tier":  "available",
+                                                         "usage_count":  15
+                                                     },
+                                                     {
+                                                         "success_rate":  77,
+                                                         "name":  "Self Improvement",
+                                                         "id":  "self-improvement",
+                                                         "tier":  "available",
+                                                         "usage_count":  18
+                                                     },
+                                                     {
+                                                         "success_rate":  73,
+                                                         "name":  "Confidence Tracker",
+                                                         "id":  "confidence-tracker",
+                                                         "tier":  "available",
+                                                         "usage_count":  12
+                                                     }
+                                                 ]
+                                   }
+             },
+    "trading":  {
+                    "avg_edge":  6.1,
+                    "total_predictions":  20,
+                    "win_rate":  85,
+                    "predictions":  {
+                                        "value":  [
+                                                      {
+                                                          "id":  1,
+                                                          "market":  "NYC Rain March 20",
+                                                          "direction":  "YES",
+                                                          "confidence":  82,
+                                                          "stake":  0.50,
+                                                          "predicted":  72,
+                                                          "market_odds":  70,
+                                                          "actual":  68,
+                                                          "outcome":  "validated",
+                                                          "edge":  2,
+                                                          "reasoning":  "Satellite imagery showed clear cloud formation patterns consistent with historical rain events. Pressure drop of 8mb in 6 hours.",
+                                                          "lesson":  "Satellite + pressure data combination is reliable for 12-24h forecasts",
+                                                          "date":  "2026-03-20"
+                                                      },
+                                                      {
+                                                          "id":  2,
+                                                          "market":  "LA Temp March 21",
+                                                          "direction":  "NO",
+                                                          "confidence":  75,
+                                                          "stake":  0.35,
+                                                          "predicted":  45,
+                                                          "market_odds":  52,
+                                                          "actual":  82,
+                                                          "outcome":  "failed",
+                                                          "edge":  -7,
+                                                          "reasoning":  "Coastal breeze pattern suggested moderation. Historical data showed 78% of similar patterns resulted in temps below threshold.",
+                                                          "lesson":  "Weight real-time wind data higher than historical patterns. 6-hour timing errors are decisive.",
+                                                          "date":  "2026-03-21"
+                                                      },
+                                                      {
+                                                          "id":  3,
+                                                          "market":  "Chicago Snow March 18",
+                                                          "direction":  "YES",
+                                                          "confidence":  89,
+                                                          "stake":  0.42,
+                                                          "predicted":  89,
+                                                          "market_odds":  85,
+                                                          "actual":  91,
+                                                          "outcome":  "validated",
+                                                          "edge":  4,
+                                                          "reasoning":  "Jet stream dip + lake effect moisture = high confidence. Multiple model convergence on accumulation totals.",
+                                                          "lesson":  "Multi-model convergence on jet stream patterns is highly reliable",
+                                                          "date":  "2026-03-18"
+                                                      },
+                                                      {
+                                                          "id":  4,
+                                                          "market":  "Miami Humidity March 22",
+                                                          "direction":  "YES",
+                                                          "confidence":  68,
+                                                          "stake":  0.42,
+                                                          "predicted":  72,
+                                                          "market_odds":  65,
+                                                          "actual":  null,
+                                                          "outcome":  "pending",
+                                                          "edge":  null,
+                                                          "reasoning":  "Gulf stream warming pushes humidity to 78-82% range. March avg is 72%.",
+                                                          "lesson":  null,
+                                                          "date":  "2026-03-22"
+                                                      },
+                                                      {
+                                                          "id":  5,
+                                                          "market":  "Austin Heat March 19",
+                                                          "direction":  "NO",
+                                                          "confidence":  78,
+                                                          "stake":  0.28,
+                                                          "predicted":  35,
+                                                          "market_odds":  42,
+                                                          "actual":  38,
+                                                          "outcome":  "validated",
+                                                          "edge":  7,
+                                                          "reasoning":  "Cold front arriving midday. Models showed max temp 4Â°F below threshold.",
+                                                          "lesson":  "Cold front timing within 6-hour window is predictable",
+                                                          "date":  "2026-03-19"
+                                                      },
+                                                      {
+                                                          "id":  6,
+                                                          "market":  "Seattle Rain March 17",
+                                                          "direction":  "YES",
+                                                          "confidence":  85,
+                                                          "stake":  0.35,
+                                                          "predicted":  80,
+                                                          "market_odds":  75,
+                                                          "actual":  45,
+                                                          "outcome":  "failed",
+                                                          "edge":  5,
+                                                          "reasoning":  "Pacific storm track looked certain. Moisture plume clearly visible.",
+                                                          "lesson":  "Storm track can shift 50+ miles in final 6 hours. Need tighter confidence bands.",
+                                                          "date":  "2026-03-17"
+                                                      },
+                                                      {
+                                                          "id":  7,
+                                                          "market":  "Denver Snow March 15",
+                                                          "direction":  "YES",
+                                                          "confidence":  91,
+                                                          "stake":  0.50,
+                                                          "predicted":  88,
+                                                          "market_odds":  82,
+                                                          "actual":  94,
+                                                          "outcome":  "validated",
+                                                          "edge":  6,
+                                                          "reasoning":  "Upslope flow + Arctic air mass. Classic Denver snow setup.",
+                                                          "lesson":  "Upslope patterns are highly reliable when Arctic air is present",
+                                                          "date":  "2026-03-15"
+                                                      },
+                                                      {
+                                                          "id":  8,
+                                                          "market":  "Phoenix Heat March 23",
+                                                          "direction":  "NO",
+                                                          "confidence":  72,
+                                                          "stake":  0.25,
+                                                          "predicted":  42,
+                                                          "market_odds":  48,
+                                                          "actual":  null,
+                                                          "outcome":  "pending",
+                                                          "edge":  null,
+                                                          "reasoning":  "Cloud cover from Pacific system should limit heating.",
+                                                          "lesson":  null,
+                                                          "date":  "2026-03-23"
+                                                      },
+                                                      {
+                                                          "id":  9,
+                                                          "market":  "Boston Rain March 16",
+                                                          "direction":  "YES",
+                                                          "confidence":  76,
+                                                          "stake":  0.30,
+                                                          "predicted":  68,
+                                                          "market_odds":  62,
+                                                          "actual":  71,
+                                                          "outcome":  "validated",
+                                                          "edge":  6,
+                                                          "reasoning":  "Nor\u0027easter developing offshore. Precipitation shield expanding.",
+                                                          "lesson":  "Nor\u0027easter precipitation shields are predictable 18h out",
+                                                          "date":  "2026-03-16"
+                                                      },
+                                                      {
+                                                          "id":  10,
+                                                          "market":  "Portland Rain March 14",
+                                                          "direction":  "YES",
+                                                          "confidence":  88,
+                                                          "stake":  0.40,
+                                                          "predicted":  85,
+                                                          "market_odds":  80,
+                                                          "actual":  82,
+                                                          "outcome":  "validated",
+                                                          "edge":  5,
+                                                          "reasoning":  "Atmospheric river event. Precipitation totals locked in.",
+                                                          "lesson":  "Atmospheric rivers have high predictability 24h out",
+                                                          "date":  "2026-03-14"
+                                                      },
+                                                      {
+                                                          "id":  11,
+                                                          "market":  "Dallas Wind March 24",
+                                                          "direction":  "NO",
+                                                          "confidence":  65,
+                                                          "stake":  0.20,
+                                                          "predicted":  38,
+                                                          "market_odds":  45,
+                                                          "actual":  null,
+                                                          "outcome":  "pending",
+                                                          "edge":  null,
+                                                          "reasoning":  "High pressure should limit wind speeds.",
+                                                          "lesson":  null,
+                                                          "date":  "2026-03-24"
+                                                      },
+                                                      {
+                                                          "id":  12,
+                                                          "market":  "Atlanta Storm March 13",
+                                                          "direction":  "YES",
+                                                          "confidence":  79,
+                                                          "stake":  0.32,
+                                                          "predicted":  72,
+                                                          "market_odds":  68,
+                                                          "actual":  65,
+                                                          "outcome":  "validated",
+                                                          "edge":  4,
+                                                          "reasoning":  "Squall line approaching from west. Timing looked certain.",
+                                                          "lesson":  "Squall line timing can vary Â±2 hours. Build buffer into confidence.",
+                                                          "date":  "2026-03-13"
+                                                      },
+                                                      {
+                                                          "id":  13,
+                                                          "market":  "San Diego Fog March 25",
+                                                          "direction":  "YES",
+                                                          "confidence":  71,
+                                                          "stake":  0.22,
+                                                          "predicted":  68,
+                                                          "market_odds":  62,
+                                                          "actual":  null,
+                                                          "outcome":  "pending",
+                                                          "edge":  null,
+                                                          "reasoning":  "Marine layer depth increasing. Onshore flow persistent.",
+                                                          "lesson":  null,
+                                                          "date":  "2026-03-25"
+                                                      },
+                                                      {
+                                                          "id":  14,
+                                                          "market":  "Minneapolis Cold March 12",
+                                                          "direction":  "NO",
+                                                          "confidence":  83,
+                                                          "stake":  0.38,
+                                                          "predicted":  25,
+                                                          "market_odds":  35,
+                                                          "actual":  18,
+                                                          "outcome":  "validated",
+                                                          "edge":  10,
+                                                          "reasoning":  "Warm air advection from south. Cold front stalled north.",
+                                                          "lesson":  "Warm air advection can overcome cold patterns when front stalls",
+                                                          "date":  "2026-03-12"
+                                                      },
+                                                      {
+                                                          "id":  15,
+                                                          "market":  "New Orleans Rain March 11",
+                                                          "direction":  "YES",
+                                                          "confidence":  74,
+                                                          "stake":  0.28,
+                                                          "predicted":  70,
+                                                          "market_odds":  65,
+                                                          "actual":  75,
+                                                          "outcome":  "validated",
+                                                          "edge":  5,
+                                                          "reasoning":  "Gulf moisture surge. Convergence along stationary front.",
+                                                          "lesson":  "Gulf moisture surges are reliable when convergence present",
+                                                          "date":  "2026-03-11"
+                                                      },
+                                                      {
+                                                          "id":  16,
+                                                          "market":  "Salt Lake City Snow March 26",
+                                                          "direction":  "YES",
+                                                          "confidence":  69,
+                                                          "stake":  0.24,
+                                                          "predicted":  65,
+                                                          "market_odds":  58,
+                                                          "actual":  null,
+                                                          "outcome":  "pending",
+                                                          "edge":  null,
+                                                          "reasoning":  "Trough deepening. Orographic lift increasing.",
+                                                          "lesson":  null,
+                                                          "date":  "2026-03-26"
+                                                      },
+                                                      {
+                                                          "id":  17,
+                                                          "market":  "Kansas City Wind March 10",
+                                                          "direction":  "NO",
+                                                          "confidence":  77,
+                                                          "stake":  0.30,
+                                                          "predicted":  32,
+                                                          "market_odds":  40,
+                                                          "actual":  28,
+                                                          "outcome":  "validated",
+                                                          "edge":  8,
+                                                          "reasoning":  "High pressure ridge blocking wind. Gradient too weak.",
+                                                          "lesson":  "High pressure ridges are reliable wind blockers",
+                                                          "date":  "2026-03-10"
+                                                      },
+                                                      {
+                                                          "id":  18,
+                                                          "market":  "Philadelphia Rain March 27",
+                                                          "direction":  "YES",
+                                                          "confidence":  73,
+                                                          "stake":  0.26,
+                                                          "predicted":  70,
+                                                          "market_odds":  64,
+                                                          "actual":  null,
+                                                          "outcome":  "pending",
+                                                          "edge":  null,
+                                                          "reasoning":  "Warm front approaching. Precipitation shield expanding.",
+                                                          "lesson":  null,
+                                                          "date":  "2026-03-27"
+                                                      },
+                                                      {
+                                                          "id":  19,
+                                                          "market":  "Las Vegas Heat March 9",
+                                                          "direction":  "NO",
+                                                          "confidence":  81,
+                                                          "stake":  0.36,
+                                                          "predicted":  28,
+                                                          "market_odds":  38,
+                                                          "actual":  22,
+                                                          "outcome":  "validated",
+                                                          "edge":  10,
+                                                          "reasoning":  "Desert high pressure breaking down. Cooler air from west.",
+                                                          "lesson":  "Desert high pressure breakdown is visible 36h in advance",
+                                                          "date":  "2026-03-09"
+                                                      },
+                                                      {
+                                                          "id":  20,
+                                                          "market":  "Detroit Snow March 28",
+                                                          "direction":  "YES",
+                                                          "confidence":  67,
+                                                          "stake":  0.21,
+                                                          "predicted":  62,
+                                                          "market_odds":  55,
+                                                          "actual":  null,
+                                                          "outcome":  "pending",
+                                                          "edge":  null,
+                                                          "reasoning":  "Clipper system approaching. Lake enhancement possible.",
+                                                          "lesson":  null,
+                                                          "date":  "2026-03-28"
+                                                      }
+                                                  ],
+                                        "Count":  20
+                                    },
+                    "edge_discovery_rate":  11
+                },
+    "memory":  {
+                   "recent_failures":  [
+                                           {
+                                               "when":  "2 days ago",
+                                               "what":  "Failed to recall skill priority",
+                                               "impact":  "Delayed delivery"
+                                           },
+                                           {
+                                               "when":  "1 week ago",
+                                               "what":  "Missed checkpoint protocol",
+                                               "impact":  "Required rollback"
+                                           }
+                                       ],
+                   "long_term":  {
+                                     "lessons":  [
+                                                     {
+                                                         "lesson":  "The quality of the feedback signal matters more than the quantity of iterations."
+                                                     },
+                                                     {
+                                                         "lesson":  "Separate REASONING_ERROR from DATA_ERROR from UNPREDICTABLE â€” only reasoning errors update the framework."
+                                                     },
+                                                     {
+                                                         "lesson":  "High-confidence predictions get deep post-mortems regardless of outcome."
+                                                     },
+                                                     {
+                                                         "lesson":  "Saying \"I learned it\" without writing it down means nothing. The write is the commitment."
+                                                     }
+                                                 ]
+                                 },
+                   "recall":  {
+                                  "totalLines":  0,
+                                  "lessonCount":  4,
+                                  "skillCount":  23
+                              },
+                   "working":  {
+                                   "loaded_files":  [
+                                                        "SOUL.md",
+                                                        "MEMORY.md",
+                                                        "USER.md",
+                                                        "AGENTS.md"
+                                                    ]
+                               }
+               },
+    "system":  {
+                   "files":  {
+                                 "SOUL.md":  {
+                                                 "lines":  0,
+                                                 "health":  95,
+                                                 "last_modified":  "Today"
+                                             },
+                                 "AGENTS.md":  {
+                                                   "lines":  0,
+                                                   "health":  65,
+                                                   "last_modified":  "Today"
+                                               },
+                                 "USER.md":  {
+                                                 "lines":  0,
+                                                 "health":  88,
+                                                 "last_modified":  "Today"
+                                             },
+                                 "MEMORY.md":  {
+                                                   "lines":  0,
+                                                   "health":  90,
+                                                   "last_modified":  "Today"
+                                               }
+                             },
+                   "gateway":  [
+                                   {
+                                       "status":  "online",
+                                       "name":  "OpenRouter",
+                                       "latency":  45
+                                   },
+                                   {
+                                       "status":  "online",
+                                       "name":  "GitHub",
+                                       "latency":  120
+                                   },
+                                   {
+                                       "status":  "online",
+                                       "name":  "Telegram",
+                                       "latency":  80
+                                   },
+                                   {
+                                       "status":  "degraded",
+                                       "name":  "Polymarket",
+                                       "latency":  350
+                                   }
+                               ]
+               },
+    "training":  {
+                     "capabilities":  [
+                                          "Skill Chaining",
+                                          "Model Routing",
+                                          "Proactive Escalation"
+                                      ],
+                     "blockers":  [
+                                      {
+                                          "title":  "Edge Discovery Rate",
+                                          "description":  "0 genuine edges found vs 12 from Marco",
+                                          "days_open":  21
+                                      },
+                                      {
+                                          "title":  "Autonomy Plateau",
+                                          "description":  "Stuck at 45% for 3 weeks",
+                                          "days_open":  21
+                                      }
+                                  ],
+                     "session_count":  35,
+                     "week":  11,
+                     "is_live":  true,
+                     "progress":  50
+                 }
+}
