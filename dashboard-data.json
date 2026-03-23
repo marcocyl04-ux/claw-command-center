@@ -3,7 +3,7 @@
                 "attention":  [
 
                               ],
-                "lastUpdate":  "2026-03-23T14:14:47.245Z"
+                "lastUpdate":  "2026-03-23T14:29:47.151Z"
             },
     "mind":  {
                  "decisions":  {
@@ -47,54 +47,54 @@
                                                          "tier":  "master",
                                                          "name":  "agency-agents",
                                                          "description":  "Skill: agency-agents",
-                                                         "success_rate":  91,
+                                                         "success_rate":  82,
                                                          "connections":  null,
-                                                         "usage_count":  17
+                                                         "usage_count":  32
                                                      },
                                                      {
                                                          "id":  "autoresearch",
                                                          "tier":  "available",
                                                          "name":  "autoresearch",
                                                          "description":  "Skill: autoresearch",
-                                                         "success_rate":  75,
+                                                         "success_rate":  82,
                                                          "connections":  null,
-                                                         "usage_count":  40
+                                                         "usage_count":  27
                                                      },
                                                      {
                                                          "id":  "browserstealthdoctrine",
                                                          "tier":  "available",
                                                          "name":  "browser-stealth-doctrine",
                                                          "description":  "Skill: browser-stealth-doctrine",
-                                                         "success_rate":  78,
+                                                         "success_rate":  73,
                                                          "connections":  null,
-                                                         "usage_count":  5
+                                                         "usage_count":  32
                                                      },
                                                      {
                                                          "id":  "clawcontext",
                                                          "tier":  "master",
                                                          "name":  "claw-context",
                                                          "description":  "Skill: claw-context",
-                                                         "success_rate":  88,
+                                                         "success_rate":  70,
                                                          "connections":  null,
-                                                         "usage_count":  5
+                                                         "usage_count":  18
                                                      },
                                                      {
                                                          "id":  "clianything",
                                                          "tier":  "available",
                                                          "name":  "cli-anything",
                                                          "description":  "Skill: cli-anything",
-                                                         "success_rate":  71,
+                                                         "success_rate":  79,
                                                          "connections":  null,
-                                                         "usage_count":  19
+                                                         "usage_count":  44
                                                      },
                                                      {
                                                          "id":  "confidencetracker",
                                                          "tier":  "active",
                                                          "name":  "confidence-tracker",
                                                          "description":  "Skill: confidence-tracker",
-                                                         "success_rate":  84,
+                                                         "success_rate":  81,
                                                          "connections":  null,
-                                                         "usage_count":  9
+                                                         "usage_count":  14
                                                      },
                                                      {
                                                          "id":  "continuity",
@@ -103,61 +103,61 @@
                                                          "description":  "Skill: continuity",
                                                          "success_rate":  73,
                                                          "connections":  null,
-                                                         "usage_count":  22
+                                                         "usage_count":  28
                                                      },
                                                      {
                                                          "id":  "examcp",
                                                          "tier":  "available",
                                                          "name":  "exa-mcp",
                                                          "description":  "Skill: exa-mcp",
-                                                         "success_rate":  75,
+                                                         "success_rate":  72,
                                                          "connections":  null,
-                                                         "usage_count":  21
+                                                         "usage_count":  38
                                                      },
                                                      {
                                                          "id":  "heretic",
                                                          "tier":  "available",
                                                          "name":  "heretic",
                                                          "description":  "Skill: heretic",
-                                                         "success_rate":  82,
+                                                         "success_rate":  77,
                                                          "connections":  null,
-                                                         "usage_count":  5
+                                                         "usage_count":  48
                                                      },
                                                      {
                                                          "id":  "impeccable",
                                                          "tier":  "core",
                                                          "name":  "impeccable",
                                                          "description":  "Skill: impeccable",
-                                                         "success_rate":  92,
+                                                         "success_rate":  70,
                                                          "connections":  null,
-                                                         "usage_count":  32
+                                                         "usage_count":  43
                                                      },
                                                      {
                                                          "id":  "localevolver",
                                                          "tier":  "available",
                                                          "name":  "local-evolver",
                                                          "description":  "Skill: local-evolver",
-                                                         "success_rate":  76,
+                                                         "success_rate":  81,
                                                          "connections":  null,
-                                                         "usage_count":  29
+                                                         "usage_count":  11
                                                      },
                                                      {
                                                          "id":  "metareasoner",
                                                          "tier":  "available",
                                                          "name":  "meta-reasoner",
                                                          "description":  "Skill: meta-reasoner",
-                                                         "success_rate":  84,
+                                                         "success_rate":  93,
                                                          "connections":  null,
-                                                         "usage_count":  12
+                                                         "usage_count":  27
                                                      },
                                                      {
                                                          "id":  "mirofish",
                                                          "tier":  "core",
                                                          "name":  "MiroFish",
                                                          "description":  "Skill: MiroFish",
-                                                         "success_rate":  78,
+                                                         "success_rate":  82,
                                                          "connections":  null,
-                                                         "usage_count":  10
+                                                         "usage_count":  22
                                                      },
                                                      {
                                                          "id":  "openaiwhisperapi",
@@ -166,16 +166,16 @@
                                                          "description":  "Skill: openai-whisper-api",
                                                          "success_rate":  74,
                                                          "connections":  null,
-                                                         "usage_count":  46
+                                                         "usage_count":  38
                                                      },
                                                      {
                                                          "id":  "openclawmodelbenchmarks",
                                                          "tier":  "available",
                                                          "name":  "openclaw-model-benchmarks",
                                                          "description":  "Skill: openclaw-model-benchmarks",
-                                                         "success_rate":  91,
+                                                         "success_rate":  86,
                                                          "connections":  null,
-                                                         "usage_count":  44
+                                                         "usage_count":  13
                                                      },
                                                      {
                                                          "id":  "polymarket",
@@ -184,68 +184,68 @@
                                                          "description":  "Skill: polymarket",
                                                          "success_rate":  78,
                                                          "connections":  null,
-                                                         "usage_count":  19
+                                                         "usage_count":  33
                                                      },
                                                      {
                                                          "id":  "proactiveagent",
                                                          "tier":  "core",
                                                          "name":  "proactive-agent",
                                                          "description":  "Skill: proactive-agent",
-                                                         "success_rate":  70,
+                                                         "success_rate":  89,
                                                          "connections":  null,
-                                                         "usage_count":  39
+                                                         "usage_count":  5
                                                      },
                                                      {
                                                          "id":  "qmdsearch",
                                                          "tier":  "active",
                                                          "name":  "qmd-search",
                                                          "description":  "Skill: qmd-search",
-                                                         "success_rate":  73,
+                                                         "success_rate":  86,
                                                          "connections":  null,
-                                                         "usage_count":  33
+                                                         "usage_count":  19
                                                      },
                                                      {
                                                          "id":  "selfimprovement",
                                                          "tier":  "active",
                                                          "name":  "self-improvement",
                                                          "description":  "Skill: self-improvement",
-                                                         "success_rate":  80,
+                                                         "success_rate":  71,
                                                          "connections":  null,
-                                                         "usage_count":  34
+                                                         "usage_count":  30
                                                      },
                                                      {
                                                          "id":  "selflearner",
                                                          "tier":  "available",
                                                          "name":  "self-learner",
                                                          "description":  "Skill: self-learner",
-                                                         "success_rate":  92,
+                                                         "success_rate":  89,
                                                          "connections":  null,
-                                                         "usage_count":  38
+                                                         "usage_count":  17
                                                      },
                                                      {
                                                          "id":  "self_diagnostic",
                                                          "tier":  "available",
                                                          "name":  "self_diagnostic",
                                                          "description":  "Skill: self_diagnostic",
-                                                         "success_rate":  78,
+                                                         "success_rate":  72,
                                                          "connections":  null,
-                                                         "usage_count":  34
+                                                         "usage_count":  42
                                                      },
                                                      {
                                                          "id":  "skillcreator",
                                                          "tier":  "available",
                                                          "name":  "skill-creator",
                                                          "description":  "Skill: skill-creator",
-                                                         "success_rate":  90,
+                                                         "success_rate":  78,
                                                          "connections":  null,
-                                                         "usage_count":  34
+                                                         "usage_count":  36
                                                      },
                                                      {
                                                          "id":  "structuredworkflow",
                                                          "tier":  "available",
                                                          "name":  "structured-workflow",
                                                          "description":  "Skill: structured-workflow",
-                                                         "success_rate":  77,
+                                                         "success_rate":  88,
                                                          "connections":  null,
                                                          "usage_count":  10
                                                      }
@@ -563,7 +563,7 @@
                                     },
                     "edge_discovery_rate":  12
                 },
-    "generatedAt":  "2026-03-23T14:14:47.245Z",
+    "generatedAt":  "2026-03-23T14:29:47.151Z",
     "memory":  {
                    "recent_failures":  [
                                            {
