@@ -181,34 +181,20 @@
         }
 
         function getFallbackData() {
+            // Show loading state - real data will replace this
             return {
-                now: { attention: [] },
+                now: { attention: [], lastUpdate: new Date().toISOString() },
                 mind: {
                     skill_network: { 
-                        nodes: [
-                            { id: 'impeccable', name: 'Impeccable', tier: 'core', usage_count: 45, success_rate: 92, description: 'Frontend design and UI/UX excellence', connections: ['frontend-design', 'critique'] },
-                            { id: 'polymarket', name: 'Polymarket', tier: 'core', usage_count: 38, success_rate: 88, description: 'Prediction market trading and analysis', connections: ['trading', 'analysis'] },
-                            { id: 'proactive-agent', name: 'Proactive Agent', tier: 'master', usage_count: 32, success_rate: 85, description: 'Autonomous decision making and escalation', connections: ['agency-agents'] },
-                            { id: 'mirofish', name: 'MiroFish', tier: 'master', usage_count: 28, success_rate: 82, description: 'Multi-agent simulation and forecasting', connections: ['analysis'] },
-                            { id: 'agency-agents', name: 'Agency Agents', tier: 'active', usage_count: 24, success_rate: 78, description: 'Collection of specialized AI agents' },
-                            { id: 'frontend-design', name: 'Frontend Design', tier: 'active', usage_count: 42, success_rate: 90, description: 'UI/UX design and implementation' },
-                            { id: 'trading', name: 'Trading', tier: 'active', usage_count: 35, success_rate: 86, description: 'Financial market analysis and execution' },
-                            { id: 'analysis', name: 'Analysis', tier: 'active', usage_count: 40, success_rate: 88, description: 'Data analysis and insights' },
-                            { id: 'critique', name: 'Critique', tier: 'active', usage_count: 22, success_rate: 80, description: 'Design and code review' },
-                            { id: 'qmd-search', name: 'QMD Search', tier: 'available', usage_count: 15, success_rate: 75, description: 'Semantic search for markdown' },
-                            { id: 'self-improvement', name: 'Self Improvement', tier: 'available', usage_count: 18, success_rate: 77, description: 'Continuous learning and adaptation' },
-                            { id: 'confidence-tracker', name: 'Confidence Tracker', tier: 'available', usage_count: 12, success_rate: 73, description: 'Track validation of learnings' }
-                        ],
-                        links: []
+                        nodes: [], // Empty until real data loads
+                        links: [],
+                        totalCount: 0
                     },
-                    decisions: { autonomous: { count: 156, quality: 87 }, escalated: { count: 23, quality: 92 }, trend: 'improving', examples: [
-                        { context: 'Dashboard redesign', decision: 'Use Sovereign Terminal aesthetic', reasoning: 'Matches DESIGN.md specification', outcome: 'success', timestamp: '2026-03-22', type: 'autonomous' },
-                        { context: 'MIND tab', decision: 'Add D3.js visualization', reasoning: 'Required for skill network display', outcome: 'pending', timestamp: '2026-03-22', type: 'escalated' }
-                    ]}
+                    decisions: { autonomous: { count: 0, quality: 0 }, escalated: { count: 0, quality: 0 }, trend: 'loading', is_live: false, examples: [] }
                 },
-                memory: { working: {}, long_term: { lessons: [] }, recent_failures: [] },
-                training: { week: 1, progress: 0, capabilities: [], blockers: [] },
-                trading: { total_predictions: 0, win_rate: 0, edge_discovery_rate: 0 },
+                memory: { working: { loaded_files: [] }, long_term: { lessons: [] }, recent_failures: [], recall: { totalLines: 0, lessonCount: 0, skillCount: 0 } },
+                training: { week: 0, progress: 0, session_count: 0, is_live: false, capabilities: [], blockers: [] },
+                trading: { total_predictions: 0, win_rate: 0, edge_discovery_rate: 0, avg_edge: 0, predictions: [] },
                 system: { gateway: [], files: {} }
             };
         }
@@ -273,18 +259,19 @@
         // Tab render functions will be added here
         function renderNowTab() {
             const now = cognitionData?.now || {};
-            const training = cognitionData?.training || { week: 11, progress: 50 };
+            const training = cognitionData?.training || { week: 0, progress: 0 };
             const memory = cognitionData?.memory || {};
             const system = cognitionData?.system || {};
             const mind = cognitionData?.mind || {};
             
-            const mindSkillCount = mind?.skill_network?.nodes?.length || 22;
+            const isLoading = !cognitionData?.generatedAt;
+            const mindSkillCount = mind?.skill_network?.nodes?.length || 0;
             const mindDecisionCount = mind?.decisions?.autonomous?.count || 0;
-            const systemOnline = system?.gateway?.filter(s => s?.status === 'online')?.length || 4;
-            const systemTotal = system?.gateway?.length || 4;
+            const systemOnline = system?.gateway?.filter(s => s?.status === 'online')?.length || 0;
+            const systemTotal = system?.gateway?.length || 0;
             const systemIssues = system?.gateway?.filter(s => s?.status === 'degraded')?.length || 0;
-            const trainingWeek = training?.week || 11;
-            const trainingProgress = training?.progress || 50;
+            const trainingWeek = training?.week || 0;
+            const trainingProgress = training?.progress || 0;
             const predictions = system?.trading?.total_predictions || 0;
             const edges = system?.trading?.edge_discovery_rate || 0;
             
